@@ -1,0 +1,1574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MiLi — Workflow &amp; Governance</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal: #2a7d7b;
+    --teal-light: #e8f4f3;
+    --dark: #0f172a;
+    --card-bg: #ffffff;
+    --border: #e2e8f0;
+    --text: #1e293b;
+    --muted: #94a3b8;
+    --green: #16a34a;
+    --green-bg: #dcfce7;
+    --red: #ef4444;
+    --red-bg: #fef2f2;
+    --amber: #f59e0b;
+    --amber-bg: #fef3c7;
+    --blue: #3b82f6;
+    --blue-bg: #eff6ff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--dark);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    color: var(--text);
+    overflow: hidden;
+  }
+
+  /* ── Stage ── */
+  .stage {
+    width: 720px;
+    height: 480px;
+    background: #f8fafc;
+    border-radius: 16px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+  }
+
+  /* ── Frame ── */
+  .frame {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 64px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+  }
+
+  .frame.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* ── Animation classes ── */
+  .pop-in     { animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+  .fade-up    { animation: fadeUp 0.4s ease forwards; }
+  .slide-right { animation: slideRight 0.4s ease forwards; }
+  .slide-left  { animation: slideLeft 0.4s ease forwards; }
+  .scale-in   { animation: scaleIn 0.35s ease forwards; }
+  .draw-line  { animation: drawLine 0.6s ease forwards; }
+  .pulse-glow { animation: pulseGlow 1.5s ease-in-out infinite; }
+  .stamp      { animation: stamp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+  .count-up   { animation: fadeUp 0.3s ease forwards; }
+  .shake      { animation: shake 0.4s ease; }
+  .check-draw { animation: checkDraw 0.4s ease forwards; }
+  .fly-out    { animation: flyOut 0.5s ease forwards; }
+  .drop-in    { animation: dropIn 0.4s ease forwards; }
+
+  .typewriter {
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: 2px solid var(--teal);
+    animation: typewriter 0.8s steps(20) forwards, blinkCaret 0.6s step-end infinite;
+  }
+
+  @keyframes popIn {
+    0%   { opacity: 0; transform: scale(0.7); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+
+  @keyframes fadeUp {
+    0%   { opacity: 0; transform: translateY(16px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes slideRight {
+    0%   { opacity: 0; transform: translateX(-24px); }
+    100% { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes slideLeft {
+    0%   { opacity: 0; transform: translateX(24px); }
+    100% { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes scaleIn {
+    0%   { opacity: 0; transform: scale(0); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+
+  @keyframes drawLine {
+    0%   { width: 0; }
+    100% { width: 100%; }
+  }
+
+  @keyframes pulseGlow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(42, 125, 123, 0); }
+    50%      { box-shadow: 0 0 0 8px rgba(42, 125, 123, 0.12); }
+  }
+
+  @keyframes typewriter {
+    0%   { width: 0; }
+    100% { width: 100%; }
+  }
+
+  @keyframes blinkCaret {
+    50% { border-color: transparent; }
+  }
+
+  @keyframes stamp {
+    0%   { opacity: 0; transform: scale(2.5) rotate(-12deg); }
+    100% { opacity: 1; transform: scale(1) rotate(-6deg); }
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%  { transform: translateX(-6px); }
+    40%  { transform: translateX(6px); }
+    60%  { transform: translateX(-4px); }
+    80%  { transform: translateX(4px); }
+  }
+
+  @keyframes checkDraw {
+    0%  { opacity: 0; transform: scale(0) rotate(-45deg); }
+    50% { transform: scale(1.2) rotate(0deg); }
+    100% { opacity: 1; transform: scale(1) rotate(0deg); }
+  }
+
+  @keyframes flyOut {
+    0%   { opacity: 1; transform: translateX(0) scale(1); }
+    100% { opacity: 0; transform: translateX(80px) scale(0.8); }
+  }
+
+  @keyframes expandWidth {
+    0%   { width: 0; opacity: 0; }
+    100% { width: auto; opacity: 1; }
+  }
+
+  @keyframes fillBar {
+    0%   { width: 0%; }
+    100% { width: var(--fill); }
+  }
+
+  @keyframes dropIn {
+    0%  { opacity: 0; transform: translateY(-30px); }
+    60% { transform: translateY(4px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Text styles ── */
+  .thought-text {
+    font-size: 15px;
+    color: var(--muted);
+    text-align: center;
+    line-height: 1.6;
+    max-width: 480px;
+  }
+  .thought-text strong { color: var(--text); }
+  .thought-text em { color: var(--teal); font-style: normal; font-weight: 600; }
+
+  .big-text {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text);
+    text-align: center;
+    line-height: 1.3;
+  }
+  .big-text em { color: var(--teal); font-style: normal; }
+
+  .mid-text {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
+    text-align: center;
+  }
+
+  .small-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+  }
+
+  /* ── Section label (top left) ── */
+  .section-label {
+    position: absolute;
+    top: 16px;
+    left: 20px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--muted);
+    opacity: 0.6;
+  }
+
+  /* ── Material card ── */
+  .mat-card {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+
+  .mat-card .mat-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: var(--teal-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .mat-card .mat-icon svg { width: 20px; height: 20px; color: var(--teal); }
+  .mat-card .mat-info { display: flex; flex-direction: column; gap: 2px; }
+  .mat-card .mat-number { font-size: 14px; font-weight: 700; color: var(--text); }
+  .mat-card .mat-desc { font-size: 12px; color: var(--muted); }
+
+  /* ── Plant badge ── */
+  .plant-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    border: 2px solid;
+  }
+
+  .plant-badge.solid-blue {
+    background: var(--blue-bg);
+    border-color: var(--blue);
+    color: var(--blue);
+  }
+
+  .plant-badge.solid-teal {
+    background: var(--teal-light);
+    border-color: var(--teal);
+    color: var(--teal);
+  }
+
+  .plant-badge.solid-green {
+    background: var(--green-bg);
+    border-color: var(--green);
+    color: var(--green);
+  }
+
+  .plant-badge.dashed {
+    border-style: dashed;
+    background: transparent;
+    border-color: var(--muted);
+    color: var(--muted);
+  }
+
+  /* ── Arrow ── */
+  .arrow {
+    color: var(--muted);
+    font-size: 20px;
+  }
+
+  /* ── Field row ── */
+  .field-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 20px;
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .field-label {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 500;
+    min-width: 100px;
+  }
+
+  .field-value {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  /* ── Warning card ── */
+  .warn-card {
+    background: var(--red-bg);
+    border: 2px solid var(--red);
+    border-radius: 12px;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .warn-card .warn-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--red);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: white;
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .warn-card .warn-text { font-size: 13px; color: #991b1b; font-weight: 500; }
+
+  /* ── Stacked cards ── */
+  .stacked-cards {
+    position: relative;
+    width: 320px;
+    height: 100px;
+  }
+
+  .stacked-cards .mat-card { position: absolute; width: 300px; }
+  .stacked-cards .mat-card:nth-child(1) { top: 0; left: 0; z-index: 3; }
+  .stacked-cards .mat-card:nth-child(2) { top: 8px; left: 10px; z-index: 2; opacity: 0.6; border-color: var(--red); }
+  .stacked-cards .mat-card:nth-child(3) { top: 16px; left: 20px; z-index: 1; opacity: 0.3; border-color: var(--red); }
+
+  /* ── Detail grid ── */
+  .detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    width: 100%;
+    max-width: 420px;
+  }
+
+  /* ── Criticality option ── */
+  .crit-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    transition: all 0.3s;
+  }
+
+  .crit-option.selected {
+    border-color: var(--teal);
+    background: var(--teal-light);
+  }
+
+  .crit-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+    transition: all 0.3s;
+  }
+
+  .crit-option.selected .crit-dot {
+    border-color: var(--teal);
+    background: var(--teal);
+    box-shadow: inset 0 0 0 3px white;
+  }
+
+  /* ── Result tag ── */
+  .result-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .result-tag.green { background: var(--green-bg); color: var(--green); }
+  .result-tag.amber { background: var(--amber-bg); color: #92400e; }
+  .result-tag.red   { background: var(--red-bg); color: var(--red); }
+
+  /* ── Check circle ── */
+  .check-circle {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--green-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .check-circle svg { width: 28px; height: 28px; color: var(--green); }
+
+  /* ── Summary chip ── */
+  .summary-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    background: white;
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+
+  /* ── CTA button ── */
+  .cta-btn {
+    background: var(--teal);
+    color: white;
+    padding: 16px 48px;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  /* ── Score bar ── */
+  .score-bar-track {
+    width: 300px;
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .score-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    animation: fillBar 0.8s ease forwards;
+  }
+
+  /* ── Connector line ── */
+  .connector-line {
+    width: 2px;
+    height: 32px;
+    background: var(--border);
+  }
+
+  /* ── Hidden until frame active ── */
+  .frame .anim-target { opacity: 0; }
+
+  .frame.active .anim-target.pop-in,
+  .frame.active .anim-target.fade-up,
+  .frame.active .anim-target.slide-right,
+  .frame.active .anim-target.slide-left,
+  .frame.active .anim-target.scale-in,
+  .frame.active .anim-target.drop-in,
+  .frame.active .anim-target.stamp,
+  .frame.active .anim-target.check-draw {
+    /* animations handle opacity */
+  }
+
+  /* ── Progress bar ── */
+  .progress-track {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: rgba(0,0,0,0.06);
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--teal);
+    transition: width 0.35s ease;
+  }
+
+  /* ── Controls ── */
+  .controls {
+    position: fixed;
+    bottom: 24px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    z-index: 100;
+  }
+
+  .controls button {
+    background: rgba(255,255,255,0.1);
+    color: #94a3b8;
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .controls button:hover { background: rgba(255,255,255,0.15); color: white; }
+  .controls button:disabled { opacity: 0.3; cursor: not-allowed; }
+  .controls button.active { background: var(--teal); color: white; border-color: var(--teal); }
+
+  .frame-counter {
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    min-width: 60px;
+    text-align: center;
+  }
+
+  /* ── Feature-specific styles ── */
+/* ── Email inbox mockup ── */
+.inbox-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 18px;
+  width: 100%;
+  max-width: 420px;
+  text-align: left;
+}
+.inbox-card .ib-header {
+  font-size: 10px; font-weight: 700; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 1px;
+  padding-bottom: 6px; border-bottom: 1px solid var(--border);
+  margin-bottom: 6px;
+  display: flex; justify-content: space-between;
+}
+.inbox-card .ib-count { color: var(--red); }
+.inbox-card .ib-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 5px 0; font-size: 11px;
+  border-bottom: 1px solid var(--border);
+}
+.inbox-card .ib-row:last-child { border-bottom: none; }
+.inbox-card .ib-row.buried { opacity: 0.4; }
+.inbox-card .ib-row.target {
+  background: var(--amber-bg); margin: 0 -8px; padding: 5px 8px;
+  border-radius: 4px;
+}
+.inbox-card .ib-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--blue); flex-shrink: 0;
+}
+.inbox-card .ib-dot.read { background: transparent; }
+.inbox-card .ib-subj { flex: 1; color: var(--text); }
+.inbox-card .ib-date { color: var(--muted); font-size: 10px; white-space: nowrap; }
+
+/* ── Timeline ── */
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: 100%;
+  max-width: 400px;
+}
+.tl-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 6px 0;
+  font-size: 11px;
+}
+.tl-marker {
+  display: flex; flex-direction: column; align-items: center;
+  flex-shrink: 0; width: 20px;
+}
+.tl-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  border: 2px solid var(--border); background: white;
+}
+.tl-dot.done { border-color: var(--green); background: var(--green); }
+.tl-dot.waiting { border-color: var(--amber); background: var(--amber); }
+.tl-dot.stuck { border-color: var(--red); background: var(--red); }
+.tl-line {
+  width: 2px; height: 16px;
+  background: var(--border);
+}
+.tl-content { color: var(--text); }
+.tl-content .tl-day { color: var(--muted); font-weight: 600; min-width: 48px; display: inline-block; }
+
+/* ── Tangled chart ── */
+.tangle-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 18px;
+  width: 100%;
+  max-width: 380px;
+  text-align: center;
+}
+.tangle-card .tc-title {
+  font-size: 10px; font-weight: 700; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;
+}
+.tangle-lines {
+  display: flex; justify-content: space-around;
+  font-size: 20px; color: var(--muted); margin-bottom: 8px;
+}
+.tangle-roles {
+  display: flex; gap: 6px; justify-content: center; flex-wrap: wrap;
+}
+.tangle-role {
+  padding: 4px 10px; border-radius: 12px;
+  font-size: 10px; background: #f1f5f9;
+  color: var(--muted); border: 1px solid var(--border);
+}
+.tangle-role.unknown { border-color: var(--red); color: var(--red); border-style: dashed; }
+.tangle-card .tc-note {
+  margin-top: 8px; font-size: 10px; color: var(--amber);
+  font-style: italic;
+}
+
+/* ── Outcome pair ── */
+.outcome-pair {
+  display: flex; gap: 10px;
+  width: 100%; max-width: 440px;
+}
+.outcome-box {
+  flex: 1;
+  border-radius: 10px;
+  padding: 12px;
+  text-align: center;
+  font-size: 11px;
+}
+.outcome-box.bad-left {
+  background: var(--red-bg);
+  border: 1px solid rgba(239,68,68,0.2);
+  color: var(--text);
+}
+.outcome-box.bad-right {
+  background: var(--amber-bg);
+  border: 1px solid rgba(217,119,6,0.2);
+  color: var(--text);
+}
+.outcome-box .ob-icon { font-size: 20px; margin-bottom: 4px; }
+.outcome-box .ob-title { font-weight: 700; font-size: 12px; margin-bottom: 4px; }
+.outcome-box.bad-left .ob-title { color: var(--red); }
+.outcome-box.bad-right .ob-title { color: var(--amber); }
+
+/* ── Approval queue ── */
+.approval-queue {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  width: 100%;
+  max-width: 440px;
+  font-size: 11px;
+}
+.aq-header {
+  display: grid;
+  grid-template-columns: 80px 1fr 80px 50px;
+  padding: 6px 12px;
+  background: #f1f5f9;
+  font-weight: 600;
+  color: var(--muted);
+  border-bottom: 1px solid var(--border);
+}
+.aq-row {
+  display: grid;
+  grid-template-columns: 80px 1fr 80px 50px;
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+}
+.aq-row:last-child { border-bottom: none; }
+.aq-row .aq-type { color: var(--teal); font-weight: 600; }
+.aq-row .aq-priority { font-size: 10px; }
+.aq-row .aq-priority.high { color: var(--red); font-weight: 600; }
+.aq-row .aq-priority.med { color: var(--amber); }
+
+/* ── Review panel ── */
+.review-panel {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 18px;
+  width: 100%;
+  max-width: 440px;
+}
+.review-panel .rp-title {
+  font-size: 10px; font-weight: 700; color: var(--teal);
+  text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;
+}
+.review-panel .rp-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+.review-panel .rp-col {
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+}
+.review-panel .rp-col.before-col {
+  background: var(--red-bg);
+  border: 1px solid rgba(239,68,68,0.15);
+}
+.review-panel .rp-col.after-col {
+  background: var(--green-bg);
+  border: 1px solid rgba(22,163,74,0.15);
+}
+.review-panel .rp-col .rpc-label {
+  font-size: 9px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.5px; margin-bottom: 4px;
+}
+.review-panel .rp-col.before-col .rpc-label { color: var(--red); }
+.review-panel .rp-col.after-col .rpc-label { color: var(--green); }
+.review-panel .rp-col .rpc-text { color: var(--text); line-height: 1.4; }
+
+/* ── Context sidebar ── */
+.context-sidebar {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 16px;
+  width: 100%;
+  max-width: 380px;
+}
+.context-sidebar .cs-title {
+  font-size: 10px; font-weight: 700; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;
+}
+.context-sidebar .cs-row {
+  display: flex; justify-content: space-between;
+  padding: 4px 0; font-size: 11px;
+  border-bottom: 1px solid var(--border);
+}
+.context-sidebar .cs-row:last-child { border-bottom: none; }
+.context-sidebar .cs-row .cs-label { color: var(--muted); }
+.context-sidebar .cs-row .cs-val { font-weight: 600; color: var(--text); }
+
+/* ── Decision buttons ── */
+.decision-btns {
+  display: flex; gap: 8px;
+  justify-content: center;
+}
+.decision-btn {
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  border: 2px solid transparent;
+}
+.decision-btn.approve { background: var(--green); color: white; }
+.decision-btn.return-btn { background: white; border-color: var(--amber); color: var(--amber); }
+.decision-btn.reject { background: white; border-color: var(--red); color: var(--red); }
+.decision-btn.selected { transform: scale(1.05); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+
+/* ── Step workflow ── */
+.step-workflow {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  max-width: 440px;
+  justify-content: center;
+}
+.sw-step {
+  display: flex; flex-direction: column;
+  align-items: center; gap: 4px;
+}
+.sw-dot {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 700;
+}
+.sw-dot.active { background: var(--teal); color: white; }
+.sw-dot.pending { background: #f1f5f9; color: var(--muted); border: 2px solid var(--border); }
+.sw-dot.done { background: var(--green-bg); color: var(--green); border: 2px solid var(--green); }
+.sw-label { font-size: 9px; color: var(--muted); text-align: center; max-width: 72px; }
+.sw-arrow { color: var(--muted); font-size: 14px; }
+.sw-progress {
+  margin-top: 8px; width: 100%; max-width: 300px;
+  height: 6px; background: #e2e8f0; border-radius: 3px;
+  overflow: hidden;
+}
+.sw-progress .sw-fill { height: 100%; background: var(--teal); border-radius: 3px; }
+
+/* ── Parallel flow ── */
+.parallel-flow {
+  display: flex; flex-direction: column;
+  align-items: center; gap: 6px;
+  width: 100%; max-width: 400px;
+}
+.pf-source {
+  padding: 6px 16px; border-radius: 20px;
+  background: var(--teal-light); color: var(--teal);
+  font-size: 11px; font-weight: 600;
+  border: 1px solid var(--teal);
+}
+.pf-split { color: var(--muted); font-size: 14px; }
+.pf-branches { display: flex; gap: 12px; }
+.pf-branch {
+  padding: 10px 14px; border-radius: 8px;
+  background: white; border: 1px solid var(--border);
+  text-align: center; font-size: 11px;
+}
+.pf-branch .pf-role { font-weight: 700; color: var(--text); margin-bottom: 2px; }
+.pf-branch .pf-type { color: var(--muted); font-size: 10px; }
+.pf-merge {
+  padding: 6px 16px; border-radius: 20px;
+  background: var(--green-bg); color: var(--green);
+  font-size: 11px; font-weight: 600;
+  border: 1px solid rgba(22,163,74,0.3);
+}
+
+/* ── Escalation notice ── */
+.escalation-notice {
+  background: var(--amber-bg);
+  border: 1px solid var(--amber);
+  border-radius: 10px;
+  padding: 14px 18px;
+  width: 100%;
+  max-width: 380px;
+  text-align: center;
+}
+.escalation-notice .en-icon { font-size: 20px; margin-bottom: 4px; }
+.escalation-notice .en-status { font-size: 12px; color: #92400e; font-weight: 600; margin-bottom: 4px; }
+.escalation-notice .en-detail { font-size: 11px; color: #92400e; }
+
+/* ── SAP confirmation ── */
+.sap-confirm {
+  background: var(--green-bg);
+  border: 1px solid rgba(22,163,74,0.3);
+  border-radius: 10px;
+  padding: 14px 18px;
+  width: 100%;
+  max-width: 400px;
+}
+.sap-confirm .sc-title {
+  font-size: 10px; font-weight: 700; color: var(--green);
+  text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;
+}
+.sap-confirm .sc-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 4px 0; font-size: 11px; color: var(--text);
+}
+.sap-confirm .sc-check { color: var(--green); font-weight: 700; }
+
+/* ── Audit trail ── */
+.audit-trail {
+  display: flex; flex-direction: column;
+  gap: 0; width: 100%; max-width: 420px;
+}
+.at-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 6px 0; font-size: 11px;
+}
+.at-marker {
+  display: flex; flex-direction: column; align-items: center;
+  flex-shrink: 0; width: 20px;
+}
+.at-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--teal); border: 2px solid var(--teal);
+}
+.at-line { width: 2px; height: 14px; background: var(--teal-light); }
+.at-content .at-action { font-weight: 600; color: var(--text); }
+.at-content .at-detail { color: var(--muted); font-size: 10px; }
+
+/* ── Role queues ── */
+.role-queues {
+  display: flex; gap: 8px;
+  width: 100%; max-width: 460px;
+}
+.rq-card {
+  flex: 1;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 10px;
+}
+.rq-card .rq-role {
+  font-weight: 700; color: var(--teal);
+  font-size: 11px; margin-bottom: 6px;
+  text-align: center;
+}
+.rq-card .rq-item {
+  padding: 3px 0; color: var(--text);
+  border-bottom: 1px solid var(--border);
+}
+.rq-card .rq-item:last-child { border-bottom: none; }
+
+/* ── Governance dashboard ── */
+.gov-dashboard {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 18px;
+  width: 100%;
+  max-width: 440px;
+}
+.gov-dashboard .gd-title {
+  font-size: 10px; font-weight: 700; color: var(--teal);
+  text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;
+}
+.gov-dashboard .gd-stats {
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px; margin-bottom: 8px;
+}
+.gov-dashboard .gd-stat {
+  text-align: center; padding: 8px;
+  background: #f8fafc; border-radius: 6px;
+}
+.gov-dashboard .gd-stat .gds-num { font-size: 20px; font-weight: 700; color: var(--teal); }
+.gov-dashboard .gd-stat .gds-label { font-size: 9px; color: var(--muted); margin-top: 2px; }
+.gov-dashboard .gd-bottom {
+  display: flex; justify-content: space-between;
+  font-size: 11px; padding-top: 6px;
+  border-top: 1px solid var(--border);
+}
+.gov-dashboard .gd-bottom .gdb-label { color: var(--muted); }
+.gov-dashboard .gd-bottom .gdb-val { font-weight: 600; color: var(--text); }
+.gov-dashboard .gd-bottom .gdb-val.good { color: var(--green); }
+
+/* ── Approval gauge ── */
+.approval-gauge {
+  text-align: center;
+  width: 100%; max-width: 300px;
+}
+.ag-bar {
+  height: 16px;
+  background: #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+.ag-fill {
+  height: 100%;
+  border-radius: 8px;
+  background: linear-gradient(90deg, var(--red), var(--amber), var(--green));
+}
+.ag-labels {
+  display: flex; justify-content: space-between;
+  font-size: 11px;
+}
+.ag-labels .ag-old { color: var(--red); font-weight: 600; }
+.ag-labels .ag-new { color: var(--green); font-weight: 700; }
+
+/* ── Side-by-side ── */
+.side-by-side { display: flex; gap: 12px; width: 100%; max-width: 480px; }
+.side-col { flex: 1; border-radius: 10px; padding: 14px; }
+.side-col.before { background: var(--red-bg); border: 1px solid rgba(239,68,68,0.2); }
+.side-col.after { background: var(--green-bg); border: 1px solid rgba(22,163,74,0.2); }
+.side-col .col-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+.side-col.before .col-title { color: var(--red); }
+.side-col.after .col-title { color: var(--green); }
+.side-col .col-item { font-size: 11px; color: var(--text); padding: 3px 0; }
+
+/* ── Metric spotlight ── */
+.metric-spotlight { text-align: center; }
+.metric-spotlight .metric-big { font-size: 48px; font-weight: 700; color: var(--teal); line-height: 1; }
+.metric-spotlight .metric-unit { font-size: 14px; color: var(--muted); margin-top: 4px; }
+.metric-spotlight .metric-compare { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+/* ── Cascade ── */
+.cascade-stack { display: flex; flex-direction: column; gap: 6px; max-width: 440px; text-align: center; }
+.cascade-item { font-size: 14px; color: var(--text); line-height: 1.5; }
+.cascade-connector { color: var(--teal); font-size: 16px; }
+
+</style>
+</head>
+<body>
+
+<div class="stage" id="stage">
+
+<!-- FRAMES START -->
+
+<!-- FRAMES START -->
+
+<!-- ══════════════ ACT 1 — THE PROBLEM ══════════════ -->
+
+<div class="frame" id="f1">
+  <div class="section-label anim-target pop-in">THE SITUATION</div>
+  <div class="spacer"></div>
+  <div class="inbox-card anim-target fade-up" style="animation-delay:.15s">
+    <div class="ib-header"><span>INBOX</span><span class="ib-count">147 unread</span></div>
+    <div class="ib-row buried"><div class="ib-dot read"></div><span class="ib-subj">Q3 budget review notes</span><span class="ib-date">2h ago</span></div>
+    <div class="ib-row buried"><div class="ib-dot"></div><span class="ib-subj">RE: Vendor onboarding docs</span><span class="ib-date">5h ago</span></div>
+    <div class="ib-row buried"><div class="ib-dot read"></div><span class="ib-subj">Lunch order Friday?</span><span class="ib-date">1d ago</span></div>
+    <div class="ib-row target"><div class="ib-dot"></div><span class="ib-subj">Please approve — MC-4501 enrichment</span><span class="ib-date">3 weeks ago</span></div>
+    <div class="ib-row buried"><div class="ib-dot read"></div><span class="ib-subj">Holiday roster update</span><span class="ib-date">3 weeks ago</span></div>
+  </div>
+  <div class="spacer"></div>
+  <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
+    The request was submitted. The approval <strong>lives in an inbox nobody checks</strong>.
+  </div>
+</div>
+
+<div class="frame" id="f2">
+  <div class="section-label anim-target pop-in">THE SITUATION</div>
+  <div class="spacer"></div>
+  <div class="timeline anim-target fade-up" style="animation-delay:.15s">
+    <div class="tl-item">
+      <div class="tl-marker"><div class="tl-dot done"></div><div class="tl-line"></div></div>
+      <div class="tl-content"><span class="tl-day">Day 1</span> Request submitted</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-marker"><div class="tl-dot done"></div><div class="tl-line"></div></div>
+      <div class="tl-content"><span class="tl-day">Day 1</span> Email sent to approver</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-marker"><div class="tl-dot waiting"></div><div class="tl-line"></div></div>
+      <div class="tl-content"><span class="tl-day">Day 7</span> Reminder sent</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-marker"><div class="tl-dot waiting"></div><div class="tl-line"></div></div>
+      <div class="tl-content"><span class="tl-day">Day 14</span> Escalation email</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-marker"><div class="tl-dot stuck"></div></div>
+      <div class="tl-content"><span class="tl-day">Day 21</span> Still pending. SAP unchanged.</div>
+    </div>
+  </div>
+  <div class="spacer"></div>
+  <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
+    The decision takes 5 minutes. <strong>Finding the decision-maker takes 3 weeks.</strong>
+  </div>
+</div>
+
+<div class="frame" id="f3">
+  <div class="section-label anim-target pop-in">WITHOUT MILI</div>
+  <div class="spacer"></div>
+  <div class="tangle-card anim-target fade-up" style="animation-delay:.15s">
+    <div class="tc-title">Who approves what?</div>
+    <div class="tangle-lines">↗ ↘ ↙ ↗ ↖ ↘ ↗ ↙</div>
+    <div class="tangle-roles">
+      <span class="tangle-role">MDM Lead</span>
+      <span class="tangle-role">Plant Mgr</span>
+      <span class="tangle-role unknown">???</span>
+      <span class="tangle-role">Controller</span>
+      <span class="tangle-role unknown">Ask Darren</span>
+      <span class="tangle-role">Warehouse</span>
+    </div>
+    <div class="tc-note">📝 "Ask Darren, he usually knows."</div>
+  </div>
+  <div class="spacer"></div>
+  <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
+    When approval rules live in people's heads, <strong>governance depends on who's available</strong>.
+  </div>
+</div>
+
+<div class="frame" id="f4">
+  <div class="section-label anim-target pop-in">WITHOUT MILI</div>
+  <div class="spacer"></div>
+  <div class="outcome-pair anim-target fade-up" style="animation-delay:.15s">
+    <div class="outcome-box bad-left">
+      <div class="ob-icon">🏃</div>
+      <div class="ob-title">Rubber-stamped</div>
+      <div>Approved without review — errors pass through</div>
+    </div>
+    <div class="outcome-box bad-right">
+      <div class="ob-icon">⏳</div>
+      <div class="ob-title">Bottlenecked</div>
+      <div>Stuck in queue — urgent changes blocked for weeks</div>
+    </div>
+  </div>
+  <div class="spacer"></div>
+  <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
+    Without workflow, you get either <strong>rubber-stamping or bottlenecks</strong>. Neither is governance.
+  </div>
+</div>
+
+<div class="frame" id="f5">
+  <div class="section-label anim-target pop-in">WITHOUT MILI</div>
+  <div class="spacer"></div>
+  <div class="warn-card anim-target slide-right" style="animation-delay:.1s">
+    <span class="warn-icon">⚠</span>
+    <span>No audit trail → who approved this? Nobody knows</span>
+  </div>
+  <div class="warn-card anim-target slide-right" style="animation-delay:.25s">
+    <span class="warn-icon">⚠</span>
+    <span>Email-based approvals → lost, delayed, bypassed</span>
+  </div>
+  <div class="warn-card anim-target slide-right" style="animation-delay:.4s">
+    <span class="warn-icon">⚠</span>
+    <span>SAP changes without review → data quality degrades</span>
+  </div>
+  <div class="spacer"></div>
+  <div class="thought-text anim-target fade-up" style="animation-delay:.55s">
+    Governance isn't about slowing things down. It's about <strong>knowing who decided, why, and when</strong>.
+  </div>
+</div>
+
+<!-- ══════════════ ACT 2 — THE SOLUTION ══════════════ -->
+
+<div class="frame" id="f6">
+  <div class="big-text anim-target scale-in">Decisions tracked. <em>Not lost.</em></div>
+</div>
+
+<div class="frame" id="f7">
+  <div class="section-label anim-target pop-in">THE QUEUE</div>
+  <div class="spacer"></div>
+  <div class="approval-queue anim-target fade-up" style="animation-delay:.15s">
+    <div class="aq-header"><span>Type</span><span>Material</span><span>Submitter</span><span>Priority</span></div>
+    <div class="aq-row"><span class="aq-type">Enrichment</span><span>MC-4501</span><span>Jane S.</span><span class="aq-priority high">High</span></div>
+    <div class="aq-row"><span class="aq-type">Extension</span><span>MC-2209</span><span>Tom R.</span><span class="aq-priority med">Med</span></div>
+    <div class="aq-row"><span class="aq-type">Criticality</span><span>MC-7803</span><span>Sam P.</span><span class="aq-priority high">High</span></div>
+    <div class="aq-row"><span class="aq-type">Deletion</span><span>MC-1155</span><span>Lisa K.</span><span class="aq-priority">Low</span></div>
+  </div>
+  <div class="spacer"></div>
+  <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
+    No searching emails. No chasing people. <strong>Your decisions come to you.</strong>
+  </div>
+</div>
+
+<div class="frame" id="f8">
+  <div class="section-label anim-target pop-in">QUEUE · CLICK ITEM</div>
+  <div class="spacer"></div>
+  <div class="review-panel anim-target fade-up" style="animation-delay:.15s">
+    <div class="rp-title">Enrichment request — MC-4501</div>
+    <div class="rp-grid">
+      <div class="rp-col before-col">
+        <div class="rpc-label">Before</div>
+        <div class="rpc-text">SEAL KIT PUMP</div>
+      </div>
+      <div class="rp-col after-col">
+        <div class="rpc-label">After</div>
+        <div class="rpc-text">Seal Kit, Mech. Pump — Flowserve MPN: 4501-SK-22</div>
+      </div>
+    </div>
+  </div>
+  <div class="spacer"></div>
+  <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
+    Everything needed to decide is <strong>on one screen</strong>. No toggling between SAP and email.
+  </div>
+</div>
+
+<div class="frame" id="f9">
+  <div class="section-label anim-target pop-in">REVIEW · CONTEXT</div>
+  <div class="spacer"></div>
+  <div class="context-sidebar anim-target fade-up" style="animation-delay:.15s">
+    <div class="cs-title">Submission context</div>
+    <div class="cs-row"><span class="cs-label">Submitted by</span><span class="cs-val">Jane Smith</span></div>
+    <div class="cs-row"><span class="cs-label">Role</span><span class="cs-val">Maintenance Planner</span></div>
+    <div class="cs-row"><span class="cs-label">Submitted</span><span class="cs-val">2 days ago</span></div>
+    <div class="cs-row"><span class="cs-label">Change type</span><span class="cs-val">Description improvement</span></div>
+    <div class="cs-row"><span class="cs-label">Reason</span><span class="cs-val">Added manufacturer + MPN</span></div>
+    <div class="cs-row"><span class="cs-label">Impact</span><span class="cs-val">Improves findability — 3 plants</span></div>
+  </div>
+  <div class="spacer"></div>
+  <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
+    The approver sees the <strong>intent</strong>, not just the change.
+  </div>
+</div>
+
+<div class="frame" id="f10">
+  <div class="section-label anim-target pop-in">REVIEW · DECISION</div>
+  <div class="spacer"></div>
+  <div class="decision-btns anim-target fade-up" style="animation-delay:.15s">
+    <div class="decision-btn approve selected">Approve ✓</div>
+    <div class="decision-btn return-btn">Return with comments</div>
+    <div class="decision-btn reject">Reject with reason</div>
+  </div>
+  <div class="spacer-sm"></div>
+  <div class="result-tag anim-target stamp" style="animation-delay:.3s">✓ Approved — 45 seconds</div>
+  <div class="spacer"></div>
+  <div class="thought-text anim-target fade-up" style="animation-delay:.45s">
+    Approve, return, or reject. <strong>Every option is structured and recorded.</strong>
+  </div>
+</div>
+
+<div class="frame" id="f11">
+  <div class="section-label anim-target pop-in">MULTI-STEP WORKFLOW</div>
+  <div class="spacer"></div>
+  <div class="step-workflow anim-target fade-up" style="animation-delay:.15s">
+    <div class="sw-step">
+      <div class="sw-dot active">1</div>
+      <div class="sw-label">MDM Review</div>
+    </div>
+    <div class="sw-arrow">→</div>
+    <div class="sw-step">
+      <div class="sw-dot pending">2</div>
+      <div class="sw-label">Plant Controller</div>
+    </div>
+    <div class="sw-arrow">→</div>
+    <div class="sw-step">
+      <div class="sw-dot pending">3</div>
+      <div class="sw-label">SAP Post-back</div>
+    </div>
+  </div>
+  <div class="spacer-sm"></div>
+  <div class="sw-progress anim-target fade-up" style="animation-delay:.25s">
+    <div class="sw-fill" style="width:33%"></div>
+  </div>
+  <div class="spacer"></div>
+  <div class="thought-text anim-target fade-up" style="animation-delay:.35s">
+    Different request types have <strong>different approval chains</strong>. Each proportionate to the risk.
+  </div>
+</div>
+
+<div class="frame" id="f12">
+  <div class="section-label anim-target pop-in">PARALLEL APPROVALS</div>
+  <div class="spacer"></div>
+  <div class="parallel-flow anim-target fade-up" style="animation-delay:.15s">
+    <div class="pf-source">Criticality change → stocking impact</div>
+    <div class="pf-split">↙ ↘</div>
+    <div class="pf-branches">
+      <div class="pf-branch">
+        <div class="pf-role">Plant Engineer</div>
+        <div class="pf-type">Technical review</div>
+      </div>
+      <div class="pf-branch">
+        <div class="pf-role">Finance Controller</div>
+        <div class="pf-type">Capital review</div>
+      </div>
+    </div>
+    <div class="pf-split">↘ ↙</div>
+    <div class="pf-merge">Both approve → SAP write-back</div>
+  </div>
+  <div class="spacer"></div>
+  <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
+    When a decision needs two perspectives, <strong>both review in parallel</strong>, not in sequence.
+  </div>
+</div>
+
+<div class="frame" id="f13">
+  <div class="section-label anim-target pop-in">ESCALATION</div>
+  <div class="spacer"></div>
+  <div class="escalation-notice anim-target shake" style="animation-delay:.15s">
+    <div class="en-icon">⏰</div>
+    <div class="en-status">Awaiting approval — 5 days</div>
+    <div class="en-detail">Auto-escalation in 2 days → routes to delegate or manager</div>
+  </div>
+  <div class="spacer"></div>
+  <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
+    <em>MiLi</em> doesn't let decisions <strong>stall silently</strong>. Escalation is automatic.
+  </div>
+</div>
+
+<div class="frame" id="f14">
+  <div class="section-label anim-target pop-in">SAP POST-BACK</div>
+  <div class="spacer"></div>
+  <div class="sap-confirm anim-target fade-up" style="animation-delay:.15s">
+    <div class="sc-title">SAP update confirmed</div>
+    <div class="sc-row"><span class="sc-check">✓</span> Material MC-4501 enriched</div>
+    <div class="sc-row"><span class="sc-check">✓</span> All views updated</div>
+    <div class="sc-row"><span class="sc-check">✓</span> Post-back verified</div>
+    <div class="sc-row"><span class="sc-check">✓</span> Audit record created</div>
+  </div>
+  <div class="spacer"></div>
+  <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
+    The last step is always <strong>verified SAP execution</strong>. Not "I think it was updated."
+  </div>
+</div>
+
+<!-- ══════════════ ACT 2b — THE AUDITABILITY ══════════════ -->
+
+<div class="frame" id="f15">
+  <div class="big-text anim-target scale-in">Every decision. <em>Traceable.</em></div>
+</div>
+
+<div class="frame" id="f16">
+  <div class="section-label anim-target pop-in">AUDIT TRAIL</div>
+  <div class="spacer"></div>
+  <div class="audit-trail anim-target fade-up" style="animation-delay:.15s">
+    <div class="at-item">
+      <div class="at-marker"><div class="at-dot"></div><div class="at-line"></div></div>
+      <div class="at-content"><div class="at-action">Created</div><div class="at-detail">Jan 12 — by Tom, approved by Lisa</div></div>
+    </div>
+    <div class="at-item">
+      <div class="at-marker"><div class="at-dot"></div><div class="at-line"></div></div>
+      <div class="at-content"><div class="at-action">Enriched</div><div class="at-detail">Mar 4 — by Jane, approved by Mark</div></div>
+    </div>
+    <div class="at-item">
+      <div class="at-marker"><div class="at-dot"></div><div class="at-line"></div></div>
+      <div class="at-content"><div class="at-action">Extended to Paris</div><div class="at-detail">Apr 18 — by Sam, approved by Claire</div></div>
+    </div>
+    <div class="at-item">
+      <div class="at-marker"><div class="at-dot"></div></div>
+      <div class="at-content"><div class="at-action">Criticality assessed</div><div class="at-detail">Jun 2 — scored B-High</div></div>
+    </div>
+  </div>
+  <div class="spacer"></div>
+  <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
+    Every change, every approval, every timestamp. <strong>The full story of the material.</strong>
+  </div>
+</div>
+
+<div class="frame" id="f17">
+  <div class="section-label anim-target pop-in">ROLE-BASED VISIBILITY</div>
+  <div class="spacer"></div>
+  <div class="role-queues anim-target fade-up" style="animation-delay:.15s">
+    <div class="rq-card">
+      <div class="rq-role">MDM Manager</div>
+      <div class="rq-item">Enrichment requests</div>
+      <div class="rq-item">Creation requests</div>
+    </div>
+    <div class="rq-card">
+      <div class="rq-role">Plant Controller</div>
+      <div class="rq-item">Stock requests</div>
+      <div class="rq-item">Criticality changes</div>
+    </div>
+    <div class="rq-card">
+      <div class="rq-role">Warehouse Mgr</div>
+      <div class="rq-item">Extensions</div>
+      <div class="rq-item">Deletions</div>
+    </div>
+  </div>
+  <div class="spacer"></div>
+  <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
+    Each role sees <strong>only what they own</strong>. No noise, no overwhelm.
+  </div>
+</div>
+
+<div class="frame" id="f18">
+  <div class="section-label anim-target pop-in">GOVERNANCE DASHBOARD</div>
+  <div class="spacer"></div>
+  <div class="gov-dashboard anim-target fade-up" style="animation-delay:.15s">
+    <div class="gd-title">This month</div>
+    <div class="gd-stats">
+      <div class="gd-stat"><div class="gds-num">142</div><div class="gds-label">Submitted</div></div>
+      <div class="gd-stat"><div class="gds-num">128</div><div class="gds-label">Approved</div></div>
+      <div class="gd-stat"><div class="gds-num">8</div><div class="gds-label">Returned</div></div>
+    </div>
+    <div class="gd-bottom">
+      <span><span class="gdb-label">Avg approval time: </span><span class="gdb-val good">1.4 days</span></span>
+      <span><span class="gdb-label">Escalations: </span><span class="gdb-val">3</span></span>
+    </div>
+  </div>
+  <div class="spacer"></div>
+  <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
+    Governance becomes <strong>measurable</strong>. Not just a policy — a performance metric.
+  </div>
+</div>
+
+<!-- ══════════════ ACT 3 — THE OUTCOME ══════════════ -->
+
+<div class="frame" id="f19">
+  <div class="big-text anim-target scale-in">The difference.</div>
+</div>
+
+<div class="frame" id="f20">
+  <div class="section-label anim-target pop-in">THE DIFFERENCE</div>
+  <div class="spacer"></div>
+  <div class="side-by-side anim-target fade-up" style="animation-delay:.15s">
+    <div class="side-col before">
+      <div class="col-title">Without MiLi</div>
+      <div class="col-item">Email-based approvals</div>
+      <div class="col-item">Lost, delayed, bypassed</div>
+      <div class="col-item">No audit trail</div>
+      <div class="col-item">Manual escalation</div>
+      <div class="col-item">Decisions stall for weeks</div>
+    </div>
+    <div class="side-col after">
+      <div class="col-title">With MiLi</div>
+      <div class="col-item">Queue-based approvals</div>
+      <div class="col-item">Visible, structured, fast</div>
+      <div class="col-item">Full audit trail</div>
+      <div class="col-item">Auto-escalation</div>
+      <div class="col-item">1.4 days average</div>
+    </div>
+  </div>
+  <div class="spacer"></div>
+  <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
+    Every approval becomes <strong>visible, fast, and defensible</strong>.
+  </div>
+</div>
+
+<div class="frame" id="f21">
+  <div class="section-label anim-target pop-in">RESULT</div>
+  <div class="spacer"></div>
+  <div class="approval-gauge anim-target scale-in" style="animation-delay:.15s">
+    <div class="ag-bar"><div class="ag-fill" style="width:93%"></div></div>
+    <div class="ag-labels"><span class="ag-old">21 days</span><span class="ag-new">1.4 days</span></div>
+  </div>
+  <div class="spacer"></div>
+  <div class="summary-chip anim-target slide-right" style="animation-delay:.25s">1.4 days average approval time (vs. 21 days)</div>
+  <div class="summary-chip anim-target slide-right" style="animation-delay:.35s">100% audit trail coverage</div>
+  <div class="summary-chip anim-target slide-right" style="animation-delay:.45s">Zero email-based approvals</div>
+  <div class="spacer"></div>
+  <div class="thought-text anim-target fade-up" style="animation-delay:.55s">
+    <strong>Fast decisions with full accountability.</strong> That's governance done right.
+  </div>
+</div>
+
+<div class="frame" id="f22">
+  <div class="section-label anim-target pop-in">RESULT</div>
+  <div class="spacer"></div>
+  <div class="metric-spotlight anim-target scale-in" style="animation-delay:.15s">
+    <div class="metric-big">1.4</div>
+    <div class="metric-unit">days average approval time</div>
+    <div class="metric-compare">down from 21 days — 93% faster</div>
+  </div>
+  <div class="spacer"></div>
+  <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
+    When decisions come to you, <strong>they don't wait 3 weeks in an inbox</strong>.
+  </div>
+</div>
+
+<div class="frame" id="f23">
+  <div class="section-label anim-target pop-in">RESULT</div>
+  <div class="spacer"></div>
+  <div class="metric-spotlight anim-target scale-in" style="animation-delay:.15s">
+    <div class="metric-big">100%</div>
+    <div class="metric-unit">audit trail coverage</div>
+    <div class="metric-compare">every change · every approver · every timestamp</div>
+  </div>
+  <div class="spacer"></div>
+  <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
+    <strong>Nothing changes in SAP without a record of who approved it and why.</strong>
+  </div>
+</div>
+
+<div class="frame" id="f24">
+  <div class="section-label anim-target pop-in">NET EFFECT</div>
+  <div class="spacer"></div>
+  <div class="cascade-stack anim-target fade-up" style="animation-delay:.15s">
+    <div class="cascade-item">When workflows are structured, <strong>decisions happen faster</strong>.</div>
+    <div class="cascade-connector">↓</div>
+    <div class="cascade-item">When decisions are auditable, <strong>accountability is real</strong>.</div>
+    <div class="cascade-connector">↓</div>
+    <div class="cascade-item">When accountability is real, <strong>data quality improves permanently</strong>.</div>
+  </div>
+  <div class="spacer"></div>
+  <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
+    Governance doesn't slow things down. <strong>It makes them defensible.</strong>
+  </div>
+</div>
+
+<div class="frame" id="f25">
+  <div class="big-text anim-target scale-in">Decisions tracked.<br><em>Not lost.</em></div>
+</div>
+
+<!-- ══════════════ CLOSER ══════════════ -->
+
+<div class="frame" id="f26">
+  <div class="brand anim-target pop-in">
+    <div class="logo">MiLi</div>
+    <div class="by">by Lexin Solutions</div>
+  </div>
+  <div class="spacer"></div>
+  <div class="divider anim-target fade-up" style="animation-delay:.15s"></div>
+  <div class="spacer"></div>
+  <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
+    Decisions that are fast, visible, and defensible. <em>Workflow &amp; Governance</em> — one of 13 modules.
+  </div>
+</div>
+
+<!-- FRAMES END -->
+
+<!-- FRAMES END -->
+
+  <!-- Progress bar -->
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+</div>
+
+<!-- Controls -->
+<div class="controls">
+  <button id="prevBtn" onclick="prev()" disabled>&larr;</button>
+  <div class="frame-counter" id="counter">1 / 26</div>
+  <button id="nextBtn" onclick="next()">&rarr;</button>
+  <button id="playBtn" onclick="autoPlay()">&#9654; Play</button>
+</div>
+
+<script>
+  const totalFrames = 26;
+  let current = 0;
+  let interval = null;
+
+  function show(n) {
+    document.querySelectorAll('.frame').forEach(f => f.classList.remove('active'));
+    const frame = document.getElementById(`f${n + 1}`);
+    frame.classList.add('active');
+
+    // Re-trigger animations
+    frame.querySelectorAll('.anim-target').forEach(el => {
+      const classes = [...el.classList];
+      const animClass = classes.find(c =>
+        ['pop-in','fade-up','slide-right','slide-left','scale-in','drop-in','stamp','check-draw'].includes(c)
+      );
+      if (animClass) {
+        el.classList.remove(animClass);
+        void el.offsetHeight;
+        el.classList.add(animClass);
+      }
+    });
+
+    document.getElementById('counter').textContent = `${n + 1} / ${totalFrames}`;
+    document.getElementById('prevBtn').disabled = n === 0;
+    document.getElementById('nextBtn').disabled = n === totalFrames - 1;
+    document.getElementById('progressFill').style.width = `${((n + 1) / totalFrames) * 100}%`;
+  }
+
+  function next() {
+    if (current < totalFrames - 1) { current++; show(current); }
+  }
+
+  function prev() {
+    if (current > 0) { current--; show(current); }
+  }
+
+  function autoPlay() {
+    const btn = document.getElementById('playBtn');
+    if (interval) {
+      clearInterval(interval);
+      interval = null;
+      btn.innerHTML = '&#9654; Play';
+      btn.classList.remove('active');
+      return;
+    }
+
+    btn.innerHTML = '&#9208; Pause';
+    btn.classList.add('active');
+    current = 0;
+    show(0);
+
+    interval = setInterval(() => {
+      if (current < totalFrames - 1) {
+        current++;
+        show(current);
+      } else {
+        clearInterval(interval);
+        interval = null;
+        btn.innerHTML = '&#9654; Play';
+        btn.classList.remove('active');
+      }
+    }, 1800);
+  }
+
+  // Keyboard navigation
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); next(); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
+  });
+
+  show(0);
+</script>
+<!-- Feedback: uncomment when deploying to mili-slides -->
+<!-- <script src="../feedback.js"></script> -->
+
+</body>
+</html>

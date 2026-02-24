@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MiLi — Flag for Deletion</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal: #2a7d7b;
+    --teal-light: #e8f4f3;
+    --dark: #0f172a;
+    --card-bg: #ffffff;
+    --border: #e2e8f0;
+    --text: #1e293b;
+    --muted: #94a3b8;
+    --green: #16a34a;
+    --green-bg: #dcfce7;
+    --red: #ef4444;
+    --red-bg: #fef2f2;
+    --amber: #f59e0b;
+    --amber-bg: #fef3c7;
+    --blue: #3b82f6;
+    --blue-bg: #eff6ff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--dark);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    color: var(--text);
+    overflow: hidden;
+  }
+
+  /* ── Stage ── */
+  .stage {
+    width: 720px;
+    height: 480px;
+    background: #f8fafc;
+    border-radius: 16px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+  }
+
+  /* ── Frame ── */
+  .frame {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 64px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+  }
+
+  .frame.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* ── Animation classes ── */
+  .pop-in     { animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+  .fade-up    { animation: fadeUp 0.4s ease forwards; }
+  .slide-right { animation: slideRight 0.4s ease forwards; }
+  .slide-left  { animation: slideLeft 0.4s ease forwards; }
+  .scale-in   { animation: scaleIn 0.35s ease forwards; }
+  .draw-line  { animation: drawLine 0.6s ease forwards; }
+  .pulse-glow { animation: pulseGlow 1.5s ease-in-out infinite; }
+  .stamp      { animation: stamp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+  .count-up   { animation: fadeUp 0.3s ease forwards; }
+  .shake      { animation: shake 0.4s ease; }
+  .check-draw { animation: checkDraw 0.4s ease forwards; }
+  .fly-out    { animation: flyOut 0.5s ease forwards; }
+  .drop-in    { animation: dropIn 0.4s ease forwards; }
+
+  .typewriter {
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: 2px solid var(--teal);
+    animation: typewriter 0.8s steps(20) forwards, blinkCaret 0.6s step-end infinite;
+  }
+
+  @keyframes popIn {
+    0%   { opacity: 0; transform: scale(0.7); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+
+  @keyframes fadeUp {
+    0%   { opacity: 0; transform: translateY(16px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes slideRight {
+    0%   { opacity: 0; transform: translateX(-24px); }
+    100% { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes slideLeft {
+    0%   { opacity: 0; transform: translateX(24px); }
+    100% { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes scaleIn {
+    0%   { opacity: 0; transform: scale(0); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+
+  @keyframes drawLine {
+    0%   { width: 0; }
+    100% { width: 100%; }
+  }
+
+  @keyframes pulseGlow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(42, 125, 123, 0); }
+    50%      { box-shadow: 0 0 0 8px rgba(42, 125, 123, 0.12); }
+  }
+
+  @keyframes typewriter {
+    0%   { width: 0; }
+    100% { width: 100%; }
+  }
+
+  @keyframes blinkCaret {
+    50% { border-color: transparent; }
+  }
+
+  @keyframes stamp {
+    0%   { opacity: 0; transform: scale(2.5) rotate(-12deg); }
+    100% { opacity: 1; transform: scale(1) rotate(-6deg); }
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%  { transform: translateX(-6px); }
+    40%  { transform: translateX(6px); }
+    60%  { transform: translateX(-4px); }
+    80%  { transform: translateX(4px); }
+  }
+
+  @keyframes checkDraw {
+    0%  { opacity: 0; transform: scale(0) rotate(-45deg); }
+    50% { transform: scale(1.2) rotate(0deg); }
+    100% { opacity: 1; transform: scale(1) rotate(0deg); }
+  }
+
+  @keyframes flyOut {
+    0%   { opacity: 1; transform: translateX(0) scale(1); }
+    100% { opacity: 0; transform: translateX(80px) scale(0.8); }
+  }
+
+  @keyframes expandWidth {
+    0%   { width: 0; opacity: 0; }
+    100% { width: auto; opacity: 1; }
+  }
+
+  @keyframes fillBar {
+    0%   { width: 0%; }
+    100% { width: var(--fill); }
+  }
+
+  @keyframes dropIn {
+    0%  { opacity: 0; transform: translateY(-30px); }
+    60% { transform: translateY(4px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Text styles ── */
+  .thought-text {
+    font-size: 15px;
+    color: var(--muted);
+    text-align: center;
+    line-height: 1.6;
+    max-width: 480px;
+  }
+  .thought-text strong { color: var(--text); }
+  .thought-text em { color: var(--teal); font-style: normal; font-weight: 600; }
+
+  .big-text {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text);
+    text-align: center;
+    line-height: 1.3;
+  }
+  .big-text em { color: var(--teal); font-style: normal; }
+
+  .mid-text {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
+    text-align: center;
+  }
+
+  .small-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+  }
+
+  /* ── Section label (top left) ── */
+  .section-label {
+    position: absolute;
+    top: 16px;
+    left: 20px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--muted);
+    opacity: 0.6;
+  }
+
+  /* ── Material card ── */
+  .mat-card {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+
+  .mat-card .mat-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: var(--teal-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .mat-card .mat-icon svg { width: 20px; height: 20px; color: var(--teal); }
+  .mat-card .mat-info { display: flex; flex-direction: column; gap: 2px; }
+  .mat-card .mat-number { font-size: 14px; font-weight: 700; color: var(--text); }
+  .mat-card .mat-desc { font-size: 12px; color: var(--muted); }
+
+  /* ── Plant badge ── */
+  .plant-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    border: 2px solid;
+  }
+
+  .plant-badge.solid-blue {
+    background: var(--blue-bg);
+    border-color: var(--blue);
+    color: var(--blue);
+  }
+
+  .plant-badge.solid-teal {
+    background: var(--teal-light);
+    border-color: var(--teal);
+    color: var(--teal);
+  }
+
+  .plant-badge.solid-green {
+    background: var(--green-bg);
+    border-color: var(--green);
+    color: var(--green);
+  }
+
+  .plant-badge.dashed {
+    border-style: dashed;
+    background: transparent;
+    border-color: var(--muted);
+    color: var(--muted);
+  }
+
+  /* ── Arrow ── */
+  .arrow {
+    color: var(--muted);
+    font-size: 20px;
+  }
+
+  /* ── Field row ── */
+  .field-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 20px;
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .field-label {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 500;
+    min-width: 100px;
+  }
+
+  .field-value {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  /* ── Warning card ── */
+  .warn-card {
+    background: var(--red-bg);
+    border: 2px solid var(--red);
+    border-radius: 12px;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .warn-card .warn-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--red);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: white;
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .warn-card .warn-text { font-size: 13px; color: #991b1b; font-weight: 500; }
+
+  /* ── Stacked cards ── */
+  .stacked-cards {
+    position: relative;
+    width: 320px;
+    height: 100px;
+  }
+
+  .stacked-cards .mat-card { position: absolute; width: 300px; }
+  .stacked-cards .mat-card:nth-child(1) { top: 0; left: 0; z-index: 3; }
+  .stacked-cards .mat-card:nth-child(2) { top: 8px; left: 10px; z-index: 2; opacity: 0.6; border-color: var(--red); }
+  .stacked-cards .mat-card:nth-child(3) { top: 16px; left: 20px; z-index: 1; opacity: 0.3; border-color: var(--red); }
+
+  /* ── Detail grid ── */
+  .detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    width: 100%;
+    max-width: 420px;
+  }
+
+  /* ── Criticality option ── */
+  .crit-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    transition: all 0.3s;
+  }
+
+  .crit-option.selected {
+    border-color: var(--teal);
+    background: var(--teal-light);
+  }
+
+  .crit-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+    transition: all 0.3s;
+  }
+
+  .crit-option.selected .crit-dot {
+    border-color: var(--teal);
+    background: var(--teal);
+    box-shadow: inset 0 0 0 3px white;
+  }
+
+  /* ── Result tag ── */
+  .result-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .result-tag.green { background: var(--green-bg); color: var(--green); }
+  .result-tag.amber { background: var(--amber-bg); color: #92400e; }
+  .result-tag.red   { background: var(--red-bg); color: var(--red); }
+
+  /* ── Check circle ── */
+  .check-circle {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--green-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .check-circle svg { width: 28px; height: 28px; color: var(--green); }
+
+  /* ── Summary chip ── */
+  .summary-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    background: white;
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+
+  /* ── CTA button ── */
+  .cta-btn {
+    background: var(--teal);
+    color: white;
+    padding: 16px 48px;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  /* ── Score bar ── */
+  .score-bar-track {
+    width: 300px;
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .score-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    animation: fillBar 0.8s ease forwards;
+  }
+
+  /* ── Connector line ── */
+  .connector-line {
+    width: 2px;
+    height: 32px;
+    background: var(--border);
+  }
+
+  /* ── Hidden until frame active ── */
+  .frame .anim-target { opacity: 0; }
+
+  .frame.active .anim-target.pop-in,
+  .frame.active .anim-target.fade-up,
+  .frame.active .anim-target.slide-right,
+  .frame.active .anim-target.slide-left,
+  .frame.active .anim-target.scale-in,
+  .frame.active .anim-target.drop-in,
+  .frame.active .anim-target.stamp,
+  .frame.active .anim-target.check-draw {
+    /* animations handle opacity */
+  }
+
+  /* ── Progress bar ── */
+  .progress-track {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: rgba(0,0,0,0.06);
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--teal);
+    transition: width 0.35s ease;
+  }
+
+  /* ── Controls ── */
+  .controls {
+    position: fixed;
+    bottom: 24px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    z-index: 100;
+  }
+
+  .controls button {
+    background: rgba(255,255,255,0.1);
+    color: #94a3b8;
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .controls button:hover { background: rgba(255,255,255,0.15); color: white; }
+  .controls button:disabled { opacity: 0.3; cursor: not-allowed; }
+  .controls button.active { background: var(--teal); color: white; border-color: var(--teal); }
+
+  .frame-counter {
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    min-width: 60px;
+    text-align: center;
+  }
+
+  /* ── Feature-specific styles ── */
+/* ── Dusty box mockup ── */
+.dusty-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 20px;
+  text-align: center;
+  width: 100%;
+  max-width: 320px;
+}
+.dusty-card .dust-icon { font-size: 32px; margin-bottom: 6px; }
+.dusty-card .dust-name { font-size: 13px; font-weight: 600; color: var(--text); }
+.dusty-card .dust-meta { font-size: 11px; color: var(--muted); margin-top: 6px; }
+.dusty-card .dust-meta strong { color: var(--red); }
+
+/* ── Blocker list ── */
+.blocker-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+  max-width: 420px;
+}
+.blocker-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 12px;
+}
+.blocker-icon { font-size: 14px; }
+.blocker-label { flex: 1; color: var(--text); }
+.blocker-status { font-size: 11px; font-weight: 600; }
+.blocker-status.blocked { color: var(--red); }
+.blocker-status.resolved { color: var(--green); }
+
+/* ── Resolution options ── */
+.resolve-card {
+  background: white;
+  border: 2px solid var(--teal);
+  border-radius: 10px;
+  padding: 14px 18px;
+  width: 100%;
+  max-width: 400px;
+}
+.resolve-card .rc-title {
+  font-size: 10px; font-weight: 700; color: var(--teal);
+  text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;
+}
+.resolve-opts {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.resolve-opt {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 11px;
+  color: var(--text);
+  background: #f8fafc;
+  border: 1px solid var(--border);
+}
+.resolve-opt.selected {
+  background: var(--teal-light);
+  border-color: var(--teal);
+  color: var(--teal);
+  font-weight: 600;
+}
+
+/* ── Approval chain ── */
+.approval-chain {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  max-width: 440px;
+  justify-content: center;
+}
+.approval-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.approval-node .an-dot {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+.approval-node .an-dot.pending { background: var(--amber-bg); border: 2px solid var(--amber); color: #92400e; }
+.approval-node .an-dot.done { background: var(--green-bg); border: 2px solid var(--green); color: var(--green); }
+.approval-node .an-label { font-size: 9px; color: var(--muted); text-align: center; max-width: 70px; }
+.approval-arrow { color: var(--muted); font-size: 14px; }
+
+/* ── Execution log ── */
+.exec-log {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+  max-width: 400px;
+}
+.exec-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: var(--green-bg);
+  border: 1px solid rgba(22,163,74,0.2);
+  border-radius: 6px;
+  font-size: 11px;
+  color: var(--text);
+}
+.exec-item .ei-check { color: var(--green); font-weight: 700; }
+
+/* ── Side-by-side ── */
+.side-by-side { display: flex; gap: 12px; width: 100%; max-width: 480px; }
+.side-col { flex: 1; border-radius: 10px; padding: 14px; }
+.side-col.before { background: var(--red-bg); border: 1px solid rgba(239,68,68,0.2); }
+.side-col.after { background: var(--green-bg); border: 1px solid rgba(22,163,74,0.2); }
+.side-col .col-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+.side-col.before .col-title { color: var(--red); }
+.side-col.after .col-title { color: var(--green); }
+.side-col .col-item { font-size: 11px; color: var(--text); padding: 3px 0; }
+
+/* ── Metric spotlight ── */
+.metric-spotlight { text-align: center; }
+.metric-spotlight .metric-big { font-size: 48px; font-weight: 700; color: var(--teal); line-height: 1; }
+.metric-spotlight .metric-unit { font-size: 14px; color: var(--muted); margin-top: 4px; }
+.metric-spotlight .metric-compare { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+/* ── Cascade ── */
+.cascade-stack { display: flex; flex-direction: column; gap: 6px; max-width: 440px; text-align: center; }
+.cascade-item { font-size: 14px; color: var(--text); line-height: 1.5; }
+.cascade-connector { color: var(--teal); font-size: 16px; }
+
+</style>
+</head>
+<body>
+
+<div class="stage" id="stage">
+
+<!-- FRAMES START -->
+
+<!-- FRAMES START -->
+
+<!-- ═══════ ACT 1 · THE PROBLEM ═══════ -->
+
+<div class="frame" id="f1">
+  <div class="section-label">THE PROBLEM</div>
+  <div class="dusty-card pop-in anim-target" style="animation-delay:0s">
+    <div class="dust-icon">📦</div>
+    <div class="dust-name">MC-2400 — Gasket, spiral wound DN150</div>
+    <div class="dust-meta">Stock: <strong>24 units</strong> · Last issued: <strong>4 years ago</strong> · Last PO: 3 years ago</div>
+  </div>
+  <div style="height:16px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">This material hasn't moved in years. But it's still <strong>"active" in SAP</strong>.</div>
+</div>
+
+<div class="frame" id="f2">
+  <div class="section-label">THE PROBLEM</div>
+  <div class="metric-spotlight pop-in anim-target" style="animation-delay:0s">
+    <div class="metric-big">18,000</div>
+    <div class="metric-unit">materials with zero movement in 24+ months</div>
+    <div class="metric-compare">Combined stock value: $6.2M · 40% of shelf space</div>
+  </div>
+  <div style="height:16px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Dead stock doesn't just tie up capital. It takes up <strong>physical space</strong> that active parts need.</div>
+</div>
+
+<div class="frame" id="f3">
+  <div class="section-label">THE PROBLEM</div>
+  <div class="blocker-list pop-in anim-target" style="animation-delay:0s">
+    <div class="blocker-item"><span class="blocker-icon">🚫</span><span class="blocker-label">Material has open PO</span><span class="blocker-status blocked">Blocked</span></div>
+    <div class="blocker-item"><span class="blocker-icon">🔗</span><span class="blocker-label">Material listed in BOM for FL-COMP-007</span><span class="blocker-status blocked">Blocked</span></div>
+    <div class="blocker-item"><span class="blocker-icon">📦</span><span class="blocker-label">Stock on hand: 24 EA</span><span class="blocker-status blocked">Blocked</span></div>
+  </div>
+  <div style="height:6px"></div>
+  <div class="result-tag fade-up anim-target" style="animation-delay:0.15s; background:var(--red-bg); color:var(--red); border-color:var(--red)">Deletion blocked — no resolution guidance</div>
+  <div style="height:12px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.35s">SAP prevents deletion but <strong>doesn't tell you how to resolve the blockers</strong>.</div>
+</div>
+
+<div class="frame" id="f4">
+  <div class="section-label">THE PROBLEM</div>
+  <div class="mat-card pop-in anim-target" style="animation-delay:0s">
+    <div style="font-size:13px; color:var(--text); text-align:center">Planner gives up. Moves to next material. <strong>Same blockers.</strong></div>
+    <div style="font-size:12px; color:var(--red); margin-top:8px; text-align:center">Dead stock report sits unchanged from last quarter.</div>
+  </div>
+  <div style="height:16px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">When deletion is hard, <strong>nothing gets deleted</strong>. The dead stock grows.</div>
+</div>
+
+<div class="frame" id="f5">
+  <div class="section-label">THE PROBLEM</div>
+  <div class="warn-card slide-right anim-target" style="animation-delay:0s">$6.2M in dead stock → capital locked, space consumed</div>
+  <div class="warn-card slide-right anim-target" style="animation-delay:0.15s">Obsolete parts in BOMs → maintenance orders wrong parts</div>
+  <div class="warn-card slide-right anim-target" style="animation-delay:0.3s">No deletion process → material master grows forever</div>
+  <div style="height:12px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.5s">A material master that only grows and never shrinks is a <strong>liability, not an asset</strong>.</div>
+</div>
+
+<div class="frame" id="f6">
+  <div class="section-label">THE PROBLEM</div>
+  <div class="big-text fade-up anim-target" style="animation-delay:0s">The problem isn't <em>knowing</em> it's dead.</div>
+  <div class="big-text fade-up anim-target" style="animation-delay:0.15s">It's <em>safely retiring</em> it.</div>
+</div>
+
+<!-- ═══════ ACT 2 · THE SOLUTION ═══════ -->
+
+<div class="frame" id="f7">
+  <div class="big-text scale-in anim-target" style="animation-delay:0s">Retire safely.</div>
+  <div class="big-text scale-in anim-target" style="animation-delay:0.2s"><em>Not recklessly.</em></div>
+</div>
+
+<div class="frame" id="f8">
+  <div class="section-label">MILI DELETION</div>
+  <div class="dusty-card pop-in anim-target" style="animation-delay:0s">
+    <div class="dust-icon">📋</div>
+    <div class="dust-name">MC-2400 — Gasket, spiral wound DN150</div>
+    <div class="dust-meta">Status: Active · Stock: 24 EA · Last issue: <strong>4 years ago</strong></div>
+  </div>
+  <div style="height:16px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">The numbers tell the story. <em>MiLi</em> just makes sure you <strong>see them clearly</strong>.</div>
+</div>
+
+<div class="frame" id="f9">
+  <div class="section-label">MILI DELETION</div>
+  <div class="blocker-list slide-right anim-target" style="animation-delay:0s">
+    <div class="blocker-item"><span class="blocker-icon">📦</span><span class="blocker-label">Stock on hand: 24 EA ($2,160) — Hamburg</span><span class="blocker-status blocked">Open</span></div>
+    <div class="blocker-item"><span class="blocker-icon">📄</span><span class="blocker-label">Open PO: PO-88412 — 12 EA arriving Mar 20</span><span class="blocker-status blocked">Open</span></div>
+    <div class="blocker-item"><span class="blocker-icon">🔗</span><span class="blocker-label">BOM link: FL-COMP-007 (Compressor C)</span><span class="blocker-status blocked">Open</span></div>
+    <div class="blocker-item"><span class="blocker-icon">📑</span><span class="blocker-label">Contract: FA-2200 (valid until Dec)</span><span class="blocker-status blocked">Open</span></div>
+  </div>
+  <div style="height:12px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Every blocker <strong>visible</strong>, every resolution path clear.</div>
+</div>
+
+<div class="frame" id="f10">
+  <div class="section-label">MILI DELETION</div>
+  <div class="resolve-card pop-in anim-target" style="animation-delay:0s">
+    <div class="rc-title">Resolve: Stock (24 EA · $2,160)</div>
+    <div class="resolve-opts">
+      <div class="resolve-opt selected">Write off (scrap)</div>
+      <div class="resolve-opt">Transfer to another plant</div>
+      <div class="resolve-opt">Consume against work order</div>
+      <div class="resolve-opt">Return to vendor</div>
+    </div>
+  </div>
+  <div style="height:12px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Stock resolution is a <strong>decision with options</strong>, not a dead end.</div>
+</div>
+
+<div class="frame" id="f11">
+  <div class="section-label">MILI DELETION</div>
+  <div class="resolve-card pop-in anim-target" style="animation-delay:0s">
+    <div class="rc-title">Resolve: Open PO (12 EA · $1,080 · arriving in 4 weeks)</div>
+    <div class="resolve-opts">
+      <div class="resolve-opt selected">Cancel PO line</div>
+      <div class="resolve-opt">Receive and consume</div>
+      <div class="resolve-opt">Receive and write off</div>
+    </div>
+  </div>
+  <div style="height:12px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">The PO was auto-generated by an outdated ROP. <strong>Canceling it is the right call.</strong></div>
+</div>
+
+<div class="frame" id="f12">
+  <div class="section-label">MILI DELETION</div>
+  <div class="resolve-card pop-in anim-target" style="animation-delay:0s">
+    <div class="rc-title">Resolve: BOM Link (FL-COMP-007 — Compressor C)</div>
+    <div class="resolve-opts">
+      <div class="resolve-opt">Last maintained: 18 months ago</div>
+      <div class="resolve-opt selected">Replace with MC-2401 (updated gasket spec)</div>
+    </div>
+  </div>
+  <div style="height:12px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Don't just remove from the BOM. <strong>Replace with the correct part.</strong></div>
+</div>
+
+<div class="frame" id="f13">
+  <div class="section-label">MILI DELETION</div>
+  <div class="resolve-card pop-in anim-target" style="animation-delay:0s">
+    <div class="rc-title">Resolve: Contract (FA-2200, line 14)</div>
+    <div class="resolve-opts">
+      <div class="resolve-opt selected">Auto-removal on next contract review — no minimum impact</div>
+    </div>
+  </div>
+  <div style="height:12px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Every blocker type has its own <strong>resolution workflow</strong>. Nothing is left ambiguous.</div>
+</div>
+
+<div class="frame" id="f14">
+  <div class="section-label">MILI DELETION</div>
+  <div class="blocker-list pop-in anim-target" style="animation-delay:0s">
+    <div class="blocker-item"><span class="blocker-icon">✓</span><span class="blocker-label">Stock: Write off approved</span><span class="blocker-status resolved">Resolved</span></div>
+    <div class="blocker-item"><span class="blocker-icon">✓</span><span class="blocker-label">PO: PO-88412 canceled</span><span class="blocker-status resolved">Resolved</span></div>
+    <div class="blocker-item"><span class="blocker-icon">✓</span><span class="blocker-label">BOM: Replaced with MC-2401</span><span class="blocker-status resolved">Resolved</span></div>
+    <div class="blocker-item"><span class="blocker-icon">✓</span><span class="blocker-label">Contract: Line 14 removed</span><span class="blocker-status resolved">Resolved</span></div>
+  </div>
+  <div style="height:6px"></div>
+  <div class="result-tag fade-up anim-target" style="animation-delay:0.15s; background:var(--green-bg); color:var(--green); border-color:var(--green)">All blocking objects resolved — eligible for deletion</div>
+  <div style="height:12px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.35s">Only when <strong>every blocker is addressed</strong> can the deletion proceed.</div>
+</div>
+
+<div class="frame" id="f15">
+  <div class="section-label">MILI DELETION</div>
+  <div class="approval-chain pop-in anim-target" style="animation-delay:0s">
+    <div class="approval-node"><div class="an-dot pending">1</div><div class="an-label">Warehouse Manager</div></div>
+    <span class="approval-arrow">→</span>
+    <div class="approval-node"><div class="an-dot pending">2</div><div class="an-label">Plant Controller</div></div>
+    <span class="approval-arrow">→</span>
+    <div class="approval-node"><div class="an-dot pending">3</div><div class="an-label">MDM Team</div></div>
+  </div>
+  <div style="height:16px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Deletion follows a <strong>chain of accountability</strong>. Not a single click in SAP.</div>
+</div>
+
+<!-- ═══════ ACT 2b · GOVERNANCE ═══════ -->
+
+<div class="frame" id="f16">
+  <div class="big-text scale-in anim-target" style="animation-delay:0s">Every deletion</div>
+  <div class="big-text scale-in anim-target" style="animation-delay:0.2s"><em>justified.</em></div>
+</div>
+
+<div class="frame" id="f17">
+  <div class="section-label">GOVERNANCE</div>
+  <div class="approval-chain pop-in anim-target" style="animation-delay:0s">
+    <div class="approval-node"><div class="an-dot done">✓</div><div class="an-label">Warehouse Manager</div></div>
+    <span class="approval-arrow">→</span>
+    <div class="approval-node"><div class="an-dot done">✓</div><div class="an-label">Plant Controller</div></div>
+    <span class="approval-arrow">→</span>
+    <div class="approval-node"><div class="an-dot pending">3</div><div class="an-label">MDM Team</div></div>
+  </div>
+  <div style="height:8px"></div>
+  <div class="result-tag fade-up anim-target" style="animation-delay:0.15s">Capital impact: -$3,240 · Dead stock: -24 EA · Shelf space: 2 bins freed</div>
+  <div style="height:12px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.35s">Each approver sees only what's <strong>relevant to their role</strong>.</div>
+</div>
+
+<div class="frame" id="f18">
+  <div class="section-label">GOVERNANCE</div>
+  <div class="exec-log pop-in anim-target" style="animation-delay:0s">
+    <div class="exec-item"><span class="ei-check">✓</span> Deletion flag set in SAP</div>
+    <div class="exec-item"><span class="ei-check">✓</span> Stock written off — 24 EA scrapped</div>
+    <div class="exec-item"><span class="ei-check">✓</span> PO-88412 canceled</div>
+    <div class="exec-item"><span class="ei-check">✓</span> BOM FL-COMP-007 updated → MC-2401</div>
+    <div class="exec-item"><span class="ei-check">✓</span> Contract FA-2200 line 14 removed</div>
+  </div>
+  <div style="height:12px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Five SAP transactions. <strong>One workflow. Full audit trail.</strong></div>
+</div>
+
+<div class="frame" id="f19">
+  <div class="section-label">GOVERNANCE</div>
+  <div class="mat-card pop-in anim-target" style="animation-delay:0s">
+    <div style="font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:1px">Monthly Refresh</div>
+    <div style="font-size:13px; color:var(--text); margin-top:6px"><strong>142 new candidates</strong> identified this month</div>
+    <div style="font-size:12px; color:var(--muted); margin-top:4px">Prioritized by stock value and age</div>
+  </div>
+  <div style="height:16px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Deletion isn't a one-time cleanup. It's a <strong>continuous process</strong>.</div>
+</div>
+
+<!-- ═══════ ACT 3 · THE OUTCOME ═══════ -->
+
+<div class="frame" id="f20">
+  <div class="section-label">THE OUTCOME</div>
+  <div class="big-text fade-up anim-target" style="animation-delay:0s">What changes when deletion</div>
+  <div class="big-text fade-up anim-target" style="animation-delay:0.15s">is <em>safe and systematic</em>?</div>
+</div>
+
+<div class="frame" id="f21">
+  <div class="section-label">THE OUTCOME</div>
+  <div class="side-by-side fade-up anim-target" style="animation-delay:0s">
+    <div class="side-col before">
+      <div class="col-title">Without MiLi</div>
+      <div class="col-item">Blockers stop deletion → nothing retired</div>
+      <div class="col-item">No guidance → users give up</div>
+      <div class="col-item">Material master grows → search degrades</div>
+    </div>
+    <div class="side-col after">
+      <div class="col-title">With MiLi</div>
+      <div class="col-item">Blockers surfaced with resolution paths</div>
+      <div class="col-item">Multi-step workflow → accountable</div>
+      <div class="col-item">Continuous ID → dead stock shrinks</div>
+    </div>
+  </div>
+</div>
+
+<div class="frame" id="f22">
+  <div class="section-label">THE OUTCOME</div>
+  <div class="metric-spotlight pop-in anim-target" style="animation-delay:0s">
+    <div class="metric-big">$2.1M</div>
+    <div class="metric-unit">dead stock retired in 6 months</div>
+    <div class="metric-compare">$6.2M → $4.1M</div>
+  </div>
+  <div style="height:16px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s"><strong>Dead stock leaving the system is capital returning to the business.</strong></div>
+</div>
+
+<div class="frame" id="f23">
+  <div class="section-label">THE OUTCOME</div>
+  <div class="metric-spotlight pop-in anim-target" style="animation-delay:0s">
+    <div class="metric-big">340</div>
+    <div class="metric-unit">materials safely deleted</div>
+    <div class="metric-compare">every blocker resolved, every step audited</div>
+  </div>
+  <div style="height:16px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Not a single broken BOM. Not a single orphaned PO.</div>
+</div>
+
+<div class="frame" id="f24">
+  <div class="section-label">THE OUTCOME</div>
+  <div class="metric-spotlight pop-in anim-target" style="animation-delay:0s">
+    <div class="metric-big">12%</div>
+    <div class="metric-unit">warehouse space recovered</div>
+    <div class="metric-compare">bins freed for active materials</div>
+  </div>
+  <div style="height:16px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Physical space that was <strong>occupied by the past</strong> — now available for the present.</div>
+</div>
+
+<div class="frame" id="f25">
+  <div class="section-label">THE OUTCOME</div>
+  <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:center">
+    <div class="summary-chip pop-in anim-target" style="animation-delay:0s">$2.1M retired</div>
+    <div class="summary-chip pop-in anim-target" style="animation-delay:0.1s">340 materials deleted</div>
+    <div class="summary-chip pop-in anim-target" style="animation-delay:0.2s">12% space recovered</div>
+    <div class="summary-chip pop-in anim-target" style="animation-delay:0.3s">Full audit trail</div>
+  </div>
+  <div style="height:16px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.45s">Retire what's dead. <strong>Protect what's alive.</strong></div>
+</div>
+
+<div class="frame" id="f26">
+  <div class="section-label">THE OUTCOME</div>
+  <div class="cascade-stack fade-up anim-target" style="animation-delay:0s">
+    <div class="cascade-item">When deletion is safe, <strong>it actually happens</strong>.</div>
+    <div class="cascade-connector">↓</div>
+    <div class="cascade-item">When dead stock retires, <strong>capital and space return</strong>.</div>
+    <div class="cascade-connector">↓</div>
+    <div class="cascade-item">When the material master shrinks, <strong>search gets sharper</strong>.</div>
+  </div>
+</div>
+
+<div class="frame" id="f27">
+  <div class="section-label">THE OUTCOME</div>
+  <div class="big-text fade-up anim-target" style="animation-delay:0s">Retire what's dead. Protect what's alive.</div>
+  <div style="height:8px"></div>
+  <div class="big-text fade-up anim-target" style="animation-delay:0.15s"><em>Flag for Deletion</em> — one of 13 modules.</div>
+</div>
+
+<div class="frame" id="f28">
+  <div style="display:flex; flex-direction:column; align-items:center; gap:12px">
+    <div class="big-text scale-in anim-target" style="animation-delay:0s"><em>MiLi</em></div>
+    <div style="font-size:13px; color:var(--muted)" class="fade-up anim-target" style="animation-delay:0.15s">by Lexin Solutions</div>
+    <div style="width:60px; height:2px; background:var(--teal); border-radius:1px" class="fade-up anim-target" style="animation-delay:0.25s"></div>
+    <div class="thought-text fade-up anim-target" style="animation-delay:0.35s">Retire safely. <em>Not recklessly.</em></div>
+  </div>
+</div>
+
+<!-- FRAMES END -->
+
+<!-- FRAMES END -->
+
+  <!-- Progress bar -->
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+</div>
+
+<!-- Controls -->
+<div class="controls">
+  <button id="prevBtn" onclick="prev()" disabled>&larr;</button>
+  <div class="frame-counter" id="counter">1 / 28</div>
+  <button id="nextBtn" onclick="next()">&rarr;</button>
+  <button id="playBtn" onclick="autoPlay()">&#9654; Play</button>
+</div>
+
+<script>
+  const totalFrames = 28;
+  let current = 0;
+  let interval = null;
+
+  function show(n) {
+    document.querySelectorAll('.frame').forEach(f => f.classList.remove('active'));
+    const frame = document.getElementById(`f${n + 1}`);
+    frame.classList.add('active');
+
+    // Re-trigger animations
+    frame.querySelectorAll('.anim-target').forEach(el => {
+      const classes = [...el.classList];
+      const animClass = classes.find(c =>
+        ['pop-in','fade-up','slide-right','slide-left','scale-in','drop-in','stamp','check-draw'].includes(c)
+      );
+      if (animClass) {
+        el.classList.remove(animClass);
+        void el.offsetHeight;
+        el.classList.add(animClass);
+      }
+    });
+
+    document.getElementById('counter').textContent = `${n + 1} / ${totalFrames}`;
+    document.getElementById('prevBtn').disabled = n === 0;
+    document.getElementById('nextBtn').disabled = n === totalFrames - 1;
+    document.getElementById('progressFill').style.width = `${((n + 1) / totalFrames) * 100}%`;
+  }
+
+  function next() {
+    if (current < totalFrames - 1) { current++; show(current); }
+  }
+
+  function prev() {
+    if (current > 0) { current--; show(current); }
+  }
+
+  function autoPlay() {
+    const btn = document.getElementById('playBtn');
+    if (interval) {
+      clearInterval(interval);
+      interval = null;
+      btn.innerHTML = '&#9654; Play';
+      btn.classList.remove('active');
+      return;
+    }
+
+    btn.innerHTML = '&#9208; Pause';
+    btn.classList.add('active');
+    current = 0;
+    show(0);
+
+    interval = setInterval(() => {
+      if (current < totalFrames - 1) {
+        current++;
+        show(current);
+      } else {
+        clearInterval(interval);
+        interval = null;
+        btn.innerHTML = '&#9654; Play';
+        btn.classList.remove('active');
+      }
+    }, 1800);
+  }
+
+  // Keyboard navigation
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); next(); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
+  });
+
+  show(0);
+</script>
+<!-- Feedback: uncomment when deploying to mili-slides -->
+<!-- <script src="../feedback.js"></script> -->
+
+</body>
+</html>

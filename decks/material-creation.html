@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MiLi — Material Creation</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal: #2a7d7b;
+    --teal-light: #e8f4f3;
+    --dark: #0f172a;
+    --card-bg: #ffffff;
+    --border: #e2e8f0;
+    --text: #1e293b;
+    --muted: #94a3b8;
+    --green: #16a34a;
+    --green-bg: #dcfce7;
+    --red: #ef4444;
+    --red-bg: #fef2f2;
+    --amber: #f59e0b;
+    --amber-bg: #fef3c7;
+    --blue: #3b82f6;
+    --blue-bg: #eff6ff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--dark);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    color: var(--text);
+    overflow: hidden;
+  }
+
+  /* ── Stage ── */
+  .stage {
+    width: 720px;
+    height: 480px;
+    background: #f8fafc;
+    border-radius: 16px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+  }
+
+  /* ── Frame ── */
+  .frame {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 64px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+  }
+
+  .frame.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* ── Animation classes ── */
+  .pop-in     { animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+  .fade-up    { animation: fadeUp 0.4s ease forwards; }
+  .slide-right { animation: slideRight 0.4s ease forwards; }
+  .slide-left  { animation: slideLeft 0.4s ease forwards; }
+  .scale-in   { animation: scaleIn 0.35s ease forwards; }
+  .draw-line  { animation: drawLine 0.6s ease forwards; }
+  .pulse-glow { animation: pulseGlow 1.5s ease-in-out infinite; }
+  .stamp      { animation: stamp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+  .count-up   { animation: fadeUp 0.3s ease forwards; }
+  .shake      { animation: shake 0.4s ease; }
+  .check-draw { animation: checkDraw 0.4s ease forwards; }
+  .fly-out    { animation: flyOut 0.5s ease forwards; }
+  .drop-in    { animation: dropIn 0.4s ease forwards; }
+
+  .typewriter {
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: 2px solid var(--teal);
+    animation: typewriter 0.8s steps(20) forwards, blinkCaret 0.6s step-end infinite;
+  }
+
+  @keyframes popIn {
+    0%   { opacity: 0; transform: scale(0.7); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+
+  @keyframes fadeUp {
+    0%   { opacity: 0; transform: translateY(16px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes slideRight {
+    0%   { opacity: 0; transform: translateX(-24px); }
+    100% { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes slideLeft {
+    0%   { opacity: 0; transform: translateX(24px); }
+    100% { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes scaleIn {
+    0%   { opacity: 0; transform: scale(0); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+
+  @keyframes drawLine {
+    0%   { width: 0; }
+    100% { width: 100%; }
+  }
+
+  @keyframes pulseGlow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(42, 125, 123, 0); }
+    50%      { box-shadow: 0 0 0 8px rgba(42, 125, 123, 0.12); }
+  }
+
+  @keyframes typewriter {
+    0%   { width: 0; }
+    100% { width: 100%; }
+  }
+
+  @keyframes blinkCaret {
+    50% { border-color: transparent; }
+  }
+
+  @keyframes stamp {
+    0%   { opacity: 0; transform: scale(2.5) rotate(-12deg); }
+    100% { opacity: 1; transform: scale(1) rotate(-6deg); }
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%  { transform: translateX(-6px); }
+    40%  { transform: translateX(6px); }
+    60%  { transform: translateX(-4px); }
+    80%  { transform: translateX(4px); }
+  }
+
+  @keyframes checkDraw {
+    0%  { opacity: 0; transform: scale(0) rotate(-45deg); }
+    50% { transform: scale(1.2) rotate(0deg); }
+    100% { opacity: 1; transform: scale(1) rotate(0deg); }
+  }
+
+  @keyframes flyOut {
+    0%   { opacity: 1; transform: translateX(0) scale(1); }
+    100% { opacity: 0; transform: translateX(80px) scale(0.8); }
+  }
+
+  @keyframes expandWidth {
+    0%   { width: 0; opacity: 0; }
+    100% { width: auto; opacity: 1; }
+  }
+
+  @keyframes fillBar {
+    0%   { width: 0%; }
+    100% { width: var(--fill); }
+  }
+
+  @keyframes dropIn {
+    0%  { opacity: 0; transform: translateY(-30px); }
+    60% { transform: translateY(4px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Text styles ── */
+  .thought-text {
+    font-size: 15px;
+    color: var(--muted);
+    text-align: center;
+    line-height: 1.6;
+    max-width: 480px;
+  }
+  .thought-text strong { color: var(--text); }
+  .thought-text em { color: var(--teal); font-style: normal; font-weight: 600; }
+
+  .big-text {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text);
+    text-align: center;
+    line-height: 1.3;
+  }
+  .big-text em { color: var(--teal); font-style: normal; }
+
+  .mid-text {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
+    text-align: center;
+  }
+
+  .small-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+  }
+
+  /* ── Section label (top left) ── */
+  .section-label {
+    position: absolute;
+    top: 16px;
+    left: 20px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--muted);
+    opacity: 0.6;
+  }
+
+  /* ── Material card ── */
+  .mat-card {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+
+  .mat-card .mat-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: var(--teal-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .mat-card .mat-icon svg { width: 20px; height: 20px; color: var(--teal); }
+  .mat-card .mat-info { display: flex; flex-direction: column; gap: 2px; }
+  .mat-card .mat-number { font-size: 14px; font-weight: 700; color: var(--text); }
+  .mat-card .mat-desc { font-size: 12px; color: var(--muted); }
+
+  /* ── Plant badge ── */
+  .plant-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    border: 2px solid;
+  }
+
+  .plant-badge.solid-blue {
+    background: var(--blue-bg);
+    border-color: var(--blue);
+    color: var(--blue);
+  }
+
+  .plant-badge.solid-teal {
+    background: var(--teal-light);
+    border-color: var(--teal);
+    color: var(--teal);
+  }
+
+  .plant-badge.solid-green {
+    background: var(--green-bg);
+    border-color: var(--green);
+    color: var(--green);
+  }
+
+  .plant-badge.dashed {
+    border-style: dashed;
+    background: transparent;
+    border-color: var(--muted);
+    color: var(--muted);
+  }
+
+  /* ── Arrow ── */
+  .arrow {
+    color: var(--muted);
+    font-size: 20px;
+  }
+
+  /* ── Field row ── */
+  .field-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 20px;
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .field-label {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 500;
+    min-width: 100px;
+  }
+
+  .field-value {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  /* ── Warning card ── */
+  .warn-card {
+    background: var(--red-bg);
+    border: 2px solid var(--red);
+    border-radius: 12px;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .warn-card .warn-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--red);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: white;
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .warn-card .warn-text { font-size: 13px; color: #991b1b; font-weight: 500; }
+
+  /* ── Stacked cards ── */
+  .stacked-cards {
+    position: relative;
+    width: 320px;
+    height: 100px;
+  }
+
+  .stacked-cards .mat-card { position: absolute; width: 300px; }
+  .stacked-cards .mat-card:nth-child(1) { top: 0; left: 0; z-index: 3; }
+  .stacked-cards .mat-card:nth-child(2) { top: 8px; left: 10px; z-index: 2; opacity: 0.6; border-color: var(--red); }
+  .stacked-cards .mat-card:nth-child(3) { top: 16px; left: 20px; z-index: 1; opacity: 0.3; border-color: var(--red); }
+
+  /* ── Detail grid ── */
+  .detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    width: 100%;
+    max-width: 420px;
+  }
+
+  /* ── Criticality option ── */
+  .crit-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    transition: all 0.3s;
+  }
+
+  .crit-option.selected {
+    border-color: var(--teal);
+    background: var(--teal-light);
+  }
+
+  .crit-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+    transition: all 0.3s;
+  }
+
+  .crit-option.selected .crit-dot {
+    border-color: var(--teal);
+    background: var(--teal);
+    box-shadow: inset 0 0 0 3px white;
+  }
+
+  /* ── Result tag ── */
+  .result-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .result-tag.green { background: var(--green-bg); color: var(--green); }
+  .result-tag.amber { background: var(--amber-bg); color: #92400e; }
+  .result-tag.red   { background: var(--red-bg); color: var(--red); }
+
+  /* ── Check circle ── */
+  .check-circle {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--green-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .check-circle svg { width: 28px; height: 28px; color: var(--green); }
+
+  /* ── Summary chip ── */
+  .summary-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    background: white;
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+
+  /* ── CTA button ── */
+  .cta-btn {
+    background: var(--teal);
+    color: white;
+    padding: 16px 48px;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  /* ── Score bar ── */
+  .score-bar-track {
+    width: 300px;
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .score-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    animation: fillBar 0.8s ease forwards;
+  }
+
+  /* ── Connector line ── */
+  .connector-line {
+    width: 2px;
+    height: 32px;
+    background: var(--border);
+  }
+
+  /* ── Hidden until frame active ── */
+  .frame .anim-target { opacity: 0; }
+
+  .frame.active .anim-target.pop-in,
+  .frame.active .anim-target.fade-up,
+  .frame.active .anim-target.slide-right,
+  .frame.active .anim-target.slide-left,
+  .frame.active .anim-target.scale-in,
+  .frame.active .anim-target.drop-in,
+  .frame.active .anim-target.stamp,
+  .frame.active .anim-target.check-draw {
+    /* animations handle opacity */
+  }
+
+  /* ── Progress bar ── */
+  .progress-track {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: rgba(0,0,0,0.06);
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--teal);
+    transition: width 0.35s ease;
+  }
+
+  /* ── Controls ── */
+  .controls {
+    position: fixed;
+    bottom: 24px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    z-index: 100;
+  }
+
+  .controls button {
+    background: rgba(255,255,255,0.1);
+    color: #94a3b8;
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .controls button:hover { background: rgba(255,255,255,0.15); color: white; }
+  .controls button:disabled { opacity: 0.3; cursor: not-allowed; }
+  .controls button.active { background: var(--teal); color: white; border-color: var(--teal); }
+
+  .frame-counter {
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    min-width: 60px;
+    text-align: center;
+  }
+
+  /* ── Feature-specific styles ── */
+  /* ── SAP transaction mockup ── */
+  .sap-tx {
+    background: #1a1a2e;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    color: #7ec8e3;
+  }
+  .sap-tx .tx-label { color: #888; font-size: 10px; margin-bottom: 4px; }
+
+  /* ── Taxonomy tree ── */
+  .taxonomy-tree {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+    max-width: 320px;
+  }
+  .taxonomy-level {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 12px;
+    color: var(--text);
+  }
+  .taxonomy-level.selected {
+    border-color: var(--teal);
+    background: var(--teal-light);
+  }
+  .taxonomy-level .level-label { color: var(--muted); font-size: 10px; min-width: 40px; }
+  .taxonomy-level .level-value { font-weight: 600; }
+
+  /* ── Description build ── */
+  .desc-build {
+    background: white;
+    border: 2px solid var(--teal);
+    border-radius: 10px;
+    padding: 14px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    text-align: center;
+    width: 100%;
+    max-width: 400px;
+  }
+  .desc-build em { color: var(--teal); font-style: normal; }
+
+  /* ── Dilemma fork ── */
+  .dilemma {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+    max-width: 480px;
+  }
+  .dilemma-path {
+    flex: 1;
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    text-align: center;
+  }
+  .dilemma-path.bad { border-color: var(--red); background: var(--red-bg); }
+  .dilemma-path .path-icon { font-size: 24px; margin-bottom: 6px; }
+  .dilemma-path .path-label { font-size: 12px; font-weight: 600; color: var(--text); }
+  .dilemma-path .path-desc { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+  /* ── Duplicate list ── */
+  .dup-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+    max-width: 400px;
+  }
+  .dup-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    background: var(--red-bg);
+    border: 1px solid var(--red);
+    border-radius: 8px;
+    font-size: 12px;
+    color: #991b1b;
+    font-family: 'Courier New', monospace;
+  }
+
+  /* ── Approval flow ── */
+  .approval-flow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    max-width: 400px;
+    justify-content: center;
+  }
+  .approval-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .approval-dot {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .approval-dot.pending { background: var(--amber-bg); color: #92400e; border: 2px solid var(--amber); }
+  .approval-dot.done { background: var(--green-bg); color: var(--green); border: 2px solid var(--green); }
+  .approval-label { font-size: 10px; color: var(--muted); text-align: center; }
+  .approval-arrow { color: var(--muted); font-size: 16px; }
+
+  /* ── Side by side comparison ── */
+  .side-by-side {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+    max-width: 480px;
+  }
+  .side-col {
+    flex: 1;
+    border-radius: 10px;
+    padding: 14px;
+  }
+  .side-col.before {
+    background: var(--red-bg);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+  }
+  .side-col.after {
+    background: var(--green-bg);
+    border: 1px solid rgba(22, 163, 74, 0.2);
+  }
+  .side-col .col-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  .side-col.before .col-title { color: var(--red); }
+  .side-col.after .col-title { color: var(--green); }
+  .side-col .col-item {
+    font-size: 11px;
+    color: var(--text);
+    padding: 3px 0;
+  }
+
+  /* ── Metric spotlight ── */
+  .metric-spotlight {
+    text-align: center;
+  }
+  .metric-spotlight .metric-big {
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--teal);
+    line-height: 1;
+  }
+  .metric-spotlight .metric-unit {
+    font-size: 14px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+  .metric-spotlight .metric-compare {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  /* ── Cascade stack ── */
+  .cascade-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-width: 440px;
+    text-align: center;
+  }
+  .cascade-item {
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+  .cascade-item strong { color: var(--text); }
+  .cascade-connector {
+    color: var(--teal);
+    font-size: 16px;
+  }
+
+  /* ── File drop zone ── */
+  .file-drop {
+    width: 100%;
+    max-width: 360px;
+    border: 2px dashed var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .file-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 12px;
+  }
+  .file-item .file-icon { font-size: 16px; }
+  .file-item .file-name { font-weight: 600; color: var(--text); }
+  .file-item .file-status { color: var(--green); font-size: 11px; margin-left: auto; }
+
+</style>
+</head>
+<body>
+
+<div class="stage" id="stage">
+
+<!-- FRAMES START -->
+
+  <!-- F1 · The situation -->
+  <div class="frame" id="f1">
+    <div class="section-label">THE PROBLEM</div>
+    <div class="big-text fade-up anim-target" style="animation-delay:0s">New pump arrived.<br><em>No material number.</em></div>
+    <div style="height:16px"></div>
+    <p class="thought-text fade-up anim-target" style="animation-delay:0.15s">Before you can order it, stock it, or track it — it has to <strong>exist</strong> in SAP.</p>
+  </div>
+
+  <!-- F2 · MM01 complexity -->
+  <div class="frame" id="f2">
+    <div class="section-label">THE PROBLEM</div>
+    <div class="sap-tx pop-in anim-target" style="animation-delay:0s">
+      <div class="tx-label">Transaction</div>MM01 — Create Material
+    </div>
+    <div style="height:12px"></div>
+    <div class="detail-grid fade-up anim-target" style="animation-delay:0.15s">
+      <div class="field-row"><span class="field-label">Material type</span><span class="field-value" style="color:var(--muted)">?</span></div>
+      <div class="field-row"><span class="field-label">Industry sector</span><span class="field-value" style="color:var(--muted)">?</span></div>
+      <div class="field-row"><span class="field-label">MRP type</span><span class="field-value" style="color:var(--muted)">?</span></div>
+      <div class="field-row"><span class="field-label">Valuation class</span><span class="field-value" style="color:var(--muted)">?</span></div>
+    </div>
+    <div style="height:12px"></div>
+    <p class="thought-text fade-up anim-target" style="animation-delay:0.3s">SAP doesn't ask what the part <strong>is</strong>. It asks what it's <strong>classified as</strong> across 15 views.</p>
+  </div>
+
+  <!-- F3 · Duplicate descriptions -->
+  <div class="frame" id="f3">
+    <div class="section-label">THE PROBLEM</div>
+    <div class="mid-text fade-up anim-target" style="animation-delay:0s">Three people. Same part.</div>
+    <div style="height:12px"></div>
+    <div class="dup-list">
+      <div class="dup-item slide-right anim-target" style="animation-delay:0.1s">Pump seal thing for CW system</div>
+      <div class="dup-item slide-right anim-target" style="animation-delay:0.2s">Seal mechanical CW pump</div>
+      <div class="dup-item slide-right anim-target" style="animation-delay:0.3s">KSPA seal 250kw</div>
+    </div>
+    <div style="height:12px"></div>
+    <p class="thought-text fade-up anim-target" style="animation-delay:0.45s"><strong>Three descriptions.</strong> None will find the others.</p>
+  </div>
+
+  <!-- F4 · The dilemma -->
+  <div class="frame" id="f4">
+    <div class="section-label">THE PROBLEM</div>
+    <div class="mid-text fade-up anim-target" style="animation-delay:0s">Creation is hard. Users either...</div>
+    <div style="height:12px"></div>
+    <div class="dilemma">
+      <div class="dilemma-path bad slide-right anim-target" style="animation-delay:0.15s">
+        <div class="path-icon">⚡</div>
+        <div class="path-label">Skip fields</div>
+        <div class="path-desc">Incomplete master → MRP breaks</div>
+      </div>
+      <div class="dilemma-path bad slide-left anim-target" style="animation-delay:0.3s">
+        <div class="path-icon">⏳</div>
+        <div class="path-label">Email MDM team</div>
+        <div class="path-desc">Wait 2 weeks for creation</div>
+      </div>
+    </div>
+    <p class="thought-text fade-up anim-target" style="animation-delay:0.45s">When creation is hard, users either <strong>guess</strong> or <strong>give up</strong>.</p>
+  </div>
+
+  <!-- F5 · Consequences -->
+  <div class="frame" id="f5">
+    <div class="section-label">THE PROBLEM</div>
+    <div class="warn-card slide-right anim-target" style="animation-delay:0s;max-width:420px">
+      <div class="warn-icon">!</div>
+      <div class="warn-text">Incomplete master → MRP can't plan</div>
+    </div>
+    <div style="height:8px"></div>
+    <div class="warn-card slide-right anim-target" style="animation-delay:0.15s;max-width:420px">
+      <div class="warn-icon">!</div>
+      <div class="warn-text">Wrong description → nobody finds it next time</div>
+    </div>
+    <div style="height:8px"></div>
+    <div class="warn-card slide-right anim-target" style="animation-delay:0.3s;max-width:420px">
+      <div class="warn-icon">!</div>
+      <div class="warn-text">Duplicate at 3 plants → $45K excess stock</div>
+    </div>
+    <p class="thought-text fade-up anim-target" style="animation-delay:0.45s">The material was born broken. <strong>Everything downstream inherits the error.</strong></p>
+  </div>
+
+  <!-- F6 · Transition -->
+  <div class="frame" id="f6">
+    <div class="section-label">THE PROBLEM</div>
+    <div class="big-text pop-in anim-target" style="animation-delay:0s">Create once.<br><em>Create correctly.</em></div>
+  </div>
+
+  <!-- F7 · Identify -->
+  <div class="frame" id="f7">
+    <div class="section-label">HOW IT WORKS</div>
+    <div class="mid-text fade-up anim-target" style="animation-delay:0s">Start with what you know</div>
+    <div style="height:12px"></div>
+    <div class="field-row slide-right anim-target" style="animation-delay:0.15s">
+      <span class="field-label">Manufacturer</span><span class="field-value">KSB</span>
+    </div>
+    <div style="height:8px"></div>
+    <div class="field-row slide-right anim-target" style="animation-delay:0.3s">
+      <span class="field-label">Part Number</span><span class="field-value">KSPA-250-SEAL</span>
+    </div>
+    <p class="thought-text fade-up anim-target" style="animation-delay:0.45s">Start with what you <strong>know</strong>. Not what SAP demands.</p>
+  </div>
+
+  <!-- F8 · Search first -->
+  <div class="frame" id="f8">
+    <div class="section-label">HOW IT WORKS</div>
+    <div class="mid-text fade-up anim-target" style="animation-delay:0s">Search first. Create second.</div>
+    <div style="height:12px"></div>
+    <div class="result-tag amber pop-in anim-target" style="animation-delay:0.15s">⚠ 3 similar materials found</div>
+    <div style="height:8px"></div>
+    <div class="mat-card scale-in anim-target" style="animation-delay:0.3s;max-width:360px">
+      <div class="mat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></div>
+      <div class="mat-info">
+        <div class="mat-number">MC-4501</div>
+        <div class="mat-desc">Seal, mech shaft KSPA — Hamburg</div>
+      </div>
+    </div>
+    <p class="thought-text fade-up anim-target" style="animation-delay:0.45s"><em>MiLi</em> makes you <strong>look</strong> before you create. Most "new" parts already exist.</p>
+  </div>
+
+  <!-- F9 · No match — proceed -->
+  <div class="frame" id="f9">
+    <div class="section-label">HOW IT WORKS</div>
+    <div class="mid-text fade-up anim-target" style="animation-delay:0s">No exact match. Proceed to create.</div>
+    <div style="height:12px"></div>
+    <div class="result-tag green pop-in anim-target" style="animation-delay:0.15s">✓ No duplicates — safe to create</div>
+    <p class="thought-text fade-up anim-target" style="animation-delay:0.3s">The <strong>duplicate check</strong> runs automatically. Zero manual searching.</p>
+  </div>
+
+  <!-- F10 · Taxonomy selection -->
+  <div class="frame" id="f10">
+    <div class="section-label">HOW IT WORKS</div>
+    <div class="mid-text fade-up anim-target" style="animation-delay:0s">Classify by selecting, not typing</div>
+    <div style="height:12px"></div>
+    <div class="taxonomy-tree">
+      <div class="taxonomy-level selected slide-right anim-target" style="animation-delay:0.1s">
+        <span class="level-label">Noun</span><span class="level-value">Seal</span>
+      </div>
+      <div class="taxonomy-level selected slide-right anim-target" style="animation-delay:0.2s">
+        <span class="level-label">Class</span><span class="level-value">Mechanical Shaft Seal</span>
+      </div>
+      <div class="taxonomy-level selected slide-right anim-target" style="animation-delay:0.3s">
+        <span class="level-label">Type</span><span class="level-value">KSPA 250 kW</span>
+      </div>
+    </div>
+    <p class="thought-text fade-up anim-target" style="animation-delay:0.45s"><strong>Taxonomy builds the description.</strong> Users choose, they don't compose.</p>
+  </div>
+
+  <!-- F11 · Auto description -->
+  <div class="frame" id="f11">
+    <div class="section-label">HOW IT WORKS</div>
+    <div class="mid-text fade-up anim-target" style="animation-delay:0s">Description generates automatically</div>
+    <div style="height:12px"></div>
+    <div class="desc-build scale-in anim-target" style="animation-delay:0.15s">Seal, mechanical shaft <em>KSPA 250 kW</em></div>
+    <div style="height:8px"></div>
+    <div class="small-label fade-up anim-target" style="animation-delay:0.3s">structured · consistent · findable</div>
+    <p class="thought-text fade-up anim-target" style="animation-delay:0.45s">The user didn't <strong>write</strong> a description. They <strong>selected</strong> one.</p>
+  </div>
+
+  <!-- F12 · Attributes -->
+  <div class="frame" id="f12">
+    <div class="section-label">HOW IT WORKS</div>
+    <div class="mid-text fade-up anim-target" style="animation-delay:0s">Relevant attributes only</div>
+    <div style="height:12px"></div>
+    <div class="detail-grid fade-up anim-target" style="animation-delay:0.15s">
+      <div class="field-row"><span class="field-label">Shaft diameter</span><span class="field-value">55 mm</span></div>
+      <div class="field-row"><span class="field-label">Pressure</span><span class="field-value">16 bar</span></div>
+      <div class="field-row"><span class="field-label">Material</span><span class="field-value">Silicon Carbide</span></div>
+      <div class="field-row"><span class="field-label">Temp range</span><span class="field-value">-20 to 180°C</span></div>
+    </div>
+    <p class="thought-text fade-up anim-target" style="animation-delay:0.3s">The form adapts to the part. <strong>Not the other way around.</strong></p>
+  </div>
+
+  <!-- F13 · Plant setup -->
+  <div class="frame" id="f13">
+    <div class="section-label">HOW IT WORKS</div>
+    <div class="mid-text fade-up anim-target" style="animation-delay:0s">Plant setup with smart defaults</div>
+    <div style="height:12px"></div>
+    <div class="plant-badge solid-teal pop-in anim-target" style="animation-delay:0.1s">📍 1000 — Hamburg</div>
+    <div style="height:8px"></div>
+    <div class="field-row slide-right anim-target" style="animation-delay:0.2s">
+      <span class="field-label">Storage loc.</span><span class="field-value">0001 – Lager</span>
+    </div>
+    <div style="height:4px"></div>
+    <div class="field-row slide-right anim-target" style="animation-delay:0.3s">
+      <span class="field-label">MRP type</span><span class="field-value">VB (auto-populated)</span>
+    </div>
+    <p class="thought-text fade-up anim-target" style="animation-delay:0.45s">Plant-specific complexity handled by <strong>defaults, not memory</strong>.</p>
+  </div>
+
+  <!-- F14 · Attachments -->
+  <div class="frame" id="f14">
+    <div class="section-label">HOW IT WORKS</div>
+    <div class="mid-text fade-up anim-target" style="animation-delay:0s">Attach documents at creation</div>
+    <div style="height:12px"></div>
+    <div class="file-drop fade-up anim-target" style="animation-delay:0.15s">
+      <div class="file-item">
+        <span class="file-icon">📄</span>
+        <span class="file-name">KSB_KSPA250_Datasheet.pdf</span>
+        <span class="file-status">✓</span>
+      </div>
+      <div class="file-item">
+        <span class="file-icon">📐</span>
+        <span class="file-name">KSPA250_Drawing.dwg</span>
+        <span class="file-status">✓</span>
+      </div>
+    </div>
+    <p class="thought-text fade-up anim-target" style="animation-delay:0.3s">The datasheet lives <strong>with</strong> the material. Not in someone's email.</p>
+  </div>
+
+  <!-- F15 · Review screen -->
+  <div class="frame" id="f15">
+    <div class="section-label">HOW IT WORKS</div>
+    <div class="mid-text fade-up anim-target" style="animation-delay:0s">Full review before submit</div>
+    <div style="height:8px"></div>
+    <div class="mat-card scale-in anim-target" style="animation-delay:0.1s;max-width:400px">
+      <div class="mat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg></div>
+      <div class="mat-info">
+        <div class="mat-number">Seal, mechanical shaft KSPA 250 kW</div>
+        <div class="mat-desc">KSB · KSPA-250-SEAL · Hamburg · 2 attachments</div>
+      </div>
+    </div>
+    <div style="height:8px"></div>
+    <div class="result-tag green pop-in anim-target" style="animation-delay:0.25s">✓ 0 conflicts found</div>
+    <p class="thought-text fade-up anim-target" style="animation-delay:0.4s">Everything visible. <strong>Nothing hidden behind tabs or transactions.</strong></p>
+  </div>
+
+  <!-- F16 · Submit -->
+  <div class="frame" id="f16">
+    <div class="section-label">HOW IT WORKS</div>
+    <div class="mid-text fade-up anim-target" style="animation-delay:0s">Submit for approval</div>
+    <div style="height:12px"></div>
+    <div class="cta-btn scale-in anim-target pulse-glow" style="animation-delay:0.15s">✓ Submit for Approval</div>
+    <div style="height:12px"></div>
+    <div class="approval-flow fade-up anim-target" style="animation-delay:0.3s">
+      <div class="approval-step"><div class="approval-dot pending">1</div><div class="approval-label">MDM Team</div></div>
+      <div class="approval-arrow">→</div>
+      <div class="approval-step"><div class="approval-dot pending">2</div><div class="approval-label">Plant Ctrl</div></div>
+      <div class="approval-arrow">→</div>
+      <div class="approval-step"><div class="approval-dot pending">3</div><div class="approval-label">SAP Post</div></div>
+    </div>
+    <p class="thought-text fade-up anim-target" style="animation-delay:0.45s">Creation doesn't end at submit. It ends at <strong>validated SAP master</strong>.</p>
+  </div>
+
+  <!-- F17 · Transition -->
+  <div class="frame" id="f17">
+    <div class="section-label">HOW IT WORKS</div>
+    <div class="big-text pop-in anim-target" style="animation-delay:0s">Governed,<br><em>not gatekept.</em></div>
+  </div>
+
+  <!-- F18 · Reviewer view -->
+  <div class="frame" id="f18">
+    <div class="section-label">HOW IT WORKS</div>
+    <div class="mid-text fade-up anim-target" style="animation-delay:0s">Reviewer sees side-by-side</div>
+    <div style="height:12px"></div>
+    <div class="side-by-side fade-up anim-target" style="animation-delay:0.15s">
+      <div class="side-col before">
+        <div class="col-title">Submitted</div>
+        <div class="col-item">Seal, mechanical shaft KSPA 250 kW</div>
+        <div class="col-item" style="font-size:10px;color:var(--muted)">KSB · KSPA-250-SEAL</div>
+      </div>
+      <div class="side-col after">
+        <div class="col-title">Closest match</div>
+        <div class="col-item">MC-4501 — Seal, mech shaft 250</div>
+        <div class="col-item" style="font-size:10px;color:var(--amber)">⚠ Different specification</div>
+      </div>
+    </div>
+    <p class="thought-text fade-up anim-target" style="animation-delay:0.3s">The approver doesn't search for duplicates. <strong><em>MiLi</em> already did.</strong></p>
+  </div>
+
+  <!-- F19 · Decision -->
+  <div class="frame" id="f19">
+    <div class="section-label">HOW IT WORKS</div>
+    <div class="mid-text fade-up anim-target" style="animation-delay:0s">Approve, return, or reject</div>
+    <div style="height:12px"></div>
+    <div style="display:flex;gap:8px" class="fade-up anim-target" style="animation-delay:0.15s">
+      <div class="result-tag green">✓ Approve</div>
+      <div class="result-tag amber">↩ Return</div>
+      <div class="result-tag red">✕ Reject</div>
+    </div>
+    <div style="height:8px"></div>
+    <div class="field-row fade-up anim-target" style="animation-delay:0.3s;max-width:400px">
+      <span class="field-label">Comment</span><span class="field-value" style="color:var(--muted)">Structured feedback here...</span>
+    </div>
+    <p class="thought-text fade-up anim-target" style="animation-delay:0.45s">Reject means <strong>improve</strong>, not restart. The request stays alive.</p>
+  </div>
+
+  <!-- F20 · SAP post-back -->
+  <div class="frame" id="f20">
+    <div class="section-label">HOW IT WORKS</div>
+    <div class="check-circle check-draw anim-target" style="animation-delay:0s">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>
+    </div>
+    <div style="height:12px"></div>
+    <div class="mid-text fade-up anim-target" style="animation-delay:0.15s">MC-4501 created in SAP</div>
+    <div style="height:8px"></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">
+      <div class="summary-chip fade-up anim-target" style="animation-delay:0.2s">✓ All views populated</div>
+      <div class="summary-chip fade-up anim-target" style="animation-delay:0.3s">✓ Plant: Hamburg</div>
+      <div class="summary-chip fade-up anim-target" style="animation-delay:0.35s">✓ Status: Active</div>
+    </div>
+    <p class="thought-text fade-up anim-target" style="animation-delay:0.45s">One click from <em>MiLi</em>. <strong>15 SAP views written simultaneously.</strong></p>
+  </div>
+
+  <!-- F21 · Multi-plant extension -->
+  <div class="frame" id="f21">
+    <div class="section-label">HOW IT WORKS</div>
+    <div class="mid-text fade-up anim-target" style="animation-delay:0s">Extend to other plants instantly</div>
+    <div style="height:12px"></div>
+    <div style="display:flex;gap:8px;align-items:center;justify-content:center">
+      <div class="plant-badge solid-teal pop-in anim-target" style="animation-delay:0.1s">Hamburg ✓</div>
+      <span class="arrow fade-up anim-target" style="animation-delay:0.2s">→</span>
+      <div class="plant-badge dashed pop-in anim-target" style="animation-delay:0.3s">Paris +</div>
+      <div class="plant-badge dashed pop-in anim-target" style="animation-delay:0.35s">Perth +</div>
+    </div>
+    <p class="thought-text fade-up anim-target" style="animation-delay:0.45s">Created once, <strong>extended everywhere</strong>. Same master, different plants.</p>
+  </div>
+
+  <!-- F22 · Complete workflow -->
+  <div class="frame" id="f22">
+    <div class="section-label">HOW IT WORKS</div>
+    <div class="mid-text fade-up anim-target" style="animation-delay:0s">The complete creation workflow</div>
+    <div style="height:12px"></div>
+    <div class="approval-flow fade-up anim-target" style="animation-delay:0.15s">
+      <div class="approval-step"><div class="approval-dot done">✓</div><div class="approval-label">Identify</div></div>
+      <div class="approval-arrow">→</div>
+      <div class="approval-step"><div class="approval-dot done">✓</div><div class="approval-label">Classify</div></div>
+      <div class="approval-arrow">→</div>
+      <div class="approval-step"><div class="approval-dot done">✓</div><div class="approval-label">Submit</div></div>
+      <div class="approval-arrow">→</div>
+      <div class="approval-step"><div class="approval-dot done">✓</div><div class="approval-label">Approve</div></div>
+      <div class="approval-arrow">→</div>
+      <div class="approval-step"><div class="approval-dot done">✓</div><div class="approval-label">SAP</div></div>
+    </div>
+    <p class="thought-text fade-up anim-target" style="animation-delay:0.3s">Five steps. <strong>Five minutes.</strong> One correct material master.</p>
+  </div>
+
+  <!-- F23 · Transition to impact -->
+  <div class="frame" id="f23">
+    <div class="section-label">THE IMPACT</div>
+    <div class="big-text pop-in anim-target" style="animation-delay:0s">Correct from <em>birth.</em></div>
+  </div>
+
+  <!-- F24 · Speed metric -->
+  <div class="frame" id="f24">
+    <div class="section-label">THE IMPACT</div>
+    <div class="metric-spotlight">
+      <div class="metric-big pop-in anim-target" style="animation-delay:0s">5 min</div>
+      <div class="metric-unit fade-up anim-target" style="animation-delay:0.15s">governed creation time</div>
+      <div class="metric-compare fade-up anim-target" style="animation-delay:0.25s">vs. 2 weeks via MDM email queue</div>
+    </div>
+    <p class="thought-text fade-up anim-target" style="animation-delay:0.4s"><strong>Correct creation is faster</strong> than fixing mistakes later.</p>
+  </div>
+
+  <!-- F25 · Completeness metric -->
+  <div class="frame" id="f25">
+    <div class="section-label">THE IMPACT</div>
+    <div class="metric-spotlight">
+      <div class="metric-big pop-in anim-target" style="animation-delay:0s">100%</div>
+      <div class="metric-unit fade-up anim-target" style="animation-delay:0.15s">field completion rate</div>
+      <div class="metric-compare fade-up anim-target" style="animation-delay:0.25s">vs. 40% with manual creation</div>
+    </div>
+    <p class="thought-text fade-up anim-target" style="animation-delay:0.4s">Every material in the library has <strong>full data from day one</strong>.</p>
+  </div>
+
+  <!-- F26 · Zero duplicates -->
+  <div class="frame" id="f26">
+    <div class="section-label">THE IMPACT</div>
+    <div class="metric-spotlight">
+      <div class="metric-big pop-in anim-target" style="animation-delay:0s">0</div>
+      <div class="metric-unit fade-up anim-target" style="animation-delay:0.15s">duplicates created</div>
+      <div class="metric-compare fade-up anim-target" style="animation-delay:0.25s">search-first prevents duplication at the source</div>
+    </div>
+    <p class="thought-text fade-up anim-target" style="animation-delay:0.4s">When search precedes creation, <strong>duplicates never form</strong>.</p>
+  </div>
+
+  <!-- F27 · Before / After -->
+  <div class="frame" id="f27">
+    <div class="section-label">THE IMPACT</div>
+    <div class="mid-text fade-up anim-target" style="animation-delay:0s">The difference</div>
+    <div style="height:12px"></div>
+    <div class="side-by-side fade-up anim-target" style="animation-delay:0.15s">
+      <div class="side-col before">
+        <div class="col-title">Without MiLi</div>
+        <div class="col-item">• Free-form description → unfindable</div>
+        <div class="col-item">• 15 views manual → errors guaranteed</div>
+        <div class="col-item">• No duplicate check → inventory inflates</div>
+      </div>
+      <div class="side-col after">
+        <div class="col-title">With MiLi</div>
+        <div class="col-item">• Taxonomy-built → always findable</div>
+        <div class="col-item">• Guided form → complete first time</div>
+        <div class="col-item">• Search-first → zero duplicates</div>
+      </div>
+    </div>
+    <p class="thought-text fade-up anim-target" style="animation-delay:0.3s">Same team, same parts — <strong>completely different outcome</strong>.</p>
+  </div>
+
+  <!-- F28 · Result summary -->
+  <div class="frame" id="f28">
+    <div class="section-label">THE IMPACT</div>
+    <div class="mat-card scale-in anim-target" style="animation-delay:0s;max-width:360px">
+      <div class="mat-icon" style="background:var(--green-bg)"><svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></div>
+      <div class="mat-info">
+        <div class="mat-number">MC-4501</div>
+        <div class="mat-desc">Created in SAP — complete, governed, live</div>
+      </div>
+    </div>
+    <div style="height:12px"></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">
+      <div class="summary-chip fade-up anim-target" style="animation-delay:0.15s">⏱ 5 min</div>
+      <div class="summary-chip fade-up anim-target" style="animation-delay:0.25s">✓ 100% complete</div>
+      <div class="summary-chip fade-up anim-target" style="animation-delay:0.35s">🚫 0 duplicates</div>
+    </div>
+    <p class="thought-text fade-up anim-target" style="animation-delay:0.45s"><strong>Correct creation is faster than fixing mistakes later.</strong></p>
+  </div>
+
+  <!-- F29 · Net effect 1 -->
+  <div class="frame" id="f29">
+    <div class="section-label">THE IMPACT</div>
+    <div class="cascade-stack">
+      <div class="cascade-item fade-up anim-target" style="animation-delay:0s">When creation is governed, <strong>descriptions are consistent</strong>.</div>
+      <div class="cascade-connector fade-up anim-target" style="animation-delay:0.15s">↓</div>
+      <div class="cascade-item fade-up anim-target" style="animation-delay:0.25s">When descriptions are consistent, <strong>search works</strong>.</div>
+      <div class="cascade-connector fade-up anim-target" style="animation-delay:0.35s">↓</div>
+      <div class="cascade-item fade-up anim-target" style="animation-delay:0.45s">When search works, <strong>nobody creates duplicates</strong>.</div>
+    </div>
+  </div>
+
+  <!-- F30 · Every module connects -->
+  <div class="frame" id="f30">
+    <div class="section-label">THE IMPACT</div>
+    <div class="mid-text fade-up anim-target" style="animation-delay:0s">Creation feeds every module</div>
+    <div style="height:12px"></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;max-width:400px">
+      <div class="summary-chip slide-right anim-target" style="animation-delay:0.1s">→ Search</div>
+      <div class="summary-chip slide-right anim-target" style="animation-delay:0.2s">→ Enrichment</div>
+      <div class="summary-chip slide-right anim-target" style="animation-delay:0.3s">→ Criticality</div>
+      <div class="summary-chip slide-right anim-target" style="animation-delay:0.35s">→ BOM</div>
+      <div class="summary-chip slide-right anim-target" style="animation-delay:0.4s">→ ROP/ROQ</div>
+    </div>
+    <p class="thought-text fade-up anim-target" style="animation-delay:0.5s">A well-born material <strong>stays well</strong> through its entire lifecycle.</p>
+  </div>
+
+  <!-- F31 · Tagline -->
+  <div class="frame" id="f31">
+    <div class="section-label">THE IMPACT</div>
+    <div class="big-text fade-up anim-target" style="animation-delay:0s">Correct from birth.<br>Governed through life.</div>
+    <div style="height:12px"></div>
+    <p class="thought-text fade-up anim-target" style="animation-delay:0.15s"><em>Material Creation</em> — the foundation of clean master data.</p>
+  </div>
+
+  <!-- F32 · Closer -->
+  <div class="frame" id="f32">
+    <div class="big-text pop-in anim-target" style="animation-delay:0s">Mi<em>Li</em></div>
+    <div style="height:4px"></div>
+    <div class="small-label fade-up anim-target" style="animation-delay:0.15s">by Lexin Solutions</div>
+    <div style="height:16px"></div>
+    <div style="width:60px;height:2px;background:var(--border)" class="fade-up anim-target" style="animation-delay:0.25s"></div>
+    <div style="height:16px"></div>
+    <p class="thought-text fade-up anim-target" style="animation-delay:0.35s">Correct from birth. <em>Material Creation</em> — one of 13 modules.</p>
+  </div>
+
+<!-- FRAMES END -->
+
+  <!-- Progress bar -->
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+</div>
+
+<!-- Controls -->
+<div class="controls">
+  <button id="prevBtn" onclick="prev()" disabled>&larr;</button>
+  <div class="frame-counter" id="counter">1 / 32</div>
+  <button id="nextBtn" onclick="next()">&rarr;</button>
+  <button id="playBtn" onclick="autoPlay()">&#9654; Play</button>
+</div>
+
+<script>
+  const totalFrames = 32;
+  let current = 0;
+  let interval = null;
+
+  function show(n) {
+    document.querySelectorAll('.frame').forEach(f => f.classList.remove('active'));
+    const frame = document.getElementById(`f${n + 1}`);
+    frame.classList.add('active');
+
+    // Re-trigger animations
+    frame.querySelectorAll('.anim-target').forEach(el => {
+      const classes = [...el.classList];
+      const animClass = classes.find(c =>
+        ['pop-in','fade-up','slide-right','slide-left','scale-in','drop-in','stamp','check-draw'].includes(c)
+      );
+      if (animClass) {
+        el.classList.remove(animClass);
+        void el.offsetHeight;
+        el.classList.add(animClass);
+      }
+    });
+
+    document.getElementById('counter').textContent = `${n + 1} / ${totalFrames}`;
+    document.getElementById('prevBtn').disabled = n === 0;
+    document.getElementById('nextBtn').disabled = n === totalFrames - 1;
+    document.getElementById('progressFill').style.width = `${((n + 1) / totalFrames) * 100}%`;
+  }
+
+  function next() {
+    if (current < totalFrames - 1) { current++; show(current); }
+  }
+
+  function prev() {
+    if (current > 0) { current--; show(current); }
+  }
+
+  function autoPlay() {
+    const btn = document.getElementById('playBtn');
+    if (interval) {
+      clearInterval(interval);
+      interval = null;
+      btn.innerHTML = '&#9654; Play';
+      btn.classList.remove('active');
+      return;
+    }
+
+    btn.innerHTML = '&#9208; Pause';
+    btn.classList.add('active');
+    current = 0;
+    show(0);
+
+    interval = setInterval(() => {
+      if (current < totalFrames - 1) {
+        current++;
+        show(current);
+      } else {
+        clearInterval(interval);
+        interval = null;
+        btn.innerHTML = '&#9654; Play';
+        btn.classList.remove('active');
+      }
+    }, 1800);
+  }
+
+  // Keyboard navigation
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); next(); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
+  });
+
+  show(0);
+</script>
+<!-- Feedback: uncomment when deploying to mili-slides -->
+<!-- <script src="../feedback.js"></script> -->
+
+</body>
+</html>

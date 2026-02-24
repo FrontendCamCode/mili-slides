@@ -1,0 +1,1428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MiLi — Criticality Calculator</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal: #2a7d7b;
+    --teal-light: #e8f4f3;
+    --dark: #0f172a;
+    --card-bg: #ffffff;
+    --border: #e2e8f0;
+    --text: #1e293b;
+    --muted: #94a3b8;
+    --green: #16a34a;
+    --green-bg: #dcfce7;
+    --red: #ef4444;
+    --red-bg: #fef2f2;
+    --amber: #f59e0b;
+    --amber-bg: #fef3c7;
+    --blue: #3b82f6;
+    --blue-bg: #eff6ff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--dark);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    color: var(--text);
+    overflow: hidden;
+  }
+
+  /* ── Stage ── */
+  .stage {
+    width: 720px;
+    height: 480px;
+    background: #f8fafc;
+    border-radius: 16px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+  }
+
+  /* ── Frame ── */
+  .frame {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 64px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+  }
+
+  .frame.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* ── Animation classes ── */
+  .pop-in     { animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+  .fade-up    { animation: fadeUp 0.4s ease forwards; }
+  .slide-right { animation: slideRight 0.4s ease forwards; }
+  .slide-left  { animation: slideLeft 0.4s ease forwards; }
+  .scale-in   { animation: scaleIn 0.35s ease forwards; }
+  .draw-line  { animation: drawLine 0.6s ease forwards; }
+  .pulse-glow { animation: pulseGlow 1.5s ease-in-out infinite; }
+  .stamp      { animation: stamp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+  .count-up   { animation: fadeUp 0.3s ease forwards; }
+  .shake      { animation: shake 0.4s ease; }
+  .check-draw { animation: checkDraw 0.4s ease forwards; }
+  .fly-out    { animation: flyOut 0.5s ease forwards; }
+  .drop-in    { animation: dropIn 0.4s ease forwards; }
+
+  .typewriter {
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: 2px solid var(--teal);
+    animation: typewriter 0.8s steps(20) forwards, blinkCaret 0.6s step-end infinite;
+  }
+
+  @keyframes popIn {
+    0%   { opacity: 0; transform: scale(0.7); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+
+  @keyframes fadeUp {
+    0%   { opacity: 0; transform: translateY(16px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes slideRight {
+    0%   { opacity: 0; transform: translateX(-24px); }
+    100% { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes slideLeft {
+    0%   { opacity: 0; transform: translateX(24px); }
+    100% { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes scaleIn {
+    0%   { opacity: 0; transform: scale(0); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+
+  @keyframes drawLine {
+    0%   { width: 0; }
+    100% { width: 100%; }
+  }
+
+  @keyframes pulseGlow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(42, 125, 123, 0); }
+    50%      { box-shadow: 0 0 0 8px rgba(42, 125, 123, 0.12); }
+  }
+
+  @keyframes typewriter {
+    0%   { width: 0; }
+    100% { width: 100%; }
+  }
+
+  @keyframes blinkCaret {
+    50% { border-color: transparent; }
+  }
+
+  @keyframes stamp {
+    0%   { opacity: 0; transform: scale(2.5) rotate(-12deg); }
+    100% { opacity: 1; transform: scale(1) rotate(-6deg); }
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%  { transform: translateX(-6px); }
+    40%  { transform: translateX(6px); }
+    60%  { transform: translateX(-4px); }
+    80%  { transform: translateX(4px); }
+  }
+
+  @keyframes checkDraw {
+    0%  { opacity: 0; transform: scale(0) rotate(-45deg); }
+    50% { transform: scale(1.2) rotate(0deg); }
+    100% { opacity: 1; transform: scale(1) rotate(0deg); }
+  }
+
+  @keyframes flyOut {
+    0%   { opacity: 1; transform: translateX(0) scale(1); }
+    100% { opacity: 0; transform: translateX(80px) scale(0.8); }
+  }
+
+  @keyframes expandWidth {
+    0%   { width: 0; opacity: 0; }
+    100% { width: auto; opacity: 1; }
+  }
+
+  @keyframes fillBar {
+    0%   { width: 0%; }
+    100% { width: var(--fill); }
+  }
+
+  @keyframes dropIn {
+    0%  { opacity: 0; transform: translateY(-30px); }
+    60% { transform: translateY(4px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Text styles ── */
+  .thought-text {
+    font-size: 15px;
+    color: var(--muted);
+    text-align: center;
+    line-height: 1.6;
+    max-width: 480px;
+  }
+  .thought-text strong { color: var(--text); }
+  .thought-text em { color: var(--teal); font-style: normal; font-weight: 600; }
+
+  .big-text {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text);
+    text-align: center;
+    line-height: 1.3;
+  }
+  .big-text em { color: var(--teal); font-style: normal; }
+
+  .mid-text {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
+    text-align: center;
+  }
+
+  .small-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+  }
+
+  /* ── Section label (top left) ── */
+  .section-label {
+    position: absolute;
+    top: 16px;
+    left: 20px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--muted);
+    opacity: 0.6;
+  }
+
+  /* ── Material card ── */
+  .mat-card {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+
+  .mat-card .mat-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: var(--teal-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .mat-card .mat-icon svg { width: 20px; height: 20px; color: var(--teal); }
+  .mat-card .mat-info { display: flex; flex-direction: column; gap: 2px; }
+  .mat-card .mat-number { font-size: 14px; font-weight: 700; color: var(--text); }
+  .mat-card .mat-desc { font-size: 12px; color: var(--muted); }
+
+  /* ── Plant badge ── */
+  .plant-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    border: 2px solid;
+  }
+
+  .plant-badge.solid-blue {
+    background: var(--blue-bg);
+    border-color: var(--blue);
+    color: var(--blue);
+  }
+
+  .plant-badge.solid-teal {
+    background: var(--teal-light);
+    border-color: var(--teal);
+    color: var(--teal);
+  }
+
+  .plant-badge.solid-green {
+    background: var(--green-bg);
+    border-color: var(--green);
+    color: var(--green);
+  }
+
+  .plant-badge.dashed {
+    border-style: dashed;
+    background: transparent;
+    border-color: var(--muted);
+    color: var(--muted);
+  }
+
+  /* ── Arrow ── */
+  .arrow {
+    color: var(--muted);
+    font-size: 20px;
+  }
+
+  /* ── Field row ── */
+  .field-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 20px;
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .field-label {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 500;
+    min-width: 100px;
+  }
+
+  .field-value {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  /* ── Warning card ── */
+  .warn-card {
+    background: var(--red-bg);
+    border: 2px solid var(--red);
+    border-radius: 12px;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .warn-card .warn-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--red);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: white;
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .warn-card .warn-text { font-size: 13px; color: #991b1b; font-weight: 500; }
+
+  /* ── Stacked cards ── */
+  .stacked-cards {
+    position: relative;
+    width: 320px;
+    height: 100px;
+  }
+
+  .stacked-cards .mat-card { position: absolute; width: 300px; }
+  .stacked-cards .mat-card:nth-child(1) { top: 0; left: 0; z-index: 3; }
+  .stacked-cards .mat-card:nth-child(2) { top: 8px; left: 10px; z-index: 2; opacity: 0.6; border-color: var(--red); }
+  .stacked-cards .mat-card:nth-child(3) { top: 16px; left: 20px; z-index: 1; opacity: 0.3; border-color: var(--red); }
+
+  /* ── Detail grid ── */
+  .detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    width: 100%;
+    max-width: 420px;
+  }
+
+  /* ── Criticality option ── */
+  .crit-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    transition: all 0.3s;
+  }
+
+  .crit-option.selected {
+    border-color: var(--teal);
+    background: var(--teal-light);
+  }
+
+  .crit-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+    transition: all 0.3s;
+  }
+
+  .crit-option.selected .crit-dot {
+    border-color: var(--teal);
+    background: var(--teal);
+    box-shadow: inset 0 0 0 3px white;
+  }
+
+  /* ── Result tag ── */
+  .result-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .result-tag.green { background: var(--green-bg); color: var(--green); }
+  .result-tag.amber { background: var(--amber-bg); color: #92400e; }
+  .result-tag.red   { background: var(--red-bg); color: var(--red); }
+
+  /* ── Check circle ── */
+  .check-circle {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--green-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .check-circle svg { width: 28px; height: 28px; color: var(--green); }
+
+  /* ── Summary chip ── */
+  .summary-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    background: white;
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+
+  /* ── CTA button ── */
+  .cta-btn {
+    background: var(--teal);
+    color: white;
+    padding: 16px 48px;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  /* ── Score bar ── */
+  .score-bar-track {
+    width: 300px;
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .score-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    animation: fillBar 0.8s ease forwards;
+  }
+
+  /* ── Connector line ── */
+  .connector-line {
+    width: 2px;
+    height: 32px;
+    background: var(--border);
+  }
+
+  /* ── Hidden until frame active ── */
+  .frame .anim-target { opacity: 0; }
+
+  .frame.active .anim-target.pop-in,
+  .frame.active .anim-target.fade-up,
+  .frame.active .anim-target.slide-right,
+  .frame.active .anim-target.slide-left,
+  .frame.active .anim-target.scale-in,
+  .frame.active .anim-target.drop-in,
+  .frame.active .anim-target.stamp,
+  .frame.active .anim-target.check-draw {
+    /* animations handle opacity */
+  }
+
+  /* ── Progress bar ── */
+  .progress-track {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: rgba(0,0,0,0.06);
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--teal);
+    transition: width 0.35s ease;
+  }
+
+  /* ── Controls ── */
+  .controls {
+    position: fixed;
+    bottom: 24px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    z-index: 100;
+  }
+
+  .controls button {
+    background: rgba(255,255,255,0.1);
+    color: #94a3b8;
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .controls button:hover { background: rgba(255,255,255,0.15); color: white; }
+  .controls button:disabled { opacity: 0.3; cursor: not-allowed; }
+  .controls button.active { background: var(--teal); color: white; border-color: var(--teal); }
+
+  .frame-counter {
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    min-width: 60px;
+    text-align: center;
+  }
+
+  /* ── Feature-specific styles ── */
+/* ── Shelf label mockup ── */
+.shelf-row {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  max-width: 440px;
+}
+.shelf-item {
+  flex: 1;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  text-align: center;
+}
+.shelf-item .shelf-icon { font-size: 24px; margin-bottom: 4px; }
+.shelf-item .shelf-name { font-size: 11px; color: var(--text); font-weight: 600; }
+.shelf-item .shelf-tag {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 700;
+  background: var(--red-bg);
+  color: var(--red);
+  border: 1px solid var(--red);
+}
+
+/* ── Spreadsheet mockup ── */
+.sheet-view {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  width: 100%;
+  max-width: 420px;
+  font-size: 11px;
+}
+.sheet-header {
+  display: grid;
+  grid-template-columns: 80px 1fr 60px 100px;
+  background: #f1f5f9;
+  padding: 6px 10px;
+  font-weight: 600;
+  color: var(--muted);
+  border-bottom: 1px solid var(--border);
+}
+.sheet-row {
+  display: grid;
+  grid-template-columns: 80px 1fr 60px 100px;
+  padding: 5px 10px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+}
+.sheet-row:last-child { border-bottom: none; }
+.sheet-row .col-y { color: var(--red); font-weight: 600; }
+
+/* ── Question card ── */
+.question-card {
+  background: white;
+  border: 2px solid var(--teal);
+  border-radius: 10px;
+  padding: 16px 20px;
+  width: 100%;
+  max-width: 420px;
+  text-align: left;
+}
+.question-card .q-number {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--teal);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+.question-card .q-text {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+.q-options {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.q-opt {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 11px;
+  color: var(--text);
+  background: #f8fafc;
+  border: 1px solid var(--border);
+}
+.q-opt.selected {
+  background: var(--teal-light);
+  border-color: var(--teal);
+  color: var(--teal);
+  font-weight: 600;
+}
+
+/* ── Context panel ── */
+.context-panel {
+  background: #f8fafc;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  width: 100%;
+  max-width: 300px;
+}
+.context-panel .ctx-title {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+.context-panel .ctx-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 3px 0;
+  font-size: 11px;
+}
+.context-panel .ctx-label { color: var(--muted); }
+.context-panel .ctx-value { color: var(--text); font-weight: 600; }
+
+/* ── Criticality badge ── */
+.crit-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.crit-badge .badge-letter {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  font-weight: 800;
+  color: white;
+}
+.crit-badge .badge-letter.grade-a { background: var(--red); }
+.crit-badge .badge-letter.grade-b { background: var(--amber); }
+.crit-badge .badge-letter.grade-c { background: var(--teal); }
+.crit-badge .badge-letter.grade-d { background: var(--blue); }
+.crit-badge .badge-letter.grade-e { background: var(--muted); }
+.crit-badge .badge-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* ── Score breakdown ── */
+.score-breakdown {
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.score-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 12px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 11px;
+}
+.score-row .score-label { color: var(--muted); }
+.score-row .score-val { font-weight: 600; color: var(--text); }
+.score-row .score-val.high { color: var(--amber); }
+.score-row .score-val.med { color: var(--teal); }
+.score-row .score-val.low { color: var(--green); }
+.score-row .score-val.yes { color: var(--red); }
+.score-row .score-val.no { color: var(--green); }
+
+/* ── Downstream link ── */
+.downstream {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  max-width: 380px;
+}
+.downstream .ds-connector { color: var(--teal); font-size: 16px; }
+.downstream .ds-item {
+  width: 100%;
+  padding: 10px 16px;
+  background: var(--teal-light);
+  border: 1px solid var(--teal);
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--teal);
+  text-align: center;
+}
+
+/* ── Grade distribution ── */
+.grade-dist {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  height: 100px;
+  width: 100%;
+  max-width: 320px;
+}
+.grade-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.grade-bar {
+  width: 100%;
+  border-radius: 4px 4px 0 0;
+  min-height: 8px;
+}
+.grade-bar.grade-a { background: var(--red); }
+.grade-bar.grade-b { background: var(--amber); }
+.grade-bar.grade-c { background: var(--teal); }
+.grade-bar.grade-d { background: var(--blue); }
+.grade-bar.grade-e { background: var(--muted); }
+.grade-label { font-size: 10px; font-weight: 700; color: var(--text); }
+.grade-pct { font-size: 9px; color: var(--muted); }
+
+/* ── Override flag ── */
+.override-flag {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: var(--amber-bg);
+  border: 1px solid var(--amber);
+  border-radius: 8px;
+  width: 100%;
+  max-width: 380px;
+  font-size: 12px;
+  color: #92400e;
+}
+
+/* ── Side-by-side ── */
+.side-by-side {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  max-width: 480px;
+}
+.side-col {
+  flex: 1;
+  border-radius: 10px;
+  padding: 14px;
+}
+.side-col.before { background: var(--red-bg); border: 1px solid rgba(239,68,68,0.2); }
+.side-col.after { background: var(--green-bg); border: 1px solid rgba(22,163,74,0.2); }
+.side-col .col-title {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 1px; margin-bottom: 8px;
+}
+.side-col.before .col-title { color: var(--red); }
+.side-col.after .col-title { color: var(--green); }
+.side-col .col-item { font-size: 11px; color: var(--text); padding: 3px 0; }
+
+/* ── Metric spotlight ── */
+.metric-spotlight {
+  text-align: center;
+}
+.metric-spotlight .metric-big {
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--teal);
+  line-height: 1;
+}
+.metric-spotlight .metric-unit {
+  font-size: 14px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+.metric-spotlight .metric-compare {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+/* ── Cascade ── */
+.cascade-stack {
+  display: flex; flex-direction: column; gap: 6px;
+  max-width: 440px; text-align: center;
+}
+.cascade-item { font-size: 14px; color: var(--text); line-height: 1.5; }
+.cascade-connector { color: var(--teal); font-size: 16px; }
+
+/* ── Review card ── */
+.review-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 18px;
+  width: 100%;
+  max-width: 420px;
+}
+.review-card .rc-title {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+.review-card .rc-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+  font-size: 11px;
+  border-bottom: 1px solid var(--border);
+}
+.review-card .rc-row:last-child { border-bottom: none; }
+.review-card .rc-label { color: var(--muted); }
+.review-card .rc-value { color: var(--text); font-weight: 600; }
+
+</style>
+</head>
+<body>
+
+<div class="stage" id="stage">
+
+<!-- FRAMES START -->
+
+<!-- FRAMES START -->
+
+<!-- ═══════ ACT 1 · THE PROBLEM ═══════ -->
+
+<div class="frame" id="f1">
+  <div class="section-label">THE PROBLEM</div>
+  <div class="shelf-row pop-in anim-target" style="animation-delay:0s">
+    <div class="shelf-item">
+      <div class="shelf-icon">📦</div>
+      <div class="shelf-name">Gasket A — 200 units</div>
+      <div class="shelf-tag">⚠ CRITICAL</div>
+    </div>
+    <div class="shelf-item">
+      <div class="shelf-icon">📦</div>
+      <div class="shelf-name">Gasket B — 200 units</div>
+      <div class="shelf-tag">⚠ CRITICAL</div>
+    </div>
+  </div>
+  <div style="height:16px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">When everything is critical, <strong>nothing is prioritized</strong>.</div>
+</div>
+
+<div class="frame" id="f2">
+  <div class="section-label">THE PROBLEM</div>
+  <div class="mat-card pop-in anim-target" style="animation-delay:0s">
+    <div style="font-size:20px; margin-bottom:6px">🗣️</div>
+    <div style="font-size:13px; font-weight:600; color:var(--text)">"We need this stocked — it stopped the plant last time."</div>
+    <div style="font-size:11px; color:var(--muted); margin-top:6px">📅 Incident date: <strong>3 years ago</strong></div>
+  </div>
+  <div style="height:16px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Criticality decisions are made from <strong>memory</strong>, not evidence. And memory fades.</div>
+</div>
+
+<div class="frame" id="f3">
+  <div class="section-label">THE PROBLEM</div>
+  <div class="sheet-view fade-up anim-target" style="animation-delay:0s">
+    <div class="sheet-header">
+      <span>Material</span><span>Description</span><span>Critical?</span><span>Last Updated</span>
+    </div>
+    <div class="sheet-row"><span>MC-1001</span><span>Bearing, roller</span><span class="col-y">Y</span><span>18 mo ago</span></div>
+    <div class="sheet-row"><span>MC-1002</span><span>Seal, shaft</span><span class="col-y">Y</span><span>18 mo ago</span></div>
+    <div class="sheet-row"><span>MC-1003</span><span>Gasket, flange</span><span class="col-y">Y</span><span>18 mo ago</span></div>
+    <div class="sheet-row"><span>MC-1004</span><span>Filter, hydraulic</span><span class="col-y">Y</span><span>18 mo ago</span></div>
+    <div class="sheet-row"><span>MC-1005</span><span>Coupling, flex</span><span>N</span><span>18 mo ago</span></div>
+  </div>
+  <div class="result-tag slide-right anim-target" style="animation-delay:0.2s">94% marked "Y" — last updated 18 months ago</div>
+  <div style="height:12px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.4s">When the assessment is a yes/no checkbox, <strong>everyone checks yes</strong>.</div>
+</div>
+
+<div class="frame" id="f4">
+  <div class="section-label">THE PROBLEM</div>
+  <div class="side-by-side fade-up anim-target" style="animation-delay:0s">
+    <div class="side-col before">
+      <div class="col-title">Capital Locked</div>
+      <div class="col-item" style="font-size:20px; font-weight:700; color:var(--red)">$4.2M</div>
+      <div class="col-item">in "critical" stock</div>
+      <div class="col-item">60% hasn't moved in 2 years</div>
+    </div>
+    <div class="side-col before">
+      <div class="col-title">Real Stoppers</div>
+      <div class="col-item" style="font-size:20px; font-weight:700; color:var(--red)">3</div>
+      <div class="col-item">actual production stoppers</div>
+      <div class="col-item">same label as 2,000 gaskets</div>
+    </div>
+  </div>
+  <div style="height:12px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Overstocking the wrong parts <strong>doesn't prevent downtime</strong>. It just locks up capital.</div>
+</div>
+
+<div class="frame" id="f5">
+  <div class="section-label">THE PROBLEM</div>
+  <div class="warn-card slide-right anim-target" style="animation-delay:0s">Everything critical → nothing prioritized → capital wasted</div>
+  <div class="warn-card slide-right anim-target" style="animation-delay:0.15s">Gut-feel decisions → no audit trail → no accountability</div>
+  <div class="warn-card slide-right anim-target" style="animation-delay:0.3s">Static assessment → never updated → drifts from reality</div>
+  <div style="height:12px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.5s">The question was never "is it critical?" It was <strong>"how critical, and why?"</strong></div>
+</div>
+
+<div class="frame" id="f6">
+  <div class="section-label">THE PROBLEM</div>
+  <div class="metric-spotlight pop-in anim-target" style="animation-delay:0s">
+    <div class="metric-big">$4.2M</div>
+    <div class="metric-unit">locked in "critical" stock</div>
+    <div class="metric-compare">60% hasn't moved in 2 years</div>
+  </div>
+  <div style="height:16px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">The cost isn't the stock. It's the <strong>inability to tell what actually matters</strong>.</div>
+</div>
+
+<div class="frame" id="f7">
+  <div class="section-label">THE PROBLEM</div>
+  <div class="big-text fade-up anim-target" style="animation-delay:0s">What's missing isn't data.</div>
+  <div class="big-text fade-up anim-target" style="animation-delay:0.15s">It's a <em>structured risk score</em>.</div>
+  <div style="height:16px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.35s">A framework that scores criticality <strong>consistently</strong> — not a checkbox someone fills once.</div>
+</div>
+
+<!-- ═══════ ACT 2 · THE SOLUTION ═══════ -->
+
+<div class="frame" id="f8">
+  <div class="big-text scale-in anim-target" style="animation-delay:0s">Score the risk.</div>
+  <div class="big-text scale-in anim-target" style="animation-delay:0.2s"><em>Don't guess it.</em></div>
+</div>
+
+<div class="frame" id="f9">
+  <div class="section-label">MILI CRITICALITY</div>
+  <div class="mat-card pop-in anim-target" style="animation-delay:0s">
+    <div style="font-size:11px; color:var(--muted)">MC-4501</div>
+    <div style="font-size:14px; font-weight:700; color:var(--text)">Seal, mechanical shaft KSPA 250 kW</div>
+    <div style="display:flex; gap:8px; margin-top:8px">
+      <span class="result-tag" style="background:var(--amber-bg); color:#92400e; border-color:var(--amber)">No criticality assessed</span>
+    </div>
+  </div>
+  <div style="height:16px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">The material has no score. That means <strong>no stocking logic</strong> can run.</div>
+</div>
+
+<div class="frame" id="f10">
+  <div class="section-label">MILI CRITICALITY</div>
+  <div class="context-panel slide-right anim-target" style="animation-delay:0s">
+    <div class="ctx-title">Operational Context</div>
+    <div class="ctx-row"><span class="ctx-label">Lead time</span><span class="ctx-value">45 days</span></div>
+    <div class="ctx-row"><span class="ctx-label">Unit cost</span><span class="ctx-value">$1,200</span></div>
+    <div class="ctx-row"><span class="ctx-label">Last issued</span><span class="ctx-value">12 days ago</span></div>
+    <div class="ctx-row"><span class="ctx-label">Open work orders</span><span class="ctx-value">2</span></div>
+    <div class="ctx-row"><span class="ctx-label">Plants stocked</span><span class="ctx-value">3</span></div>
+  </div>
+  <div style="height:16px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Before you answer questions, <em>MiLi</em> shows you the <strong>facts</strong>.</div>
+</div>
+
+<div class="frame" id="f11">
+  <div class="section-label">MILI CRITICALITY</div>
+  <div class="question-card pop-in anim-target" style="animation-delay:0s">
+    <div class="q-number">Question 1 of 6</div>
+    <div class="q-text">What is the impact if this part is unavailable?</div>
+    <div class="q-options">
+      <div class="q-opt">No impact</div>
+      <div class="q-opt">Maintenance delays</div>
+      <div class="q-opt">Production reduced</div>
+      <div class="q-opt selected">Production stops</div>
+    </div>
+  </div>
+  <div style="height:12px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">One question at a time. <strong>Structured options</strong>, not free text.</div>
+</div>
+
+<div class="frame" id="f12">
+  <div class="section-label">MILI CRITICALITY</div>
+  <div style="display:flex; gap:12px; width:100%; max-width:460px" class="fade-up anim-target" style="animation-delay:0s">
+    <div class="question-card" style="flex:1; max-width:none">
+      <div class="q-number">Question 2 of 6</div>
+      <div class="q-text">Is there a safety risk if this part fails?</div>
+      <div class="q-options">
+        <div class="q-opt selected">Yes</div>
+        <div class="q-opt">No</div>
+      </div>
+    </div>
+    <div class="context-panel" style="max-width:180px">
+      <div class="ctx-title">Context</div>
+      <div style="font-size:11px; color:var(--text)">2 work orders linked to confined-space equipment</div>
+    </div>
+  </div>
+  <div style="height:12px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Context data sits <strong>beside</strong> the question. The user doesn't have to look it up.</div>
+</div>
+
+<div class="frame" id="f13">
+  <div class="section-label">MILI CRITICALITY</div>
+  <div style="display:flex; gap:12px; width:100%; max-width:460px" class="fade-up anim-target" style="animation-delay:0s">
+    <div class="question-card" style="flex:1; max-width:none">
+      <div class="q-number">Question 3 of 6</div>
+      <div class="q-text">Is there an environmental risk?</div>
+      <div class="q-options">
+        <div class="q-opt selected">Yes</div>
+        <div class="q-opt">No</div>
+      </div>
+    </div>
+    <div class="context-panel" style="max-width:180px">
+      <div class="ctx-title">Context</div>
+      <div style="font-size:11px; color:var(--text)">Cooling water system — discharge permit linked</div>
+    </div>
+  </div>
+  <div style="height:12px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Every question narrows the score. Every answer is <strong>recorded and auditable</strong>.</div>
+</div>
+
+<div class="frame" id="f14">
+  <div class="section-label">MILI CRITICALITY</div>
+  <div class="question-card pop-in anim-target" style="animation-delay:0s">
+    <div class="q-number">Question 4 of 6</div>
+    <div class="q-text">Is the part repairable on site?</div>
+    <div class="q-options">
+      <div class="q-opt">Yes — full repair capability</div>
+      <div class="q-opt selected">Partial — temporary fix only</div>
+      <div class="q-opt">No — must replace</div>
+    </div>
+  </div>
+  <div style="height:12px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Repairability changes the <strong>urgency</strong>. The score adapts.</div>
+</div>
+
+<div class="frame" id="f15">
+  <div class="section-label">MILI CRITICALITY</div>
+  <div class="question-card pop-in anim-target" style="animation-delay:0s">
+    <div class="q-number">Question 5 of 6</div>
+    <div class="q-text">What is the replacement lead time?</div>
+    <div class="q-options">
+      <div class="q-opt">Under 7 days</div>
+      <div class="q-opt">7–30 days</div>
+      <div class="q-opt selected">30–90 days</div>
+      <div class="q-opt">Over 90 days</div>
+    </div>
+  </div>
+  <div style="height:12px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">A 45-day lead time with no alternative? That's a <strong>different risk</strong> than a 3-day part.</div>
+</div>
+
+<div class="frame" id="f16">
+  <div class="section-label">MILI CRITICALITY</div>
+  <div class="question-card pop-in anim-target" style="animation-delay:0s">
+    <div class="q-number">Question 6 of 6</div>
+    <div class="q-text">Are there alternative sources or substitutes?</div>
+    <div class="q-options">
+      <div class="q-opt">Multiple sources available</div>
+      <div class="q-opt selected">One alternative exists</div>
+      <div class="q-opt">Sole source — no substitute</div>
+    </div>
+  </div>
+  <div style="height:12px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Six questions. Two minutes. <strong>A decision that used to take a meeting.</strong></div>
+</div>
+
+<div class="frame" id="f17">
+  <div class="section-label">MILI CRITICALITY</div>
+  <div class="crit-badge stamp anim-target" style="animation-delay:0s">
+    <div class="badge-letter grade-b">B</div>
+    <div class="badge-label">High Criticality</div>
+  </div>
+  <div style="height:12px"></div>
+  <div class="score-breakdown fade-up anim-target" style="animation-delay:0.2s">
+    <div class="score-row"><span class="score-label">Production impact</span><span class="score-val high">High</span></div>
+    <div class="score-row"><span class="score-label">Safety risk</span><span class="score-val yes">Yes</span></div>
+    <div class="score-row"><span class="score-label">Environmental risk</span><span class="score-val yes">Yes</span></div>
+    <div class="score-row"><span class="score-label">Lead time factor</span><span class="score-val med">Medium</span></div>
+  </div>
+  <div style="height:12px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.45s">Scored by the system. <strong>Justified by the inputs.</strong> Not by gut feel.</div>
+</div>
+
+<div class="frame" id="f18">
+  <div class="section-label">MILI CRITICALITY</div>
+  <div class="downstream fade-up anim-target" style="animation-delay:0s">
+    <div class="ds-item">Criticality: B — High</div>
+    <div class="ds-connector">↓</div>
+    <div class="ds-item">Recommended: Stock at ROP 5, ROQ 3</div>
+    <div class="ds-connector">↓</div>
+    <div class="ds-item">Triggers: New Stock Request workflow</div>
+  </div>
+  <div style="height:12px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Criticality doesn't just <strong>label</strong>. It drives what happens next.</div>
+</div>
+
+<!-- ═══════ ACT 2b · GOVERNANCE ═══════ -->
+
+<div class="frame" id="f19">
+  <div class="big-text scale-in anim-target" style="animation-delay:0s">Every score has</div>
+  <div class="big-text scale-in anim-target" style="animation-delay:0.2s"><em>a reason.</em></div>
+</div>
+
+<div class="frame" id="f20">
+  <div class="section-label">GOVERNANCE</div>
+  <div class="review-card slide-right anim-target" style="animation-delay:0s">
+    <div class="rc-title">Reviewer Summary</div>
+    <div class="rc-row"><span class="rc-label">Material</span><span class="rc-value">MC-4501 — Seal, mechanical shaft</span></div>
+    <div class="rc-row"><span class="rc-label">Score</span><span class="rc-value" style="color:var(--amber)">B — High</span></div>
+    <div class="rc-row"><span class="rc-label">Capital commitment</span><span class="rc-value">$18K</span></div>
+    <div class="rc-row"><span class="rc-label">Answered by</span><span class="rc-value">J. Martinez — Maintenance</span></div>
+    <div class="rc-row"><span class="rc-label">Questions answered</span><span class="rc-value">6/6</span></div>
+  </div>
+  <div style="height:12px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">The approver reviews <strong>logic</strong>, not just a label.</div>
+</div>
+
+<div class="frame" id="f21">
+  <div class="section-label">GOVERNANCE</div>
+  <div class="override-flag slide-right anim-target" style="animation-delay:0s">
+    ⚠️ Manual override: score changed from B → A. Expires in 6 months.
+  </div>
+  <div style="height:8px"></div>
+  <div class="review-card fade-up anim-target" style="animation-delay:0.15s">
+    <div class="rc-title">Override Details</div>
+    <div class="rc-row"><span class="rc-label">Reason</span><span class="rc-value">Upcoming shutdown — critical path item</span></div>
+    <div class="rc-row"><span class="rc-label">Overridden by</span><span class="rc-value">S. Patel — Plant Manager</span></div>
+    <div class="rc-row"><span class="rc-label">Expiry</span><span class="rc-value">6 months (auto-revert)</span></div>
+  </div>
+  <div style="height:12px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.4s">Overrides are allowed. But they're <strong>visible and temporary</strong>.</div>
+</div>
+
+<div class="frame" id="f22">
+  <div class="section-label">GOVERNANCE</div>
+  <div class="detail-grid pop-in anim-target" style="animation-delay:0s">
+    <div class="field-row"><span class="field-label">Criticality</span><span class="field-value">B — High</span></div>
+    <div class="field-row"><span class="field-label">Stocking</span><span class="field-value">Active</span></div>
+    <div class="field-row"><span class="field-label">ROP</span><span class="field-value">5</span></div>
+    <div class="field-row"><span class="field-label">Last assessed</span><span class="field-value">Today</span></div>
+    <div class="field-row"><span class="field-label">Next review</span><span class="field-value">6 months</span></div>
+    <div class="field-row"><span class="field-label">Audit trail</span><span class="field-value" style="color:var(--green)">✓ Linked</span></div>
+  </div>
+  <div style="height:12px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Not just scored. <strong>Governed, tracked, and scheduled for reassessment.</strong></div>
+</div>
+
+<!-- ═══════ ACT 3 · THE OUTCOME ═══════ -->
+
+<div class="frame" id="f23">
+  <div class="section-label">THE OUTCOME</div>
+  <div class="big-text fade-up anim-target" style="animation-delay:0s">What changes when criticality</div>
+  <div class="big-text fade-up anim-target" style="animation-delay:0.15s">is <em>scored, not assumed</em>?</div>
+</div>
+
+<div class="frame" id="f24">
+  <div class="section-label">THE OUTCOME</div>
+  <div class="side-by-side fade-up anim-target" style="animation-delay:0s">
+    <div class="side-col before">
+      <div class="col-title">Without MiLi</div>
+      <div class="col-item">Yes/No checkbox → everything critical</div>
+      <div class="col-item">No audit trail → no accountability</div>
+      <div class="col-item">Static → never updated</div>
+    </div>
+    <div class="side-col after">
+      <div class="col-title">With MiLi</div>
+      <div class="col-item">Risk-scored → A through E grading</div>
+      <div class="col-item">Full audit trail → every answer recorded</div>
+      <div class="col-item">Scheduled reassessment → stays current</div>
+    </div>
+  </div>
+  <div style="height:12px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">From a checkbox to a <strong>risk framework</strong>.</div>
+</div>
+
+<div class="frame" id="f25">
+  <div class="section-label">THE OUTCOME</div>
+  <div class="grade-dist pop-in anim-target" style="animation-delay:0s">
+    <div class="grade-col">
+      <div class="grade-bar grade-a" style="height:10px"></div>
+      <div class="grade-label">A</div>
+      <div class="grade-pct">5%</div>
+    </div>
+    <div class="grade-col">
+      <div class="grade-bar grade-b" style="height:24px"></div>
+      <div class="grade-label">B</div>
+      <div class="grade-pct">12%</div>
+    </div>
+    <div class="grade-col">
+      <div class="grade-bar grade-c" style="height:56px"></div>
+      <div class="grade-label">C</div>
+      <div class="grade-pct">28%</div>
+    </div>
+    <div class="grade-col">
+      <div class="grade-bar grade-d" style="height:70px"></div>
+      <div class="grade-label">D</div>
+      <div class="grade-pct">35%</div>
+    </div>
+    <div class="grade-col">
+      <div class="grade-bar grade-e" style="height:40px"></div>
+      <div class="grade-label">E</div>
+      <div class="grade-pct">20%</div>
+    </div>
+  </div>
+  <div style="height:16px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">When you score properly, <strong>only 17% are truly high-risk</strong>. Not 94%.</div>
+</div>
+
+<div class="frame" id="f26">
+  <div class="section-label">THE OUTCOME</div>
+  <div class="metric-spotlight pop-in anim-target" style="animation-delay:0s">
+    <div class="metric-big">80%</div>
+    <div class="metric-unit">reclassified from "critical"</div>
+    <div class="metric-compare">to their appropriate risk level</div>
+  </div>
+  <div style="height:16px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Eight out of ten items were <strong>over-classified</strong>. Now they're right.</div>
+</div>
+
+<div class="frame" id="f27">
+  <div class="section-label">THE OUTCOME</div>
+  <div class="metric-spotlight pop-in anim-target" style="animation-delay:0s">
+    <div class="metric-big">$2.1M</div>
+    <div class="metric-unit">capital released</div>
+    <div class="metric-compare">from overstocked non-critical items</div>
+  </div>
+  <div style="height:16px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Money that was <strong>locked in the wrong shelves</strong> — now available where it matters.</div>
+</div>
+
+<div class="frame" id="f28">
+  <div class="section-label">THE OUTCOME</div>
+  <div class="metric-spotlight pop-in anim-target" style="animation-delay:0s">
+    <div class="metric-big">6 mo</div>
+    <div class="metric-unit">auto-reassessment cycle</div>
+    <div class="metric-compare">scores stay current, not stale</div>
+  </div>
+  <div style="height:16px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Criticality isn't a one-time exercise. It's a <strong>living score</strong>.</div>
+</div>
+
+<div class="frame" id="f29">
+  <div class="section-label">THE OUTCOME</div>
+  <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:center">
+    <div class="summary-chip pop-in anim-target" style="animation-delay:0s">80% reclassified</div>
+    <div class="summary-chip pop-in anim-target" style="animation-delay:0.1s">$2.1M released</div>
+    <div class="summary-chip pop-in anim-target" style="animation-delay:0.2s">6-month cycle</div>
+    <div class="summary-chip pop-in anim-target" style="animation-delay:0.3s">Full audit trail</div>
+    <div class="summary-chip pop-in anim-target" style="animation-delay:0.4s">A–E grading</div>
+  </div>
+  <div style="height:16px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.55s"><strong>When not everything is critical</strong>, resources go where they matter.</div>
+</div>
+
+<div class="frame" id="f30">
+  <div class="section-label">THE OUTCOME</div>
+  <div class="cascade-stack fade-up anim-target" style="animation-delay:0s">
+    <div class="cascade-item">When criticality is scored, <strong>stocking is justified</strong>.</div>
+    <div class="cascade-connector">↓</div>
+    <div class="cascade-item">When stocking is justified, <strong>capital is efficient</strong>.</div>
+    <div class="cascade-connector">↓</div>
+    <div class="cascade-item">When capital is efficient, <strong>availability actually improves</strong>.</div>
+  </div>
+</div>
+
+<div class="frame" id="f31">
+  <div class="section-label">THE OUTCOME</div>
+  <div class="big-text fade-up anim-target" style="animation-delay:0s">Risk-scored, not gut-felt.</div>
+  <div style="height:8px"></div>
+  <div class="big-text fade-up anim-target" style="animation-delay:0.15s"><em>Criticality Calculator</em> — one of 13 modules.</div>
+</div>
+
+<div class="frame" id="f32">
+  <div style="display:flex; flex-direction:column; align-items:center; gap:12px">
+    <div class="big-text scale-in anim-target" style="animation-delay:0s"><em>MiLi</em></div>
+    <div style="font-size:13px; color:var(--muted)" class="fade-up anim-target" style="animation-delay:0.15s">by Lexin Solutions</div>
+    <div style="width:60px; height:2px; background:var(--teal); border-radius:1px" class="fade-up anim-target" style="animation-delay:0.25s"></div>
+    <div class="thought-text fade-up anim-target" style="animation-delay:0.35s">Score the risk. <em>Don't guess it.</em></div>
+  </div>
+</div>
+
+<!-- FRAMES END -->
+
+<!-- FRAMES END -->
+
+  <!-- Progress bar -->
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+</div>
+
+<!-- Controls -->
+<div class="controls">
+  <button id="prevBtn" onclick="prev()" disabled>&larr;</button>
+  <div class="frame-counter" id="counter">1 / 32</div>
+  <button id="nextBtn" onclick="next()">&rarr;</button>
+  <button id="playBtn" onclick="autoPlay()">&#9654; Play</button>
+</div>
+
+<script>
+  const totalFrames = 32;
+  let current = 0;
+  let interval = null;
+
+  function show(n) {
+    document.querySelectorAll('.frame').forEach(f => f.classList.remove('active'));
+    const frame = document.getElementById(`f${n + 1}`);
+    frame.classList.add('active');
+
+    // Re-trigger animations
+    frame.querySelectorAll('.anim-target').forEach(el => {
+      const classes = [...el.classList];
+      const animClass = classes.find(c =>
+        ['pop-in','fade-up','slide-right','slide-left','scale-in','drop-in','stamp','check-draw'].includes(c)
+      );
+      if (animClass) {
+        el.classList.remove(animClass);
+        void el.offsetHeight;
+        el.classList.add(animClass);
+      }
+    });
+
+    document.getElementById('counter').textContent = `${n + 1} / ${totalFrames}`;
+    document.getElementById('prevBtn').disabled = n === 0;
+    document.getElementById('nextBtn').disabled = n === totalFrames - 1;
+    document.getElementById('progressFill').style.width = `${((n + 1) / totalFrames) * 100}%`;
+  }
+
+  function next() {
+    if (current < totalFrames - 1) { current++; show(current); }
+  }
+
+  function prev() {
+    if (current > 0) { current--; show(current); }
+  }
+
+  function autoPlay() {
+    const btn = document.getElementById('playBtn');
+    if (interval) {
+      clearInterval(interval);
+      interval = null;
+      btn.innerHTML = '&#9654; Play';
+      btn.classList.remove('active');
+      return;
+    }
+
+    btn.innerHTML = '&#9208; Pause';
+    btn.classList.add('active');
+    current = 0;
+    show(0);
+
+    interval = setInterval(() => {
+      if (current < totalFrames - 1) {
+        current++;
+        show(current);
+      } else {
+        clearInterval(interval);
+        interval = null;
+        btn.innerHTML = '&#9654; Play';
+        btn.classList.remove('active');
+      }
+    }, 1800);
+  }
+
+  // Keyboard navigation
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); next(); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
+  });
+
+  show(0);
+</script>
+<!-- Feedback: uncomment when deploying to mili-slides -->
+<!-- <script src="../feedback.js"></script> -->
+
+</body>
+</html>

@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MiLi — Lead Time Calculator</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal: #2a7d7b;
+    --teal-light: #e8f4f3;
+    --dark: #0f172a;
+    --card-bg: #ffffff;
+    --border: #e2e8f0;
+    --text: #1e293b;
+    --muted: #94a3b8;
+    --green: #16a34a;
+    --green-bg: #dcfce7;
+    --red: #ef4444;
+    --red-bg: #fef2f2;
+    --amber: #f59e0b;
+    --amber-bg: #fef3c7;
+    --blue: #3b82f6;
+    --blue-bg: #eff6ff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--dark);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    color: var(--text);
+    overflow: hidden;
+  }
+
+  /* ── Stage ── */
+  .stage {
+    width: 720px;
+    height: 480px;
+    background: #f8fafc;
+    border-radius: 16px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+  }
+
+  /* ── Frame ── */
+  .frame {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 64px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+  }
+
+  .frame.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* ── Animation classes ── */
+  .pop-in     { animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+  .fade-up    { animation: fadeUp 0.4s ease forwards; }
+  .slide-right { animation: slideRight 0.4s ease forwards; }
+  .slide-left  { animation: slideLeft 0.4s ease forwards; }
+  .scale-in   { animation: scaleIn 0.35s ease forwards; }
+  .draw-line  { animation: drawLine 0.6s ease forwards; }
+  .pulse-glow { animation: pulseGlow 1.5s ease-in-out infinite; }
+  .stamp      { animation: stamp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+  .count-up   { animation: fadeUp 0.3s ease forwards; }
+  .shake      { animation: shake 0.4s ease; }
+  .check-draw { animation: checkDraw 0.4s ease forwards; }
+  .fly-out    { animation: flyOut 0.5s ease forwards; }
+  .drop-in    { animation: dropIn 0.4s ease forwards; }
+
+  .typewriter {
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: 2px solid var(--teal);
+    animation: typewriter 0.8s steps(20) forwards, blinkCaret 0.6s step-end infinite;
+  }
+
+  @keyframes popIn {
+    0%   { opacity: 0; transform: scale(0.7); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+
+  @keyframes fadeUp {
+    0%   { opacity: 0; transform: translateY(16px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes slideRight {
+    0%   { opacity: 0; transform: translateX(-24px); }
+    100% { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes slideLeft {
+    0%   { opacity: 0; transform: translateX(24px); }
+    100% { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes scaleIn {
+    0%   { opacity: 0; transform: scale(0); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+
+  @keyframes drawLine {
+    0%   { width: 0; }
+    100% { width: 100%; }
+  }
+
+  @keyframes pulseGlow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(42, 125, 123, 0); }
+    50%      { box-shadow: 0 0 0 8px rgba(42, 125, 123, 0.12); }
+  }
+
+  @keyframes typewriter {
+    0%   { width: 0; }
+    100% { width: 100%; }
+  }
+
+  @keyframes blinkCaret {
+    50% { border-color: transparent; }
+  }
+
+  @keyframes stamp {
+    0%   { opacity: 0; transform: scale(2.5) rotate(-12deg); }
+    100% { opacity: 1; transform: scale(1) rotate(-6deg); }
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%  { transform: translateX(-6px); }
+    40%  { transform: translateX(6px); }
+    60%  { transform: translateX(-4px); }
+    80%  { transform: translateX(4px); }
+  }
+
+  @keyframes checkDraw {
+    0%  { opacity: 0; transform: scale(0) rotate(-45deg); }
+    50% { transform: scale(1.2) rotate(0deg); }
+    100% { opacity: 1; transform: scale(1) rotate(0deg); }
+  }
+
+  @keyframes flyOut {
+    0%   { opacity: 1; transform: translateX(0) scale(1); }
+    100% { opacity: 0; transform: translateX(80px) scale(0.8); }
+  }
+
+  @keyframes expandWidth {
+    0%   { width: 0; opacity: 0; }
+    100% { width: auto; opacity: 1; }
+  }
+
+  @keyframes fillBar {
+    0%   { width: 0%; }
+    100% { width: var(--fill); }
+  }
+
+  @keyframes dropIn {
+    0%  { opacity: 0; transform: translateY(-30px); }
+    60% { transform: translateY(4px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Text styles ── */
+  .thought-text {
+    font-size: 15px;
+    color: var(--muted);
+    text-align: center;
+    line-height: 1.6;
+    max-width: 480px;
+  }
+  .thought-text strong { color: var(--text); }
+  .thought-text em { color: var(--teal); font-style: normal; font-weight: 600; }
+
+  .big-text {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text);
+    text-align: center;
+    line-height: 1.3;
+  }
+  .big-text em { color: var(--teal); font-style: normal; }
+
+  .mid-text {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
+    text-align: center;
+  }
+
+  .small-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+  }
+
+  /* ── Section label (top left) ── */
+  .section-label {
+    position: absolute;
+    top: 16px;
+    left: 20px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--muted);
+    opacity: 0.6;
+  }
+
+  /* ── Material card ── */
+  .mat-card {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+
+  .mat-card .mat-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: var(--teal-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .mat-card .mat-icon svg { width: 20px; height: 20px; color: var(--teal); }
+  .mat-card .mat-info { display: flex; flex-direction: column; gap: 2px; }
+  .mat-card .mat-number { font-size: 14px; font-weight: 700; color: var(--text); }
+  .mat-card .mat-desc { font-size: 12px; color: var(--muted); }
+
+  /* ── Plant badge ── */
+  .plant-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    border: 2px solid;
+  }
+
+  .plant-badge.solid-blue {
+    background: var(--blue-bg);
+    border-color: var(--blue);
+    color: var(--blue);
+  }
+
+  .plant-badge.solid-teal {
+    background: var(--teal-light);
+    border-color: var(--teal);
+    color: var(--teal);
+  }
+
+  .plant-badge.solid-green {
+    background: var(--green-bg);
+    border-color: var(--green);
+    color: var(--green);
+  }
+
+  .plant-badge.dashed {
+    border-style: dashed;
+    background: transparent;
+    border-color: var(--muted);
+    color: var(--muted);
+  }
+
+  /* ── Arrow ── */
+  .arrow {
+    color: var(--muted);
+    font-size: 20px;
+  }
+
+  /* ── Field row ── */
+  .field-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 20px;
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .field-label {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 500;
+    min-width: 100px;
+  }
+
+  .field-value {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  /* ── Warning card ── */
+  .warn-card {
+    background: var(--red-bg);
+    border: 2px solid var(--red);
+    border-radius: 12px;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .warn-card .warn-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--red);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: white;
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .warn-card .warn-text { font-size: 13px; color: #991b1b; font-weight: 500; }
+
+  /* ── Stacked cards ── */
+  .stacked-cards {
+    position: relative;
+    width: 320px;
+    height: 100px;
+  }
+
+  .stacked-cards .mat-card { position: absolute; width: 300px; }
+  .stacked-cards .mat-card:nth-child(1) { top: 0; left: 0; z-index: 3; }
+  .stacked-cards .mat-card:nth-child(2) { top: 8px; left: 10px; z-index: 2; opacity: 0.6; border-color: var(--red); }
+  .stacked-cards .mat-card:nth-child(3) { top: 16px; left: 20px; z-index: 1; opacity: 0.3; border-color: var(--red); }
+
+  /* ── Detail grid ── */
+  .detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    width: 100%;
+    max-width: 420px;
+  }
+
+  /* ── Criticality option ── */
+  .crit-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    transition: all 0.3s;
+  }
+
+  .crit-option.selected {
+    border-color: var(--teal);
+    background: var(--teal-light);
+  }
+
+  .crit-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+    transition: all 0.3s;
+  }
+
+  .crit-option.selected .crit-dot {
+    border-color: var(--teal);
+    background: var(--teal);
+    box-shadow: inset 0 0 0 3px white;
+  }
+
+  /* ── Result tag ── */
+  .result-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .result-tag.green { background: var(--green-bg); color: var(--green); }
+  .result-tag.amber { background: var(--amber-bg); color: #92400e; }
+  .result-tag.red   { background: var(--red-bg); color: var(--red); }
+
+  /* ── Check circle ── */
+  .check-circle {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--green-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .check-circle svg { width: 28px; height: 28px; color: var(--green); }
+
+  /* ── Summary chip ── */
+  .summary-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    background: white;
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+
+  /* ── CTA button ── */
+  .cta-btn {
+    background: var(--teal);
+    color: white;
+    padding: 16px 48px;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  /* ── Score bar ── */
+  .score-bar-track {
+    width: 300px;
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .score-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    animation: fillBar 0.8s ease forwards;
+  }
+
+  /* ── Connector line ── */
+  .connector-line {
+    width: 2px;
+    height: 32px;
+    background: var(--border);
+  }
+
+  /* ── Hidden until frame active ── */
+  .frame .anim-target { opacity: 0; }
+
+  .frame.active .anim-target.pop-in,
+  .frame.active .anim-target.fade-up,
+  .frame.active .anim-target.slide-right,
+  .frame.active .anim-target.slide-left,
+  .frame.active .anim-target.scale-in,
+  .frame.active .anim-target.drop-in,
+  .frame.active .anim-target.stamp,
+  .frame.active .anim-target.check-draw {
+    /* animations handle opacity */
+  }
+
+  /* ── Progress bar ── */
+  .progress-track {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: rgba(0,0,0,0.06);
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--teal);
+    transition: width 0.35s ease;
+  }
+
+  /* ── Controls ── */
+  .controls {
+    position: fixed;
+    bottom: 24px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    z-index: 100;
+  }
+
+  .controls button {
+    background: rgba(255,255,255,0.1);
+    color: #94a3b8;
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .controls button:hover { background: rgba(255,255,255,0.15); color: white; }
+  .controls button:disabled { opacity: 0.3; cursor: not-allowed; }
+  .controls button.active { background: var(--teal); color: white; border-color: var(--teal); }
+
+  .frame-counter {
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    min-width: 60px;
+    text-align: center;
+  }
+
+  /* ── Feature-specific styles ── */
+/* ── Lead time record ── */
+.lt-record {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 18px;
+  width: 100%;
+  max-width: 400px;
+}
+.lt-record .lt-title {
+  font-size: 10px; font-weight: 700; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;
+}
+.lt-row {
+  display: flex; justify-content: space-between;
+  padding: 4px 0; font-size: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.lt-row:last-child { border-bottom: none; }
+.lt-row .lt-label { color: var(--muted); }
+.lt-row .lt-value { font-weight: 600; color: var(--text); }
+.lt-row .lt-value.alert { color: var(--red); }
+.lt-row .lt-value.good { color: var(--green); }
+
+/* ── Stockout alert ── */
+.stockout-alert {
+  background: var(--red-bg);
+  border: 2px solid var(--red);
+  border-radius: 10px;
+  padding: 14px 18px;
+  width: 100%;
+  max-width: 380px;
+  text-align: center;
+}
+.stockout-alert .alert-icon { font-size: 24px; margin-bottom: 4px; }
+.stockout-alert .alert-title { font-size: 14px; font-weight: 700; color: var(--red); }
+.stockout-alert .alert-detail { font-size: 11px; color: #991b1b; margin-top: 6px; }
+
+/* ── Scatter plot mockup ── */
+.scatter-mockup {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  width: 100%;
+  max-width: 360px;
+  position: relative;
+  height: 80px;
+}
+.scatter-mockup .scatter-title {
+  font-size: 10px; color: var(--muted); font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;
+}
+.scatter-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--teal);
+  position: absolute;
+}
+.scatter-dot.outlier { background: var(--red); }
+.scatter-sap-line {
+  position: absolute;
+  left: 16px; right: 16px;
+  border-top: 2px dashed var(--red);
+}
+.scatter-sap-label {
+  font-size: 9px; color: var(--red); position: absolute; right: 16px;
+}
+
+/* ── Vendor cards ── */
+.vendor-pair {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  max-width: 440px;
+}
+.vendor-card {
+  flex: 1;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+}
+.vendor-card .vendor-name {
+  font-size: 11px; font-weight: 700; color: var(--text); margin-bottom: 6px;
+}
+.vendor-card .vendor-stat {
+  display: flex; justify-content: space-between;
+  font-size: 11px; padding: 2px 0;
+}
+.vendor-card .vendor-stat .vs-label { color: var(--muted); }
+.vendor-card .vendor-stat .vs-value { font-weight: 600; color: var(--text); }
+.vendor-card.better { border-color: var(--green); }
+.vendor-card.worse { border-color: var(--red); }
+
+/* ── Recommendation diff ── */
+.rec-diff {
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.rec-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 12px;
+}
+.rec-label { color: var(--muted); min-width: 90px; }
+.rec-old { color: var(--red); text-decoration: line-through; }
+.rec-arrow { color: var(--teal); }
+.rec-new { color: var(--green); font-weight: 700; }
+
+/* ── Variance spread ── */
+.variance-spread {
+  display: flex;
+  gap: 6px;
+  align-items: flex-end;
+  height: 60px;
+  width: 100%;
+  max-width: 340px;
+}
+.variance-bar {
+  flex: 1;
+  border-radius: 3px 3px 0 0;
+  min-width: 12px;
+}
+
+/* ── Side-by-side ── */
+.side-by-side { display: flex; gap: 12px; width: 100%; max-width: 480px; }
+.side-col { flex: 1; border-radius: 10px; padding: 14px; }
+.side-col.before { background: var(--red-bg); border: 1px solid rgba(239,68,68,0.2); }
+.side-col.after { background: var(--green-bg); border: 1px solid rgba(22,163,74,0.2); }
+.side-col .col-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+.side-col.before .col-title { color: var(--red); }
+.side-col.after .col-title { color: var(--green); }
+.side-col .col-item { font-size: 11px; color: var(--text); padding: 3px 0; }
+
+/* ── Metric spotlight ── */
+.metric-spotlight { text-align: center; }
+.metric-spotlight .metric-big { font-size: 48px; font-weight: 700; color: var(--teal); line-height: 1; }
+.metric-spotlight .metric-unit { font-size: 14px; color: var(--muted); margin-top: 4px; }
+.metric-spotlight .metric-compare { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+/* ── Cascade ── */
+.cascade-stack { display: flex; flex-direction: column; gap: 6px; max-width: 440px; text-align: center; }
+.cascade-item { font-size: 14px; color: var(--text); line-height: 1.5; }
+.cascade-connector { color: var(--teal); font-size: 16px; }
+
+</style>
+</head>
+<body>
+
+<div class="stage" id="stage">
+
+<!-- FRAMES START -->
+
+<!-- FRAMES START -->
+
+<!-- ═══════ ACT 1 · THE PROBLEM ═══════ -->
+
+<div class="frame" id="f1">
+  <div class="section-label">THE PROBLEM</div>
+  <div class="lt-record pop-in anim-target" style="animation-delay:0s">
+    <div class="lt-title">Material Record — MC-7800</div>
+    <div class="lt-row"><span class="lt-label">Planned delivery time</span><span class="lt-value">14 days</span></div>
+    <div class="lt-row"><span class="lt-label">PO #1 actual</span><span class="lt-value alert">42 days</span></div>
+    <div class="lt-row"><span class="lt-label">PO #2 actual</span><span class="lt-value alert">38 days</span></div>
+    <div class="lt-row"><span class="lt-label">PO #3 actual</span><span class="lt-value alert">56 days</span></div>
+    <div class="lt-row"><span class="lt-label">PO #4 actual</span><span class="lt-value alert">41 days</span></div>
+  </div>
+  <div style="height:16px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">SAP says 14 days. Reality says <strong>42</strong>. The ROP is based on the lie.</div>
+</div>
+
+<div class="frame" id="f2">
+  <div class="section-label">THE PROBLEM</div>
+  <div class="stockout-alert pop-in anim-target" style="animation-delay:0s">
+    <div class="alert-icon">🚨</div>
+    <div class="alert-title">STOCKOUT — MC-7800</div>
+    <div class="alert-detail">Coupling, flexible jaw type · Stock: 0<br>PO placed 3 weeks ago · Expected: 1 week ago · Status: still in transit</div>
+  </div>
+  <div style="height:16px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">The stockout didn't happen because demand spiked. It happened because the <strong>lead time was wrong</strong>.</div>
+</div>
+
+<div class="frame" id="f3">
+  <div class="section-label">THE PROBLEM</div>
+  <div class="mat-card pop-in anim-target" style="animation-delay:0s">
+    <div style="font-size:11px; color:var(--muted)">SAP MM02 — Planned Delivery Time</div>
+    <div style="font-size:16px; font-weight:700; color:var(--text); margin:6px 0">Type new value: <span style="color:var(--teal)">42</span>_</div>
+    <div style="font-size:11px; color:var(--muted); font-style:italic">"Wait — is it 42? Or was that a one-off? What's the average? Across which vendors?"</div>
+  </div>
+  <div style="height:16px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Updating a lead time requires <strong>knowing the right number</strong>. And knowing it requires analysis nobody has time to do.</div>
+</div>
+
+<div class="frame" id="f4">
+  <div class="section-label">THE PROBLEM</div>
+  <div class="side-by-side fade-up anim-target" style="animation-delay:0s">
+    <div class="side-col before">
+      <div class="col-title">Option A</div>
+      <div class="col-item" style="font-weight:600">Keep vendor's quoted lead time</div>
+      <div class="col-item" style="margin-top:6px; font-size:10px; color:var(--red)">→ Plan on fiction</div>
+    </div>
+    <div class="side-col before">
+      <div class="col-title">Option B</div>
+      <div class="col-item" style="font-weight:600">Manually analyze PO history</div>
+      <div class="col-item" style="margin-top:6px; font-size:10px; color:var(--red)">→ 30 min × 8,000 materials</div>
+    </div>
+  </div>
+  <div style="height:12px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Manual lead time analysis at scale is <strong>mathematically impossible</strong>.</div>
+</div>
+
+<div class="frame" id="f5">
+  <div class="section-label">THE PROBLEM</div>
+  <div class="warn-card slide-right anim-target" style="animation-delay:0s">Wrong lead time → ROP too low → stockout</div>
+  <div class="warn-card slide-right anim-target" style="animation-delay:0.15s">Wrong lead time → ROP too high → overstock</div>
+  <div class="warn-card slide-right anim-target" style="animation-delay:0.3s">Vendor promises unverified → no accountability</div>
+  <div style="height:12px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.5s">Lead time is the <strong>foundation</strong> of MRP. When it's wrong, everything built on it is wrong.</div>
+</div>
+
+<div class="frame" id="f6">
+  <div class="section-label">THE PROBLEM</div>
+  <div class="big-text fade-up anim-target" style="animation-delay:0s">The problem isn't SAP.</div>
+  <div class="big-text fade-up anim-target" style="animation-delay:0.15s">It's the <em>numbers fed into SAP</em>.</div>
+</div>
+
+<!-- ═══════ ACT 2 · THE SOLUTION ═══════ -->
+
+<div class="frame" id="f7">
+  <div class="big-text scale-in anim-target" style="animation-delay:0s">Demonstrated performance.</div>
+  <div class="big-text scale-in anim-target" style="animation-delay:0.2s"><em>Not vendor promises.</em></div>
+</div>
+
+<div class="frame" id="f8">
+  <div class="section-label">MILI LEAD TIME</div>
+  <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:center" class="pop-in anim-target" style="animation-delay:0s">
+    <div class="result-tag">Last 24 months</div>
+    <div class="result-tag">Plant 1000 — Hamburg</div>
+    <div class="result-tag">All material groups</div>
+  </div>
+  <div style="height:8px"></div>
+  <div class="result-tag slide-right anim-target" style="animation-delay:0.15s; background:var(--teal-light); color:var(--teal); border-color:var(--teal)">Analyzing PO history…</div>
+  <div style="height:16px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.35s">Select the window. <em>MiLi</em> does the math.</div>
+</div>
+
+<div class="frame" id="f9">
+  <div class="section-label">MILI LEAD TIME</div>
+  <div class="lt-record slide-right anim-target" style="animation-delay:0s">
+    <div class="lt-title">Largest Variances — Sorted by Gap</div>
+    <div class="lt-row"><span class="lt-label">MC-7800 · Coupling</span><span class="lt-value alert">14d → 43d (+29)</span></div>
+    <div class="lt-row"><span class="lt-label">MC-3401 · Bearing</span><span class="lt-value alert">21d → 45d (+24)</span></div>
+    <div class="lt-row"><span class="lt-label">MC-5100 · Seal</span><span class="lt-value alert">7d → 28d (+21)</span></div>
+    <div class="lt-row"><span class="lt-label">MC-2200 · Filter</span><span class="lt-value alert">30d → 48d (+18)</span></div>
+    <div class="lt-row"><span class="lt-label">MC-6700 · Gasket</span><span class="lt-value" style="color:var(--amber)">14d → 22d (+8)</span></div>
+  </div>
+  <div style="height:12px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">The biggest gaps surface first. <strong>That's where the risk lives.</strong></div>
+</div>
+
+<div class="frame" id="f10">
+  <div class="section-label">MILI LEAD TIME</div>
+  <div class="scatter-mockup pop-in anim-target" style="animation-delay:0s">
+    <div class="scatter-title">MC-7800 — 12 POs over 24 months</div>
+    <div class="scatter-sap-line" style="top:60px"></div>
+    <div class="scatter-sap-label" style="top:48px">SAP: 14d</div>
+    <div class="scatter-dot" style="left:30px; top:26px"></div>
+    <div class="scatter-dot" style="left:55px; top:30px"></div>
+    <div class="scatter-dot" style="left:80px; top:24px"></div>
+    <div class="scatter-dot" style="left:105px; top:28px"></div>
+    <div class="scatter-dot" style="left:130px; top:22px"></div>
+    <div class="scatter-dot outlier" style="left:155px; top:14px"></div>
+    <div class="scatter-dot" style="left:180px; top:26px"></div>
+    <div class="scatter-dot" style="left:205px; top:24px"></div>
+    <div class="scatter-dot" style="left:230px; top:30px"></div>
+    <div class="scatter-dot" style="left:255px; top:28px"></div>
+    <div class="scatter-dot" style="left:280px; top:26px"></div>
+    <div class="scatter-dot" style="left:305px; top:24px"></div>
+  </div>
+  <div style="height:4px"></div>
+  <div class="result-tag fade-up anim-target" style="animation-delay:0.15s; background:var(--teal-light); color:var(--teal); border-color:var(--teal)">Calculated lead time: 43 days</div>
+  <div style="height:12px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.35s">Not one number. A <strong>distribution</strong>. The user sees the spread, not just the average.</div>
+</div>
+
+<div class="frame" id="f11">
+  <div class="section-label">MILI LEAD TIME</div>
+  <div class="vendor-pair pop-in anim-target" style="animation-delay:0s">
+    <div class="vendor-card better">
+      <div class="vendor-name">Vendor A</div>
+      <div class="vendor-stat"><span class="vs-label">Avg lead time</span><span class="vs-value">41 days</span></div>
+      <div class="vendor-stat"><span class="vs-label">POs analyzed</span><span class="vs-value">8</span></div>
+      <div class="vendor-stat"><span class="vs-label">On-time rate</span><span class="vs-value" style="color:var(--green)">95%</span></div>
+    </div>
+    <div class="vendor-card worse">
+      <div class="vendor-name">Vendor B</div>
+      <div class="vendor-stat"><span class="vs-label">Avg lead time</span><span class="vs-value">52 days</span></div>
+      <div class="vendor-stat"><span class="vs-label">POs analyzed</span><span class="vs-value">4</span></div>
+      <div class="vendor-stat"><span class="vs-label">On-time rate</span><span class="vs-value" style="color:var(--red)">60%</span></div>
+    </div>
+  </div>
+  <div style="height:12px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Same part, different vendors, <strong>different reliability</strong>. <em>MiLi</em> shows which one delivers.</div>
+</div>
+
+<div class="frame" id="f12">
+  <div class="section-label">MILI LEAD TIME</div>
+  <div class="rec-diff pop-in anim-target" style="animation-delay:0s">
+    <div class="rec-row">
+      <span class="rec-label">SAP lead time</span>
+      <span class="rec-old">14 days</span>
+      <span class="rec-arrow">→</span>
+      <span class="rec-new">43 days</span>
+    </div>
+  </div>
+  <div style="height:8px"></div>
+  <div class="result-tag slide-right anim-target" style="animation-delay:0.15s">Impact: ROP recalculates from 2 → 7 EA</div>
+  <div style="height:12px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.35s">Change the lead time → <strong>ROP adjusts automatically</strong>. One fix, two improvements.</div>
+</div>
+
+<div class="frame" id="f13">
+  <div class="section-label">MILI LEAD TIME</div>
+  <div class="mat-card pop-in anim-target" style="animation-delay:0s">
+    <div style="font-size:22px; font-weight:700; color:var(--teal); text-align:center">45 materials selected</div>
+    <div style="font-size:12px; color:var(--muted); text-align:center; margin-top:4px">Variance exceeds 10 days · Accept all recommendations</div>
+  </div>
+  <div style="height:8px"></div>
+  <div class="result-tag slide-right anim-target" style="animation-delay:0.15s; background:var(--green-bg); color:var(--green); border-color:var(--green)">Average variance closed: 22 days</div>
+  <div style="height:12px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.35s">45 corrections. <strong>Minutes, not months.</strong></div>
+</div>
+
+<div class="frame" id="f14">
+  <div class="section-label">MILI LEAD TIME</div>
+  <div class="lt-record slide-right anim-target" style="animation-delay:0s">
+    <div class="lt-title">Approval Summary</div>
+    <div class="lt-row"><span class="lt-label">Lead time updates</span><span class="lt-value">45</span></div>
+    <div class="lt-row"><span class="lt-label">Source</span><span class="lt-value">24-month PO analysis</span></div>
+    <div class="lt-row"><span class="lt-label">Average correction</span><span class="lt-value">+22 days</span></div>
+    <div class="lt-row"><span class="lt-label">ROP impact</span><span class="lt-value good">Recalculation triggered</span></div>
+  </div>
+  <div style="height:12px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">The approver sees the <strong>evidence</strong>, not just the change.</div>
+</div>
+
+<div class="frame" id="f15">
+  <div class="section-label">MILI LEAD TIME</div>
+  <div class="check-circle check-draw anim-target" style="animation-delay:0s">✓</div>
+  <div style="height:6px"></div>
+  <div class="result-tag slide-right anim-target" style="animation-delay:0.15s; background:var(--green-bg); color:var(--green); border-color:var(--green)">45 materials updated in SAP</div>
+  <div style="height:4px"></div>
+  <div class="result-tag slide-right anim-target" style="animation-delay:0.25s">MRP uses corrected lead times from next planning run</div>
+  <div style="height:12px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.4s">SAP now plans with <strong>reality</strong>. Not the number entered in 2018.</div>
+</div>
+
+<!-- ═══════ ACT 2b · VENDOR INTELLIGENCE ═══════ -->
+
+<div class="frame" id="f16">
+  <div class="big-text scale-in anim-target" style="animation-delay:0s">Trust,</div>
+  <div class="big-text scale-in anim-target" style="animation-delay:0.2s"><em>verified.</em></div>
+</div>
+
+<div class="frame" id="f17">
+  <div class="section-label">VENDOR INTELLIGENCE</div>
+  <div class="lt-record slide-right anim-target" style="animation-delay:0s">
+    <div class="lt-title">Vendor A — Performance Scorecard</div>
+    <div class="lt-row"><span class="lt-label">POs analyzed</span><span class="lt-value">142</span></div>
+    <div class="lt-row"><span class="lt-label">Avg lead time</span><span class="lt-value">38 days</span></div>
+    <div class="lt-row"><span class="lt-label">Quoted lead time</span><span class="lt-value alert">30 days</span></div>
+    <div class="lt-row"><span class="lt-label">Reliability score</span><span class="lt-value" style="color:var(--amber)">82%</span></div>
+    <div class="lt-row"><span class="lt-label">Trend (12 mo)</span><span class="lt-value good">Improving ↑</span></div>
+  </div>
+  <div style="height:12px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Vendor performance becomes <strong>measurable</strong>, not anecdotal.</div>
+</div>
+
+<div class="frame" id="f18">
+  <div class="section-label">VENDOR INTELLIGENCE</div>
+  <div class="vendor-pair pop-in anim-target" style="animation-delay:0s">
+    <div class="vendor-card better">
+      <div class="vendor-name">Vendor A</div>
+      <div class="vendor-stat"><span class="vs-label">Avg delivery</span><span class="vs-value">38 days</span></div>
+      <div class="vendor-stat"><span class="vs-label">Reliability</span><span class="vs-value" style="color:var(--green)">82%</span></div>
+      <div class="vendor-stat"><span class="vs-label">Price</span><span class="vs-value">$124/unit</span></div>
+    </div>
+    <div class="vendor-card worse">
+      <div class="vendor-name">Vendor B</div>
+      <div class="vendor-stat"><span class="vs-label">Avg delivery</span><span class="vs-value">51 days</span></div>
+      <div class="vendor-stat"><span class="vs-label">Reliability</span><span class="vs-value" style="color:var(--red)">64%</span></div>
+      <div class="vendor-stat"><span class="vs-label">Price</span><span class="vs-value">$120/unit (3% less)</span></div>
+    </div>
+  </div>
+  <div style="height:12px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">The 3% cheaper vendor costs more in <strong>stockouts and expediting</strong>.</div>
+</div>
+
+<div class="frame" id="f19">
+  <div class="section-label">VENDOR INTELLIGENCE</div>
+  <div class="lt-record slide-right anim-target" style="animation-delay:0s">
+    <div class="lt-title">Quarterly Recalculation</div>
+    <div class="lt-row"><span class="lt-label">Materials analyzed</span><span class="lt-value">1,200</span></div>
+    <div class="lt-row"><span class="lt-label">Lead time changes</span><span class="lt-value" style="color:var(--amber)">340 recommended</span></div>
+    <div class="lt-row"><span class="lt-label">Vendor flags</span><span class="lt-value alert">89 performance issues</span></div>
+  </div>
+  <div style="height:12px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Lead times drift. <em>MiLi</em> <strong>catches the drift</strong> before MRP fails.</div>
+</div>
+
+<!-- ═══════ ACT 3 · THE OUTCOME ═══════ -->
+
+<div class="frame" id="f20">
+  <div class="section-label">THE OUTCOME</div>
+  <div class="big-text fade-up anim-target" style="animation-delay:0s">What changes when lead times</div>
+  <div class="big-text fade-up anim-target" style="animation-delay:0.15s">reflect <em>reality</em>?</div>
+</div>
+
+<div class="frame" id="f21">
+  <div class="section-label">THE OUTCOME</div>
+  <div class="side-by-side fade-up anim-target" style="animation-delay:0s">
+    <div class="side-col before">
+      <div class="col-title">Without MiLi</div>
+      <div class="col-item">Vendor-quoted → fictional</div>
+      <div class="col-item">Manual analysis → impossible at scale</div>
+      <div class="col-item">ROP based on wrong inputs → stockouts</div>
+    </div>
+    <div class="side-col after">
+      <div class="col-title">With MiLi</div>
+      <div class="col-item">Demonstrated → evidence-based</div>
+      <div class="col-item">Every material, every quarter</div>
+      <div class="col-item">ROP based on reality → availability</div>
+    </div>
+  </div>
+  <div style="height:12px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">From vendor promises to <strong>proven performance</strong>.</div>
+</div>
+
+<div class="frame" id="f22">
+  <div class="section-label">THE OUTCOME</div>
+  <div class="metric-spotlight pop-in anim-target" style="animation-delay:0s">
+    <div class="metric-big">22 days</div>
+    <div class="metric-unit">average variance closed</div>
+    <div class="metric-compare">the gap between SAP and reality — eliminated</div>
+  </div>
+  <div style="height:16px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Twenty-two days of <strong>planning error</strong> — corrected across the board.</div>
+</div>
+
+<div class="frame" id="f23">
+  <div class="section-label">THE OUTCOME</div>
+  <div class="metric-spotlight pop-in anim-target" style="animation-delay:0s">
+    <div class="metric-big">67%</div>
+    <div class="metric-unit">fewer stockouts</div>
+    <div class="metric-compare">from lead-time-related errors</div>
+  </div>
+  <div style="height:16px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Two-thirds of stockouts were caused by <strong>wrong lead times</strong>. Now they're right.</div>
+</div>
+
+<div class="frame" id="f24">
+  <div class="section-label">THE OUTCOME</div>
+  <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:center">
+    <div class="summary-chip pop-in anim-target" style="animation-delay:0s">22-day variance closed</div>
+    <div class="summary-chip pop-in anim-target" style="animation-delay:0.1s">67% fewer stockouts</div>
+    <div class="summary-chip pop-in anim-target" style="animation-delay:0.2s">Vendor scorecards</div>
+    <div class="summary-chip pop-in anim-target" style="animation-delay:0.3s">Quarterly refresh</div>
+  </div>
+  <div style="height:16px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.45s"><strong>When lead times are real, MRP works.</strong> That's the entire point.</div>
+</div>
+
+<div class="frame" id="f25">
+  <div class="section-label">THE OUTCOME</div>
+  <div class="cascade-stack fade-up anim-target" style="animation-delay:0s">
+    <div class="cascade-item">When lead times reflect reality, <strong>reorder points are accurate</strong>.</div>
+    <div class="cascade-connector">↓</div>
+    <div class="cascade-item">When reorder points are accurate, <strong>stock is right-sized</strong>.</div>
+    <div class="cascade-connector">↓</div>
+    <div class="cascade-item">When stock is right-sized, <strong>availability and capital both improve</strong>.</div>
+  </div>
+</div>
+
+<div class="frame" id="f26">
+  <div class="section-label">THE OUTCOME</div>
+  <div class="big-text fade-up anim-target" style="animation-delay:0s">Promises verified by performance.</div>
+  <div style="height:8px"></div>
+  <div class="big-text fade-up anim-target" style="animation-delay:0.15s"><em>Lead Time Calculator</em> — one of 13 modules.</div>
+</div>
+
+<div class="frame" id="f27">
+  <div style="display:flex; flex-direction:column; align-items:center; gap:12px">
+    <div class="big-text scale-in anim-target" style="animation-delay:0s"><em>MiLi</em></div>
+    <div style="font-size:13px; color:var(--muted)" class="fade-up anim-target" style="animation-delay:0.15s">by Lexin Solutions</div>
+    <div style="width:60px; height:2px; background:var(--teal); border-radius:1px" class="fade-up anim-target" style="animation-delay:0.25s"></div>
+    <div class="thought-text fade-up anim-target" style="animation-delay:0.35s">Demonstrated performance. <em>Not vendor promises.</em></div>
+  </div>
+</div>
+
+<!-- FRAMES END -->
+
+<!-- FRAMES END -->
+
+  <!-- Progress bar -->
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+</div>
+
+<!-- Controls -->
+<div class="controls">
+  <button id="prevBtn" onclick="prev()" disabled>&larr;</button>
+  <div class="frame-counter" id="counter">1 / 27</div>
+  <button id="nextBtn" onclick="next()">&rarr;</button>
+  <button id="playBtn" onclick="autoPlay()">&#9654; Play</button>
+</div>
+
+<script>
+  const totalFrames = 27;
+  let current = 0;
+  let interval = null;
+
+  function show(n) {
+    document.querySelectorAll('.frame').forEach(f => f.classList.remove('active'));
+    const frame = document.getElementById(`f${n + 1}`);
+    frame.classList.add('active');
+
+    // Re-trigger animations
+    frame.querySelectorAll('.anim-target').forEach(el => {
+      const classes = [...el.classList];
+      const animClass = classes.find(c =>
+        ['pop-in','fade-up','slide-right','slide-left','scale-in','drop-in','stamp','check-draw'].includes(c)
+      );
+      if (animClass) {
+        el.classList.remove(animClass);
+        void el.offsetHeight;
+        el.classList.add(animClass);
+      }
+    });
+
+    document.getElementById('counter').textContent = `${n + 1} / ${totalFrames}`;
+    document.getElementById('prevBtn').disabled = n === 0;
+    document.getElementById('nextBtn').disabled = n === totalFrames - 1;
+    document.getElementById('progressFill').style.width = `${((n + 1) / totalFrames) * 100}%`;
+  }
+
+  function next() {
+    if (current < totalFrames - 1) { current++; show(current); }
+  }
+
+  function prev() {
+    if (current > 0) { current--; show(current); }
+  }
+
+  function autoPlay() {
+    const btn = document.getElementById('playBtn');
+    if (interval) {
+      clearInterval(interval);
+      interval = null;
+      btn.innerHTML = '&#9654; Play';
+      btn.classList.remove('active');
+      return;
+    }
+
+    btn.innerHTML = '&#9208; Pause';
+    btn.classList.add('active');
+    current = 0;
+    show(0);
+
+    interval = setInterval(() => {
+      if (current < totalFrames - 1) {
+        current++;
+        show(current);
+      } else {
+        clearInterval(interval);
+        interval = null;
+        btn.innerHTML = '&#9654; Play';
+        btn.classList.remove('active');
+      }
+    }, 1800);
+  }
+
+  // Keyboard navigation
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); next(); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
+  });
+
+  show(0);
+</script>
+<!-- Feedback: uncomment when deploying to mili-slides -->
+<!-- <script src="../feedback.js"></script> -->
+
+</body>
+</html>

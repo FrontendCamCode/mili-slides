@@ -1,0 +1,1572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MiLi — New Stock Requests</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal: #2a7d7b;
+    --teal-light: #e8f4f3;
+    --dark: #0f172a;
+    --card-bg: #ffffff;
+    --border: #e2e8f0;
+    --text: #1e293b;
+    --muted: #94a3b8;
+    --green: #16a34a;
+    --green-bg: #dcfce7;
+    --red: #ef4444;
+    --red-bg: #fef2f2;
+    --amber: #f59e0b;
+    --amber-bg: #fef3c7;
+    --blue: #3b82f6;
+    --blue-bg: #eff6ff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--dark);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    color: var(--text);
+    overflow: hidden;
+  }
+
+  /* ── Stage ── */
+  .stage {
+    width: 720px;
+    height: 480px;
+    background: #f8fafc;
+    border-radius: 16px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+  }
+
+  /* ── Frame ── */
+  .frame {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 64px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+  }
+
+  .frame.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* ── Animation classes ── */
+  .pop-in     { animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+  .fade-up    { animation: fadeUp 0.4s ease forwards; }
+  .slide-right { animation: slideRight 0.4s ease forwards; }
+  .slide-left  { animation: slideLeft 0.4s ease forwards; }
+  .scale-in   { animation: scaleIn 0.35s ease forwards; }
+  .draw-line  { animation: drawLine 0.6s ease forwards; }
+  .pulse-glow { animation: pulseGlow 1.5s ease-in-out infinite; }
+  .stamp      { animation: stamp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+  .count-up   { animation: fadeUp 0.3s ease forwards; }
+  .shake      { animation: shake 0.4s ease; }
+  .check-draw { animation: checkDraw 0.4s ease forwards; }
+  .fly-out    { animation: flyOut 0.5s ease forwards; }
+  .drop-in    { animation: dropIn 0.4s ease forwards; }
+
+  .typewriter {
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: 2px solid var(--teal);
+    animation: typewriter 0.8s steps(20) forwards, blinkCaret 0.6s step-end infinite;
+  }
+
+  @keyframes popIn {
+    0%   { opacity: 0; transform: scale(0.7); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+
+  @keyframes fadeUp {
+    0%   { opacity: 0; transform: translateY(16px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes slideRight {
+    0%   { opacity: 0; transform: translateX(-24px); }
+    100% { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes slideLeft {
+    0%   { opacity: 0; transform: translateX(24px); }
+    100% { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes scaleIn {
+    0%   { opacity: 0; transform: scale(0); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+
+  @keyframes drawLine {
+    0%   { width: 0; }
+    100% { width: 100%; }
+  }
+
+  @keyframes pulseGlow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(42, 125, 123, 0); }
+    50%      { box-shadow: 0 0 0 8px rgba(42, 125, 123, 0.12); }
+  }
+
+  @keyframes typewriter {
+    0%   { width: 0; }
+    100% { width: 100%; }
+  }
+
+  @keyframes blinkCaret {
+    50% { border-color: transparent; }
+  }
+
+  @keyframes stamp {
+    0%   { opacity: 0; transform: scale(2.5) rotate(-12deg); }
+    100% { opacity: 1; transform: scale(1) rotate(-6deg); }
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%  { transform: translateX(-6px); }
+    40%  { transform: translateX(6px); }
+    60%  { transform: translateX(-4px); }
+    80%  { transform: translateX(4px); }
+  }
+
+  @keyframes checkDraw {
+    0%  { opacity: 0; transform: scale(0) rotate(-45deg); }
+    50% { transform: scale(1.2) rotate(0deg); }
+    100% { opacity: 1; transform: scale(1) rotate(0deg); }
+  }
+
+  @keyframes flyOut {
+    0%   { opacity: 1; transform: translateX(0) scale(1); }
+    100% { opacity: 0; transform: translateX(80px) scale(0.8); }
+  }
+
+  @keyframes expandWidth {
+    0%   { width: 0; opacity: 0; }
+    100% { width: auto; opacity: 1; }
+  }
+
+  @keyframes fillBar {
+    0%   { width: 0%; }
+    100% { width: var(--fill); }
+  }
+
+  @keyframes dropIn {
+    0%  { opacity: 0; transform: translateY(-30px); }
+    60% { transform: translateY(4px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Text styles ── */
+  .thought-text {
+    font-size: 15px;
+    color: var(--muted);
+    text-align: center;
+    line-height: 1.6;
+    max-width: 480px;
+  }
+  .thought-text strong { color: var(--text); }
+  .thought-text em { color: var(--teal); font-style: normal; font-weight: 600; }
+
+  .big-text {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text);
+    text-align: center;
+    line-height: 1.3;
+  }
+  .big-text em { color: var(--teal); font-style: normal; }
+
+  .mid-text {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
+    text-align: center;
+  }
+
+  .small-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+  }
+
+  /* ── Section label (top left) ── */
+  .section-label {
+    position: absolute;
+    top: 16px;
+    left: 20px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--muted);
+    opacity: 0.6;
+  }
+
+  /* ── Material card ── */
+  .mat-card {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+
+  .mat-card .mat-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: var(--teal-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .mat-card .mat-icon svg { width: 20px; height: 20px; color: var(--teal); }
+  .mat-card .mat-info { display: flex; flex-direction: column; gap: 2px; }
+  .mat-card .mat-number { font-size: 14px; font-weight: 700; color: var(--text); }
+  .mat-card .mat-desc { font-size: 12px; color: var(--muted); }
+
+  /* ── Plant badge ── */
+  .plant-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    border: 2px solid;
+  }
+
+  .plant-badge.solid-blue {
+    background: var(--blue-bg);
+    border-color: var(--blue);
+    color: var(--blue);
+  }
+
+  .plant-badge.solid-teal {
+    background: var(--teal-light);
+    border-color: var(--teal);
+    color: var(--teal);
+  }
+
+  .plant-badge.solid-green {
+    background: var(--green-bg);
+    border-color: var(--green);
+    color: var(--green);
+  }
+
+  .plant-badge.dashed {
+    border-style: dashed;
+    background: transparent;
+    border-color: var(--muted);
+    color: var(--muted);
+  }
+
+  /* ── Arrow ── */
+  .arrow {
+    color: var(--muted);
+    font-size: 20px;
+  }
+
+  /* ── Field row ── */
+  .field-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 20px;
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .field-label {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 500;
+    min-width: 100px;
+  }
+
+  .field-value {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  /* ── Warning card ── */
+  .warn-card {
+    background: var(--red-bg);
+    border: 2px solid var(--red);
+    border-radius: 12px;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .warn-card .warn-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--red);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: white;
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .warn-card .warn-text { font-size: 13px; color: #991b1b; font-weight: 500; }
+
+  /* ── Stacked cards ── */
+  .stacked-cards {
+    position: relative;
+    width: 320px;
+    height: 100px;
+  }
+
+  .stacked-cards .mat-card { position: absolute; width: 300px; }
+  .stacked-cards .mat-card:nth-child(1) { top: 0; left: 0; z-index: 3; }
+  .stacked-cards .mat-card:nth-child(2) { top: 8px; left: 10px; z-index: 2; opacity: 0.6; border-color: var(--red); }
+  .stacked-cards .mat-card:nth-child(3) { top: 16px; left: 20px; z-index: 1; opacity: 0.3; border-color: var(--red); }
+
+  /* ── Detail grid ── */
+  .detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    width: 100%;
+    max-width: 420px;
+  }
+
+  /* ── Criticality option ── */
+  .crit-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    transition: all 0.3s;
+  }
+
+  .crit-option.selected {
+    border-color: var(--teal);
+    background: var(--teal-light);
+  }
+
+  .crit-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+    transition: all 0.3s;
+  }
+
+  .crit-option.selected .crit-dot {
+    border-color: var(--teal);
+    background: var(--teal);
+    box-shadow: inset 0 0 0 3px white;
+  }
+
+  /* ── Result tag ── */
+  .result-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .result-tag.green { background: var(--green-bg); color: var(--green); }
+  .result-tag.amber { background: var(--amber-bg); color: #92400e; }
+  .result-tag.red   { background: var(--red-bg); color: var(--red); }
+
+  /* ── Check circle ── */
+  .check-circle {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--green-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .check-circle svg { width: 28px; height: 28px; color: var(--green); }
+
+  /* ── Summary chip ── */
+  .summary-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    background: white;
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+
+  /* ── CTA button ── */
+  .cta-btn {
+    background: var(--teal);
+    color: white;
+    padding: 16px 48px;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  /* ── Score bar ── */
+  .score-bar-track {
+    width: 300px;
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .score-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    animation: fillBar 0.8s ease forwards;
+  }
+
+  /* ── Connector line ── */
+  .connector-line {
+    width: 2px;
+    height: 32px;
+    background: var(--border);
+  }
+
+  /* ── Hidden until frame active ── */
+  .frame .anim-target { opacity: 0; }
+
+  .frame.active .anim-target.pop-in,
+  .frame.active .anim-target.fade-up,
+  .frame.active .anim-target.slide-right,
+  .frame.active .anim-target.slide-left,
+  .frame.active .anim-target.scale-in,
+  .frame.active .anim-target.drop-in,
+  .frame.active .anim-target.stamp,
+  .frame.active .anim-target.check-draw {
+    /* animations handle opacity */
+  }
+
+  /* ── Progress bar ── */
+  .progress-track {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: rgba(0,0,0,0.06);
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--teal);
+    transition: width 0.35s ease;
+  }
+
+  /* ── Controls ── */
+  .controls {
+    position: fixed;
+    bottom: 24px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    z-index: 100;
+  }
+
+  .controls button {
+    background: rgba(255,255,255,0.1);
+    color: #94a3b8;
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .controls button:hover { background: rgba(255,255,255,0.15); color: white; }
+  .controls button:disabled { opacity: 0.3; cursor: not-allowed; }
+  .controls button.active { background: var(--teal); color: white; border-color: var(--teal); }
+
+  .frame-counter {
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    min-width: 60px;
+    text-align: center;
+  }
+
+  /* ── Feature-specific styles ── */
+/* ── Email request mockup ── */
+.email-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 18px;
+  width: 100%;
+  max-width: 400px;
+  text-align: left;
+}
+.email-card .em-header {
+  display: flex; align-items: center; gap: 8px;
+  padding-bottom: 8px; border-bottom: 1px solid var(--border);
+  margin-bottom: 8px;
+}
+.email-card .em-avatar {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--teal-light); display: flex;
+  align-items: center; justify-content: center;
+  font-size: 12px; color: var(--teal); font-weight: 700;
+}
+.email-card .em-from { font-size: 11px; font-weight: 600; color: var(--text); }
+.email-card .em-subject { font-size: 10px; color: var(--muted); }
+.email-card .em-body { font-size: 11px; color: var(--text); line-height: 1.6; }
+.email-card .em-attach {
+  margin-top: 8px; padding: 6px 10px;
+  background: #f1f5f9; border-radius: 6px;
+  font-size: 10px; color: var(--muted);
+  display: flex; align-items: center; gap: 6px;
+}
+
+/* ── Pending spreadsheet ── */
+.pending-sheet {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  width: 100%;
+  max-width: 440px;
+  font-size: 11px;
+}
+.pending-sheet .ps-header {
+  display: grid;
+  grid-template-columns: 40px 1fr 60px 60px;
+  background: #f1f5f9;
+  padding: 6px 10px;
+  font-weight: 600;
+  color: var(--muted);
+  border-bottom: 1px solid var(--border);
+}
+.pending-sheet .ps-row {
+  display: grid;
+  grid-template-columns: 40px 1fr 60px 60px;
+  padding: 5px 10px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+}
+.pending-sheet .ps-row:last-child { border-bottom: none; }
+.pending-sheet .ps-row.stale { color: var(--muted); font-style: italic; }
+.pending-sheet .ps-count {
+  padding: 6px 10px;
+  background: var(--amber-bg);
+  font-size: 10px;
+  color: #92400e;
+  text-align: center;
+}
+
+/* ── Stock decision (gut-feel) ── */
+.gut-decision {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 18px;
+  width: 100%;
+  max-width: 360px;
+}
+.gut-decision .gd-title {
+  font-size: 10px; font-weight: 700; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;
+}
+.gut-decision .gd-row {
+  display: flex; justify-content: space-between;
+  padding: 4px 0; font-size: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.gut-decision .gd-row:last-child { border-bottom: none; }
+.gut-decision .gd-row .gd-label { color: var(--muted); }
+.gut-decision .gd-row .gd-value { font-weight: 600; color: var(--text); }
+.gut-decision .gd-row .gd-value.guess { color: var(--amber); font-style: italic; }
+
+/* ── Shelf visual ── */
+.shelf-visual {
+  display: flex;
+  gap: 6px;
+  align-items: flex-end;
+  justify-content: center;
+  height: 80px;
+}
+.shelf-unit {
+  width: 20px;
+  background: var(--amber-bg);
+  border: 1px solid var(--amber);
+  border-radius: 3px 3px 0 0;
+  position: relative;
+}
+.shelf-unit.dust {
+  background: #f1f5f9;
+  border-color: var(--border);
+  opacity: 0.5;
+}
+.shelf-label {
+  font-size: 10px;
+  color: var(--muted);
+  text-align: center;
+  margin-top: 4px;
+}
+
+/* ── Criticality trigger ── */
+.crit-trigger {
+  background: white;
+  border: 2px solid var(--teal);
+  border-radius: 10px;
+  padding: 14px 18px;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+.crit-trigger .ct-badge {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  background: var(--amber-bg);
+  color: #92400e;
+  border: 2px solid var(--amber);
+  margin-bottom: 8px;
+}
+.crit-trigger .ct-prompt {
+  font-size: 12px;
+  color: var(--text);
+  line-height: 1.5;
+}
+.crit-trigger .ct-prompt strong { color: var(--teal); }
+
+/* ── Material context card ── */
+.context-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 18px;
+  width: 100%;
+  max-width: 420px;
+}
+.context-card .cc-title {
+  font-size: 10px; font-weight: 700; color: var(--teal);
+  text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;
+}
+.context-card .cc-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+.context-card .cc-item {
+  padding: 6px 10px;
+  background: #f8fafc;
+  border-radius: 6px;
+}
+.context-card .cc-item .cc-label { font-size: 9px; color: var(--muted); text-transform: uppercase; }
+.context-card .cc-item .cc-val { font-size: 13px; font-weight: 700; color: var(--text); margin-top: 2px; }
+.context-card .cc-item .cc-val.teal { color: var(--teal); }
+.context-card .cc-stock {
+  margin-top: 8px; padding: 8px 10px;
+  background: var(--amber-bg);
+  border-radius: 6px;
+  font-size: 11px; color: #92400e;
+  display: flex; justify-content: space-between;
+}
+
+/* ── Proposal card ── */
+.proposal-card {
+  background: white;
+  border: 2px solid var(--teal);
+  border-radius: 10px;
+  padding: 14px 18px;
+  width: 100%;
+  max-width: 380px;
+}
+.proposal-card .pc-title {
+  font-size: 10px; font-weight: 700; color: var(--teal);
+  text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;
+}
+.proposal-card .pc-row {
+  display: flex; justify-content: space-between;
+  padding: 5px 0; font-size: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.proposal-card .pc-row:last-child { border-bottom: none; }
+.proposal-card .pc-row .pc-label { color: var(--muted); }
+.proposal-card .pc-row .pc-value { font-weight: 700; color: var(--text); }
+.proposal-card .pc-row .pc-value.highlight { color: var(--teal); }
+.proposal-card .pc-capital {
+  margin-top: 8px; padding: 8px 10px;
+  background: var(--teal-light);
+  border-radius: 6px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--teal);
+}
+
+/* ── Capital adjuster ── */
+.capital-adj {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 18px;
+  width: 100%;
+  max-width: 400px;
+}
+.capital-adj .ca-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 6px 0; font-size: 12px;
+}
+.capital-adj .ca-label { color: var(--muted); min-width: 50px; }
+.capital-adj .ca-slider {
+  flex: 1; height: 6px; background: #e2e8f0;
+  border-radius: 3px; position: relative;
+}
+.capital-adj .ca-fill {
+  height: 100%; border-radius: 3px;
+  background: var(--teal);
+}
+.capital-adj .ca-val { font-weight: 700; color: var(--text); min-width: 30px; text-align: right; }
+.capital-adj .ca-reason {
+  margin-top: 8px; padding: 6px 10px;
+  background: var(--amber-bg); border-radius: 6px;
+  font-size: 10px; color: #92400e;
+}
+.capital-adj .ca-total {
+  margin-top: 8px; text-align: center;
+  font-size: 14px; font-weight: 700; color: var(--teal);
+}
+
+/* ── Justification panel ── */
+.justification-panel {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 18px;
+  width: 100%;
+  max-width: 400px;
+}
+.justification-panel .jp-title {
+  font-size: 10px; font-weight: 700; color: var(--teal);
+  text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;
+}
+.justification-panel .jp-row {
+  display: flex; gap: 8px; padding: 5px 0;
+  font-size: 11px; border-bottom: 1px solid var(--border);
+}
+.justification-panel .jp-row:last-child { border-bottom: none; }
+.justification-panel .jp-icon { font-size: 14px; }
+.justification-panel .jp-text { color: var(--text); flex: 1; }
+.justification-panel .jp-text strong { color: var(--teal); }
+
+/* ── Vendor selection ── */
+.vendor-select {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  max-width: 420px;
+}
+.vendor-option {
+  flex: 1;
+  background: white;
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  padding: 12px;
+  text-align: center;
+  font-size: 11px;
+}
+.vendor-option.selected {
+  border-color: var(--teal);
+  background: var(--teal-light);
+}
+.vendor-option .vo-name { font-weight: 700; color: var(--text); font-size: 13px; margin-bottom: 6px; }
+.vendor-option .vo-row { color: var(--muted); padding: 2px 0; }
+.vendor-option .vo-row strong { color: var(--text); }
+.vendor-option.selected .vo-check {
+  display: inline-block; margin-top: 6px;
+  color: var(--teal); font-weight: 700; font-size: 14px;
+}
+
+/* ── Review screen ── */
+.review-screen {
+  background: white;
+  border: 2px solid var(--green);
+  border-radius: 10px;
+  padding: 14px 18px;
+  width: 100%;
+  max-width: 420px;
+}
+.review-screen .rs-title {
+  font-size: 10px; font-weight: 700; color: var(--green);
+  text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;
+}
+.review-screen .rs-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px 12px;
+  font-size: 11px;
+}
+.review-screen .rs-label { color: var(--muted); }
+.review-screen .rs-val { font-weight: 600; color: var(--text); }
+
+/* ── Workflow chain ── */
+.workflow-chain {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  max-width: 440px;
+  justify-content: center;
+}
+.wf-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.wf-node .wf-dot {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+}
+.wf-node .wf-dot.pending { background: var(--amber-bg); border: 2px solid var(--amber); color: #92400e; }
+.wf-node .wf-dot.done { background: var(--green-bg); border: 2px solid var(--green); color: var(--green); }
+.wf-node .wf-label { font-size: 9px; color: var(--muted); text-align: center; max-width: 70px; }
+.wf-arrow { color: var(--muted); font-size: 14px; }
+
+/* ── Approval view ── */
+.approval-view {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 18px;
+  width: 100%;
+  max-width: 400px;
+}
+.approval-view .av-role {
+  font-size: 10px; font-weight: 700; color: var(--teal);
+  text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;
+}
+.approval-view .av-row {
+  display: flex; justify-content: space-between;
+  padding: 4px 0; font-size: 11px;
+  border-bottom: 1px solid var(--border);
+}
+.approval-view .av-row:last-child { border-bottom: none; }
+.approval-view .av-row .av-label { color: var(--muted); }
+.approval-view .av-row .av-val { font-weight: 600; color: var(--text); }
+.approval-view .av-row .av-val.green { color: var(--green); }
+
+/* ── SAP activation ── */
+.sap-activation {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+  max-width: 400px;
+}
+.sap-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 12px;
+  background: var(--green-bg);
+  border: 1px solid rgba(22,163,74,0.2);
+  border-radius: 6px;
+  font-size: 11px; color: var(--text);
+}
+.sap-item .sap-check { color: var(--green); font-weight: 700; }
+
+/* ── Flow diagram ── */
+.flow-diagram {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  justify-content: center;
+  width: 100%;
+  max-width: 460px;
+}
+.flow-step {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 600;
+  background: var(--teal-light);
+  color: var(--teal);
+  border: 1px solid var(--teal);
+  white-space: nowrap;
+}
+.flow-step.active { background: var(--teal); color: white; }
+.flow-arrow { color: var(--teal); font-size: 12px; }
+
+/* ── Side-by-side ── */
+.side-by-side { display: flex; gap: 12px; width: 100%; max-width: 480px; }
+.side-col { flex: 1; border-radius: 10px; padding: 14px; }
+.side-col.before { background: var(--red-bg); border: 1px solid rgba(239,68,68,0.2); }
+.side-col.after { background: var(--green-bg); border: 1px solid rgba(22,163,74,0.2); }
+.side-col .col-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+.side-col.before .col-title { color: var(--red); }
+.side-col.after .col-title { color: var(--green); }
+.side-col .col-item { font-size: 11px; color: var(--text); padding: 3px 0; }
+
+/* ── Metric spotlight ── */
+.metric-spotlight { text-align: center; }
+.metric-spotlight .metric-big { font-size: 48px; font-weight: 700; color: var(--teal); line-height: 1; }
+.metric-spotlight .metric-unit { font-size: 14px; color: var(--muted); margin-top: 4px; }
+.metric-spotlight .metric-compare { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+/* ── Cascade ── */
+.cascade-stack { display: flex; flex-direction: column; gap: 6px; max-width: 440px; text-align: center; }
+.cascade-item { font-size: 14px; color: var(--text); line-height: 1.5; }
+.cascade-connector { color: var(--teal); font-size: 16px; }
+
+</style>
+</head>
+<body>
+
+<div class="stage" id="stage">
+
+<!-- FRAMES START -->
+
+<!-- FRAMES START -->
+
+<!-- ══════════════ ACT 1 — THE PROBLEM ══════════════ -->
+
+<div class="frame" id="f1">
+  <div class="section-label anim-target pop-in">THE SITUATION</div>
+  <div class="spacer"></div>
+  <div class="email-card anim-target fade-up" style="animation-delay:.15s">
+    <div class="em-header">
+      <div class="em-avatar">MS</div>
+      <div>
+        <div class="em-from">Mike S. — Maintenance Supervisor</div>
+        <div class="em-subject">RE: Please stock this part</div>
+      </div>
+    </div>
+    <div class="em-body">
+      "We had a breakdown last week and couldn't find this part anywhere. Can we please get it stocked? Part number attached."
+    </div>
+    <div class="em-attach">📎 nameplate_photo.jpg &nbsp;·&nbsp; handwritten_PN.pdf</div>
+  </div>
+  <div class="spacer"></div>
+  <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
+    Stocking decisions start with <strong>an incident and an email</strong>. Not analysis.
+  </div>
+</div>
+
+<div class="frame" id="f2">
+  <div class="section-label anim-target pop-in">THE SITUATION</div>
+  <div class="spacer"></div>
+  <div class="pending-sheet anim-target fade-up" style="animation-delay:.15s">
+    <div class="ps-count">⚠ 87 rows — some from last month, some from last year</div>
+    <div class="ps-header"><span>#</span><span>Description</span><span>Priority</span><span>Cost</span></div>
+    <div class="ps-row"><span>84</span><span>Seal kit, pump MC-4501</span><span>—</span><span>—</span></div>
+    <div class="ps-row"><span>85</span><span>Bearing assembly 6209</span><span>—</span><span>—</span></div>
+    <div class="ps-row stale"><span>86</span><span>Coupling half — Jan 2024</span><span>—</span><span>—</span></div>
+    <div class="ps-row stale"><span>87</span><span>Filter element — Nov 2023</span><span>—</span><span>—</span></div>
+  </div>
+  <div class="spacer"></div>
+  <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
+    Stock requests accumulate in spreadsheets. <strong>Nobody knows which ones matter.</strong>
+  </div>
+</div>
+
+<div class="frame" id="f3">
+  <div class="section-label anim-target pop-in">WITHOUT MILI</div>
+  <div class="spacer"></div>
+  <div class="gut-decision anim-target fade-up" style="animation-delay:.15s">
+    <div class="gd-title">Manual stocking decision</div>
+    <div class="gd-row"><span class="gd-label">Material</span><span class="gd-value">Seal kit MC-4501</span></div>
+    <div class="gd-row"><span class="gd-label">ROP</span><span class="gd-value guess">10 — "seems about right"</span></div>
+    <div class="gd-row"><span class="gd-label">ROQ</span><span class="gd-value guess">20 — "to be safe"</span></div>
+    <div class="gd-row"><span class="gd-label">Criticality</span><span class="gd-value guess">Not assessed</span></div>
+    <div class="gd-row"><span class="gd-label">Capital review</span><span class="gd-value guess">None</span></div>
+  </div>
+  <div class="spacer"></div>
+  <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
+    The ROP was a guess. The ROQ was fear. The stocking decision had <strong>no governance</strong>.
+  </div>
+</div>
+
+<div class="frame" id="f4">
+  <div class="section-label anim-target pop-in">WITHOUT MILI</div>
+  <div class="spacer"></div>
+  <div class="shelf-visual anim-target fade-up" style="animation-delay:.15s">
+    <div class="shelf-unit dust" style="height:50px"></div>
+    <div class="shelf-unit dust" style="height:50px"></div>
+    <div class="shelf-unit dust" style="height:50px"></div>
+    <div class="shelf-unit dust" style="height:50px"></div>
+    <div class="shelf-unit dust" style="height:50px"></div>
+    <div class="shelf-unit dust" style="height:50px"></div>
+    <div class="shelf-unit dust" style="height:50px"></div>
+    <div class="shelf-unit dust" style="height:50px"></div>
+    <div class="shelf-unit dust" style="height:50px"></div>
+    <div class="shelf-unit dust" style="height:50px"></div>
+    <div class="shelf-unit dust" style="height:50px"></div>
+    <div class="shelf-unit dust" style="height:50px"></div>
+    <div class="shelf-unit dust" style="height:50px"></div>
+    <div class="shelf-unit dust" style="height:50px"></div>
+    <div class="shelf-unit dust" style="height:50px"></div>
+    <div class="shelf-unit dust" style="height:50px"></div>
+    <div class="shelf-unit dust" style="height:50px"></div>
+    <div class="shelf-unit dust" style="height:50px"></div>
+    <div class="shelf-unit" style="height:24px"></div>
+    <div class="shelf-unit" style="height:24px"></div>
+  </div>
+  <div class="shelf-label anim-target fade-up" style="animation-delay:.2s">18 of 20 units untouched after 12 months</div>
+  <div class="spacer"></div>
+  <div class="metric-spotlight anim-target scale-in" style="animation-delay:.25s">
+    <div class="metric-big">$14,400</div>
+    <div class="metric-unit">capital locked on a shelf</div>
+    <div class="metric-compare">one incident · one emotional response</div>
+  </div>
+  <div class="spacer"></div>
+  <div class="thought-text anim-target fade-up" style="animation-delay:.35s">
+    One incident. One emotional response. <strong>$14,400 sitting on a shelf.</strong>
+  </div>
+</div>
+
+<div class="frame" id="f5">
+  <div class="section-label anim-target pop-in">WITHOUT MILI</div>
+  <div class="spacer"></div>
+  <div class="warn-card anim-target slide-right" style="animation-delay:.1s">
+    <span class="warn-icon">⚠</span>
+    <span>Emotional stocking → inventory grows unchecked</span>
+  </div>
+  <div class="warn-card anim-target slide-right" style="animation-delay:.25s">
+    <span class="warn-icon">⚠</span>
+    <span>No capital review → $14K per unnecessary item</span>
+  </div>
+  <div class="warn-card anim-target slide-right" style="animation-delay:.4s">
+    <span class="warn-icon">⚠</span>
+    <span>No approval trail → nobody accountable for stock growth</span>
+  </div>
+  <div class="spacer"></div>
+  <div class="thought-text anim-target fade-up" style="animation-delay:.55s">
+    Inventory grows one "just stock it" at a time. <strong>Without governance, it only goes up.</strong>
+  </div>
+</div>
+
+<!-- ══════════════ ACT 2 — THE SOLUTION ══════════════ -->
+
+<div class="frame" id="f6">
+  <div class="big-text anim-target scale-in">Stock with intent. <em>Not impulse.</em></div>
+</div>
+
+<div class="frame" id="f7">
+  <div class="section-label anim-target pop-in">STEP 1 · TRIGGER</div>
+  <div class="spacer"></div>
+  <div class="crit-trigger anim-target fade-up" style="animation-delay:.15s">
+    <div class="ct-badge">B — High</div>
+    <div class="ct-prompt">
+      This material is critical but <strong>not currently stocked</strong> at Plant 2000.<br>
+      Would you like to create a new stock request?
+    </div>
+  </div>
+  <div class="spacer"></div>
+  <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
+    Stocking is triggered by <strong>criticality score</strong>, not by an email after a breakdown.
+  </div>
+</div>
+
+<div class="frame" id="f8">
+  <div class="section-label anim-target pop-in">STEP 1 · MATERIAL CONTEXT</div>
+  <div class="spacer"></div>
+  <div class="context-card anim-target fade-up" style="animation-delay:.15s">
+    <div class="cc-title">Material context — MC-4501</div>
+    <div class="cc-grid">
+      <div class="cc-item"><div class="cc-label">Criticality</div><div class="cc-val teal">B — High</div></div>
+      <div class="cc-item"><div class="cc-label">Lead time</div><div class="cc-val">45 days</div></div>
+      <div class="cc-item"><div class="cc-label">Unit cost</div><div class="cc-val">$1,200</div></div>
+      <div class="cc-item"><div class="cc-label">This plant</div><div class="cc-val" style="color:var(--red)">0 units</div></div>
+    </div>
+    <div class="cc-stock">
+      <span>Hamburg: 12 units</span>
+      <span>Perth: 8 units</span>
+    </div>
+  </div>
+  <div class="spacer"></div>
+  <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
+    Before proposing stock levels, <em>MiLi</em> shows you <strong>everything relevant to the decision</strong>.
+  </div>
+</div>
+
+<div class="frame" id="f9">
+  <div class="section-label anim-target pop-in">STEP 2 · PROPOSE ROP / ROQ</div>
+  <div class="spacer"></div>
+  <div class="proposal-card anim-target fade-up" style="animation-delay:.15s">
+    <div class="pc-title">Calculated recommendation</div>
+    <div class="pc-row"><span class="pc-label">Reorder point (ROP)</span><span class="pc-value highlight">3</span></div>
+    <div class="pc-row"><span class="pc-label">Reorder quantity (ROQ)</span><span class="pc-value highlight">2</span></div>
+    <div class="pc-row"><span class="pc-label">Based on</span><span class="pc-value">Criticality + lead time + consumption</span></div>
+    <div class="pc-capital">Capital commitment: $6,000</div>
+  </div>
+  <div class="spacer"></div>
+  <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
+    The numbers are <strong>calculated</strong>, not guessed. And the capital cost is visible upfront.
+  </div>
+</div>
+
+<div class="frame" id="f10">
+  <div class="section-label anim-target pop-in">STEP 2 · ADJUST</div>
+  <div class="spacer"></div>
+  <div class="capital-adj anim-target fade-up" style="animation-delay:.15s">
+    <div class="ca-row">
+      <span class="ca-label">ROP</span>
+      <div class="ca-slider"><div class="ca-fill" style="width:57%"></div></div>
+      <span class="ca-val">4</span>
+    </div>
+    <div class="ca-reason">📝 "Seasonal demand peak Q3"</div>
+    <div class="ca-row">
+      <span class="ca-label">ROQ</span>
+      <div class="ca-slider"><div class="ca-fill" style="width:14%"></div></div>
+      <span class="ca-val">1</span>
+    </div>
+    <div class="ca-total">Capital commitment: $6,000</div>
+  </div>
+  <div class="spacer"></div>
+  <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
+    Overrides are allowed. But the <strong>financial impact is always visible</strong>.
+  </div>
+</div>
+
+<div class="frame" id="f11">
+  <div class="section-label anim-target pop-in">STEP 2 · STOCKING JUSTIFICATION</div>
+  <div class="spacer"></div>
+  <div class="justification-panel anim-target fade-up" style="animation-delay:.15s">
+    <div class="jp-title">Business case for stocking</div>
+    <div class="jp-row"><span class="jp-icon">🎯</span><span class="jp-text">Criticality: <strong>B — High</strong></span></div>
+    <div class="jp-row"><span class="jp-icon">📊</span><span class="jp-text">Consumption: <strong>2 per quarter</strong> at similar plants</span></div>
+    <div class="jp-row"><span class="jp-icon">⏱</span><span class="jp-text">Lead time: <strong>45 days</strong> — exceeds emergency window</span></div>
+    <div class="jp-row"><span class="jp-icon">💰</span><span class="jp-text">Cost of downtime: <strong>$24,000/day</strong></span></div>
+  </div>
+  <div class="spacer"></div>
+  <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
+    This isn't a request. It's a <strong>business case</strong> for stocking.
+  </div>
+</div>
+
+<div class="frame" id="f12">
+  <div class="section-label anim-target pop-in">STEP 3 · VENDOR SELECTION</div>
+  <div class="spacer"></div>
+  <div class="vendor-select anim-target fade-up" style="animation-delay:.15s">
+    <div class="vendor-option selected">
+      <div class="vo-name">Vendor A</div>
+      <div class="vo-row">Price: <strong>$1,050</strong></div>
+      <div class="vo-row">Lead time: <strong>41 days</strong></div>
+      <div class="vo-check">✓ Selected</div>
+    </div>
+    <div class="vendor-option">
+      <div class="vo-name">Vendor B</div>
+      <div class="vo-row">Price: <strong>$1,180</strong></div>
+      <div class="vo-row">Lead time: <strong>52 days</strong></div>
+    </div>
+  </div>
+  <div class="spacer"></div>
+  <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
+    The stocking decision includes <strong>where to buy from</strong>. Not just how many to hold.
+  </div>
+</div>
+
+<div class="frame" id="f13">
+  <div class="section-label anim-target pop-in">STEP 3 · REVIEW</div>
+  <div class="spacer"></div>
+  <div class="review-screen anim-target fade-up" style="animation-delay:.15s">
+    <div class="rs-title">Stock request — ready to submit</div>
+    <div class="rs-grid">
+      <span class="rs-label">Material</span><span class="rs-val">MC-4501</span>
+      <span class="rs-label">Plant</span><span class="rs-val">2000</span>
+      <span class="rs-label">ROP</span><span class="rs-val">3</span>
+      <span class="rs-label">ROQ</span><span class="rs-val">2</span>
+      <span class="rs-label">Criticality</span><span class="rs-val">B — High</span>
+      <span class="rs-label">Capital</span><span class="rs-val">$6,000</span>
+      <span class="rs-label">Vendor</span><span class="rs-val">Vendor A ($1,050)</span>
+      <span class="rs-label">Justification</span><span class="rs-val">Auto-generated</span>
+    </div>
+  </div>
+  <div class="spacer"></div>
+  <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
+    The approver will see exactly this. <strong>No information lost between request and approval.</strong>
+  </div>
+</div>
+
+<div class="frame" id="f14">
+  <div class="section-label anim-target pop-in">STEP 3 · SUBMIT</div>
+  <div class="spacer"></div>
+  <div class="cta-btn anim-target stamp" style="animation-delay:.15s">Submit Stock Request</div>
+  <div class="spacer-sm"></div>
+  <div class="workflow-chain anim-target fade-up" style="animation-delay:.3s">
+    <div class="wf-node">
+      <div class="wf-dot pending">💰</div>
+      <div class="wf-label">Plant Controller</div>
+    </div>
+    <div class="wf-arrow">→</div>
+    <div class="wf-node">
+      <div class="wf-dot pending">📦</div>
+      <div class="wf-label">Warehouse Mgr</div>
+    </div>
+    <div class="wf-arrow">→</div>
+    <div class="wf-node">
+      <div class="wf-dot pending">⚙</div>
+      <div class="wf-label">SAP Post-back</div>
+    </div>
+  </div>
+  <div class="spacer"></div>
+  <div class="thought-text anim-target fade-up" style="animation-delay:.45s">
+    Three approvers. Each sees what matters to them. <strong>Stock only exists after all approve.</strong>
+  </div>
+</div>
+
+<!-- ══════════════ ACT 2b — THE GOVERNANCE ══════════════ -->
+
+<div class="frame" id="f15">
+  <div class="big-text anim-target scale-in">Justified, approved, <em>then stocked.</em></div>
+</div>
+
+<div class="frame" id="f16">
+  <div class="section-label anim-target pop-in">APPROVAL · CAPITAL REVIEW</div>
+  <div class="spacer"></div>
+  <div class="approval-view anim-target fade-up" style="animation-delay:.15s">
+    <div class="av-role">Plant Controller</div>
+    <div class="av-row"><span class="av-label">Capital commitment</span><span class="av-val">$6,000</span></div>
+    <div class="av-row"><span class="av-label">Annual holding cost</span><span class="av-val">$1,800</span></div>
+    <div class="av-row"><span class="av-label">Downtime risk avoided</span><span class="av-val green">$24,000/day</span></div>
+    <div class="av-row"><span class="av-label">Payback</span><span class="av-val green">1 stockout prevented</span></div>
+  </div>
+  <div class="spacer"></div>
+  <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
+    The controller doesn't approve "a part." They approve <strong>an investment with a return</strong>.
+  </div>
+</div>
+
+<div class="frame" id="f17">
+  <div class="section-label anim-target pop-in">APPROVAL · WAREHOUSE LOGISTICS</div>
+  <div class="spacer"></div>
+  <div class="approval-view anim-target fade-up" style="animation-delay:.15s">
+    <div class="av-role">Warehouse Manager</div>
+    <div class="av-row"><span class="av-label">Bin allocation</span><span class="av-val">Required</span></div>
+    <div class="av-row"><span class="av-label">Suggested location</span><span class="av-val">Aisle 4, Bin 22</span></div>
+    <div class="av-row"><span class="av-label">Adjacent to</span><span class="av-val">Similar seals</span></div>
+    <div class="av-row"><span class="av-label">Space available</span><span class="av-val green">Yes</span></div>
+  </div>
+  <div class="spacer"></div>
+  <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
+    Stocking isn't just a number in SAP. It's <strong>physical space and logistics</strong>.
+  </div>
+</div>
+
+<div class="frame" id="f18">
+  <div class="section-label anim-target pop-in">SAP ACTIVATION</div>
+  <div class="spacer"></div>
+  <div class="workflow-chain anim-target fade-up" style="animation-delay:.1s">
+    <div class="wf-node">
+      <div class="wf-dot done">✓</div>
+      <div class="wf-label">Controller</div>
+    </div>
+    <div class="wf-arrow">→</div>
+    <div class="wf-node">
+      <div class="wf-dot done">✓</div>
+      <div class="wf-label">Warehouse</div>
+    </div>
+    <div class="wf-arrow">→</div>
+    <div class="wf-node">
+      <div class="wf-dot done">✓</div>
+      <div class="wf-label">SAP</div>
+    </div>
+  </div>
+  <div class="spacer-sm"></div>
+  <div class="sap-activation anim-target fade-up" style="animation-delay:.25s">
+    <div class="sap-item"><span class="sap-check">✓</span> MRP parameters set — ROP 3, ROQ 2</div>
+    <div class="sap-item"><span class="sap-check">✓</span> Storage location assigned — Aisle 4, Bin 22</div>
+    <div class="sap-item"><span class="sap-check">✓</span> Source of supply linked — Vendor A</div>
+    <div class="sap-item"><span class="sap-check">✓</span> First PO auto-generated</div>
+  </div>
+  <div class="spacer"></div>
+  <div class="thought-text anim-target fade-up" style="animation-delay:.4s">
+    From request to active stock, <strong>every step governed and traceable</strong>.
+  </div>
+</div>
+
+<!-- ══════════════ ACT 3 — THE OUTCOME ══════════════ -->
+
+<div class="frame" id="f19">
+  <div class="big-text anim-target scale-in">The difference.</div>
+</div>
+
+<div class="frame" id="f20">
+  <div class="section-label anim-target pop-in">THE DIFFERENCE</div>
+  <div class="spacer"></div>
+  <div class="side-by-side anim-target fade-up" style="animation-delay:.15s">
+    <div class="side-col before">
+      <div class="col-title">Without MiLi</div>
+      <div class="col-item">Email request → spreadsheet</div>
+      <div class="col-item">Gut-feel ROP/ROQ</div>
+      <div class="col-item">No capital review</div>
+      <div class="col-item">No approval trail</div>
+      <div class="col-item">Inventory grows unchecked</div>
+    </div>
+    <div class="side-col after">
+      <div class="col-title">With MiLi</div>
+      <div class="col-item">Criticality-triggered request</div>
+      <div class="col-item">Calculated ROP/ROQ</div>
+      <div class="col-item">Capital visible upfront</div>
+      <div class="col-item">Three-step approval</div>
+      <div class="col-item">Justified investment</div>
+    </div>
+  </div>
+  <div class="spacer"></div>
+  <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
+    Every stocking decision becomes <strong>a governed investment</strong>, not a reactive impulse.
+  </div>
+</div>
+
+<div class="frame" id="f21">
+  <div class="section-label anim-target pop-in">RESULT</div>
+  <div class="spacer"></div>
+  <div class="flow-diagram anim-target fade-up" style="animation-delay:.1s">
+    <div class="flow-step active">Criticality</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step active">Request</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step active">Approval</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step active">SAP</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step active">Active</div>
+  </div>
+  <div class="spacer"></div>
+  <div class="summary-chip anim-target slide-right" style="animation-delay:.2s">100% of new stock backed by criticality score</div>
+  <div class="summary-chip anim-target slide-right" style="animation-delay:.3s">$6K avg capital commitment vs. $14K gut-feel</div>
+  <div class="summary-chip anim-target slide-right" style="animation-delay:.4s">Zero un-governed stock additions</div>
+  <div class="spacer"></div>
+  <div class="thought-text anim-target fade-up" style="animation-delay:.5s">
+    <strong>Intentional stocking costs less and works better than reactive stocking.</strong>
+  </div>
+</div>
+
+<div class="frame" id="f22">
+  <div class="section-label anim-target pop-in">RESULT</div>
+  <div class="spacer"></div>
+  <div class="metric-spotlight anim-target scale-in" style="animation-delay:.15s">
+    <div class="metric-big">100%</div>
+    <div class="metric-unit">of new stock backed by criticality</div>
+    <div class="metric-compare">every item justified before stocking</div>
+  </div>
+  <div class="spacer"></div>
+  <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
+    No material enters stock without a <strong>scored reason to be there</strong>.
+  </div>
+</div>
+
+<div class="frame" id="f23">
+  <div class="section-label anim-target pop-in">RESULT</div>
+  <div class="spacer"></div>
+  <div class="metric-spotlight anim-target scale-in" style="animation-delay:.15s">
+    <div class="metric-big">$6K</div>
+    <div class="metric-unit">average capital commitment</div>
+    <div class="metric-compare">vs. $14K from gut-feel stocking</div>
+  </div>
+  <div class="spacer"></div>
+  <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
+    Calculated stock levels mean <strong>57% less capital locked per item</strong>.
+  </div>
+</div>
+
+<div class="frame" id="f24">
+  <div class="section-label anim-target pop-in">RESULT</div>
+  <div class="spacer"></div>
+  <div class="metric-spotlight anim-target scale-in" style="animation-delay:.15s">
+    <div class="metric-big">Zero</div>
+    <div class="metric-unit">un-governed stock additions</div>
+    <div class="metric-compare">every item tracked from request to shelf</div>
+  </div>
+  <div class="spacer"></div>
+  <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
+    <strong>Nothing enters inventory without approval, justification, and a trail.</strong>
+  </div>
+</div>
+
+<div class="frame" id="f25">
+  <div class="section-label anim-target pop-in">NET EFFECT</div>
+  <div class="spacer"></div>
+  <div class="cascade-stack anim-target fade-up" style="animation-delay:.15s">
+    <div class="cascade-item">When stocking requires justification, <strong>inventory grows intentionally</strong>.</div>
+    <div class="cascade-connector">↓</div>
+    <div class="cascade-item">When growth is intentional, <strong>capital is efficient</strong>.</div>
+    <div class="cascade-connector">↓</div>
+    <div class="cascade-item">When capital is efficient, <strong>more budget goes to parts that matter</strong>.</div>
+  </div>
+  <div class="spacer"></div>
+  <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
+    Governance doesn't slow things down. <strong>It directs resources where they belong.</strong>
+  </div>
+</div>
+
+<div class="frame" id="f26">
+  <div class="big-text anim-target scale-in">Stock with intent.<br><em>Not impulse.</em></div>
+</div>
+
+<!-- ══════════════ CLOSER ══════════════ -->
+
+<div class="frame" id="f27">
+  <div class="brand anim-target pop-in">
+    <div class="logo">MiLi</div>
+    <div class="by">by Lexin Solutions</div>
+  </div>
+  <div class="spacer"></div>
+  <div class="divider anim-target fade-up" style="animation-delay:.15s"></div>
+  <div class="spacer"></div>
+  <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
+    Stock on purpose. <em>New Stock Requests</em> — one of 13 modules.
+  </div>
+</div>
+
+<!-- FRAMES END -->
+
+<!-- FRAMES END -->
+
+  <!-- Progress bar -->
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+</div>
+
+<!-- Controls -->
+<div class="controls">
+  <button id="prevBtn" onclick="prev()" disabled>&larr;</button>
+  <div class="frame-counter" id="counter">1 / 27</div>
+  <button id="nextBtn" onclick="next()">&rarr;</button>
+  <button id="playBtn" onclick="autoPlay()">&#9654; Play</button>
+</div>
+
+<script>
+  const totalFrames = 27;
+  let current = 0;
+  let interval = null;
+
+  function show(n) {
+    document.querySelectorAll('.frame').forEach(f => f.classList.remove('active'));
+    const frame = document.getElementById(`f${n + 1}`);
+    frame.classList.add('active');
+
+    // Re-trigger animations
+    frame.querySelectorAll('.anim-target').forEach(el => {
+      const classes = [...el.classList];
+      const animClass = classes.find(c =>
+        ['pop-in','fade-up','slide-right','slide-left','scale-in','drop-in','stamp','check-draw'].includes(c)
+      );
+      if (animClass) {
+        el.classList.remove(animClass);
+        void el.offsetHeight;
+        el.classList.add(animClass);
+      }
+    });
+
+    document.getElementById('counter').textContent = `${n + 1} / ${totalFrames}`;
+    document.getElementById('prevBtn').disabled = n === 0;
+    document.getElementById('nextBtn').disabled = n === totalFrames - 1;
+    document.getElementById('progressFill').style.width = `${((n + 1) / totalFrames) * 100}%`;
+  }
+
+  function next() {
+    if (current < totalFrames - 1) { current++; show(current); }
+  }
+
+  function prev() {
+    if (current > 0) { current--; show(current); }
+  }
+
+  function autoPlay() {
+    const btn = document.getElementById('playBtn');
+    if (interval) {
+      clearInterval(interval);
+      interval = null;
+      btn.innerHTML = '&#9654; Play';
+      btn.classList.remove('active');
+      return;
+    }
+
+    btn.innerHTML = '&#9208; Pause';
+    btn.classList.add('active');
+    current = 0;
+    show(0);
+
+    interval = setInterval(() => {
+      if (current < totalFrames - 1) {
+        current++;
+        show(current);
+      } else {
+        clearInterval(interval);
+        interval = null;
+        btn.innerHTML = '&#9654; Play';
+        btn.classList.remove('active');
+      }
+    }, 1800);
+  }
+
+  // Keyboard navigation
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); next(); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
+  });
+
+  show(0);
+</script>
+<!-- Feedback: uncomment when deploying to mili-slides -->
+<!-- <script src="../feedback.js"></script> -->
+
+</body>
+</html>

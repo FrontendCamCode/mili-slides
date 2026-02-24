@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MiLi — ROP ROQ Calculator</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal: #2a7d7b;
+    --teal-light: #e8f4f3;
+    --dark: #0f172a;
+    --card-bg: #ffffff;
+    --border: #e2e8f0;
+    --text: #1e293b;
+    --muted: #94a3b8;
+    --green: #16a34a;
+    --green-bg: #dcfce7;
+    --red: #ef4444;
+    --red-bg: #fef2f2;
+    --amber: #f59e0b;
+    --amber-bg: #fef3c7;
+    --blue: #3b82f6;
+    --blue-bg: #eff6ff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--dark);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    color: var(--text);
+    overflow: hidden;
+  }
+
+  /* ── Stage ── */
+  .stage {
+    width: 720px;
+    height: 480px;
+    background: #f8fafc;
+    border-radius: 16px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+  }
+
+  /* ── Frame ── */
+  .frame {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 64px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+  }
+
+  .frame.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* ── Animation classes ── */
+  .pop-in     { animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+  .fade-up    { animation: fadeUp 0.4s ease forwards; }
+  .slide-right { animation: slideRight 0.4s ease forwards; }
+  .slide-left  { animation: slideLeft 0.4s ease forwards; }
+  .scale-in   { animation: scaleIn 0.35s ease forwards; }
+  .draw-line  { animation: drawLine 0.6s ease forwards; }
+  .pulse-glow { animation: pulseGlow 1.5s ease-in-out infinite; }
+  .stamp      { animation: stamp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+  .count-up   { animation: fadeUp 0.3s ease forwards; }
+  .shake      { animation: shake 0.4s ease; }
+  .check-draw { animation: checkDraw 0.4s ease forwards; }
+  .fly-out    { animation: flyOut 0.5s ease forwards; }
+  .drop-in    { animation: dropIn 0.4s ease forwards; }
+
+  .typewriter {
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: 2px solid var(--teal);
+    animation: typewriter 0.8s steps(20) forwards, blinkCaret 0.6s step-end infinite;
+  }
+
+  @keyframes popIn {
+    0%   { opacity: 0; transform: scale(0.7); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+
+  @keyframes fadeUp {
+    0%   { opacity: 0; transform: translateY(16px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes slideRight {
+    0%   { opacity: 0; transform: translateX(-24px); }
+    100% { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes slideLeft {
+    0%   { opacity: 0; transform: translateX(24px); }
+    100% { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes scaleIn {
+    0%   { opacity: 0; transform: scale(0); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+
+  @keyframes drawLine {
+    0%   { width: 0; }
+    100% { width: 100%; }
+  }
+
+  @keyframes pulseGlow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(42, 125, 123, 0); }
+    50%      { box-shadow: 0 0 0 8px rgba(42, 125, 123, 0.12); }
+  }
+
+  @keyframes typewriter {
+    0%   { width: 0; }
+    100% { width: 100%; }
+  }
+
+  @keyframes blinkCaret {
+    50% { border-color: transparent; }
+  }
+
+  @keyframes stamp {
+    0%   { opacity: 0; transform: scale(2.5) rotate(-12deg); }
+    100% { opacity: 1; transform: scale(1) rotate(-6deg); }
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%  { transform: translateX(-6px); }
+    40%  { transform: translateX(6px); }
+    60%  { transform: translateX(-4px); }
+    80%  { transform: translateX(4px); }
+  }
+
+  @keyframes checkDraw {
+    0%  { opacity: 0; transform: scale(0) rotate(-45deg); }
+    50% { transform: scale(1.2) rotate(0deg); }
+    100% { opacity: 1; transform: scale(1) rotate(0deg); }
+  }
+
+  @keyframes flyOut {
+    0%   { opacity: 1; transform: translateX(0) scale(1); }
+    100% { opacity: 0; transform: translateX(80px) scale(0.8); }
+  }
+
+  @keyframes expandWidth {
+    0%   { width: 0; opacity: 0; }
+    100% { width: auto; opacity: 1; }
+  }
+
+  @keyframes fillBar {
+    0%   { width: 0%; }
+    100% { width: var(--fill); }
+  }
+
+  @keyframes dropIn {
+    0%  { opacity: 0; transform: translateY(-30px); }
+    60% { transform: translateY(4px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Text styles ── */
+  .thought-text {
+    font-size: 15px;
+    color: var(--muted);
+    text-align: center;
+    line-height: 1.6;
+    max-width: 480px;
+  }
+  .thought-text strong { color: var(--text); }
+  .thought-text em { color: var(--teal); font-style: normal; font-weight: 600; }
+
+  .big-text {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text);
+    text-align: center;
+    line-height: 1.3;
+  }
+  .big-text em { color: var(--teal); font-style: normal; }
+
+  .mid-text {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
+    text-align: center;
+  }
+
+  .small-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+  }
+
+  /* ── Section label (top left) ── */
+  .section-label {
+    position: absolute;
+    top: 16px;
+    left: 20px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--muted);
+    opacity: 0.6;
+  }
+
+  /* ── Material card ── */
+  .mat-card {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+
+  .mat-card .mat-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: var(--teal-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .mat-card .mat-icon svg { width: 20px; height: 20px; color: var(--teal); }
+  .mat-card .mat-info { display: flex; flex-direction: column; gap: 2px; }
+  .mat-card .mat-number { font-size: 14px; font-weight: 700; color: var(--text); }
+  .mat-card .mat-desc { font-size: 12px; color: var(--muted); }
+
+  /* ── Plant badge ── */
+  .plant-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    border: 2px solid;
+  }
+
+  .plant-badge.solid-blue {
+    background: var(--blue-bg);
+    border-color: var(--blue);
+    color: var(--blue);
+  }
+
+  .plant-badge.solid-teal {
+    background: var(--teal-light);
+    border-color: var(--teal);
+    color: var(--teal);
+  }
+
+  .plant-badge.solid-green {
+    background: var(--green-bg);
+    border-color: var(--green);
+    color: var(--green);
+  }
+
+  .plant-badge.dashed {
+    border-style: dashed;
+    background: transparent;
+    border-color: var(--muted);
+    color: var(--muted);
+  }
+
+  /* ── Arrow ── */
+  .arrow {
+    color: var(--muted);
+    font-size: 20px;
+  }
+
+  /* ── Field row ── */
+  .field-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 20px;
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .field-label {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 500;
+    min-width: 100px;
+  }
+
+  .field-value {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  /* ── Warning card ── */
+  .warn-card {
+    background: var(--red-bg);
+    border: 2px solid var(--red);
+    border-radius: 12px;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .warn-card .warn-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--red);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: white;
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .warn-card .warn-text { font-size: 13px; color: #991b1b; font-weight: 500; }
+
+  /* ── Stacked cards ── */
+  .stacked-cards {
+    position: relative;
+    width: 320px;
+    height: 100px;
+  }
+
+  .stacked-cards .mat-card { position: absolute; width: 300px; }
+  .stacked-cards .mat-card:nth-child(1) { top: 0; left: 0; z-index: 3; }
+  .stacked-cards .mat-card:nth-child(2) { top: 8px; left: 10px; z-index: 2; opacity: 0.6; border-color: var(--red); }
+  .stacked-cards .mat-card:nth-child(3) { top: 16px; left: 20px; z-index: 1; opacity: 0.3; border-color: var(--red); }
+
+  /* ── Detail grid ── */
+  .detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    width: 100%;
+    max-width: 420px;
+  }
+
+  /* ── Criticality option ── */
+  .crit-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    transition: all 0.3s;
+  }
+
+  .crit-option.selected {
+    border-color: var(--teal);
+    background: var(--teal-light);
+  }
+
+  .crit-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+    transition: all 0.3s;
+  }
+
+  .crit-option.selected .crit-dot {
+    border-color: var(--teal);
+    background: var(--teal);
+    box-shadow: inset 0 0 0 3px white;
+  }
+
+  /* ── Result tag ── */
+  .result-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .result-tag.green { background: var(--green-bg); color: var(--green); }
+  .result-tag.amber { background: var(--amber-bg); color: #92400e; }
+  .result-tag.red   { background: var(--red-bg); color: var(--red); }
+
+  /* ── Check circle ── */
+  .check-circle {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--green-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .check-circle svg { width: 28px; height: 28px; color: var(--green); }
+
+  /* ── Summary chip ── */
+  .summary-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    background: white;
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+
+  /* ── CTA button ── */
+  .cta-btn {
+    background: var(--teal);
+    color: white;
+    padding: 16px 48px;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  /* ── Score bar ── */
+  .score-bar-track {
+    width: 300px;
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .score-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    animation: fillBar 0.8s ease forwards;
+  }
+
+  /* ── Connector line ── */
+  .connector-line {
+    width: 2px;
+    height: 32px;
+    background: var(--border);
+  }
+
+  /* ── Hidden until frame active ── */
+  .frame .anim-target { opacity: 0; }
+
+  .frame.active .anim-target.pop-in,
+  .frame.active .anim-target.fade-up,
+  .frame.active .anim-target.slide-right,
+  .frame.active .anim-target.slide-left,
+  .frame.active .anim-target.scale-in,
+  .frame.active .anim-target.drop-in,
+  .frame.active .anim-target.stamp,
+  .frame.active .anim-target.check-draw {
+    /* animations handle opacity */
+  }
+
+  /* ── Progress bar ── */
+  .progress-track {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: rgba(0,0,0,0.06);
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--teal);
+    transition: width 0.35s ease;
+  }
+
+  /* ── Controls ── */
+  .controls {
+    position: fixed;
+    bottom: 24px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    z-index: 100;
+  }
+
+  .controls button {
+    background: rgba(255,255,255,0.1);
+    color: #94a3b8;
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .controls button:hover { background: rgba(255,255,255,0.15); color: white; }
+  .controls button:disabled { opacity: 0.3; cursor: not-allowed; }
+  .controls button.active { background: var(--teal); color: white; border-color: var(--teal); }
+
+  .frame-counter {
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    min-width: 60px;
+    text-align: center;
+  }
+
+  /* ── Feature-specific styles ── */
+/* ── Warehouse bin mockup ── */
+.bin-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 20px;
+  text-align: center;
+  width: 100%;
+  max-width: 300px;
+}
+.bin-card .bin-icon { font-size: 28px; margin-bottom: 6px; }
+.bin-card .bin-stock { font-size: 22px; font-weight: 700; color: var(--text); }
+.bin-card .bin-label { font-size: 12px; color: var(--muted); margin-top: 4px; }
+.bin-card .bin-rop {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--amber-bg);
+  color: #92400e;
+  border: 1px solid var(--amber);
+}
+
+/* ── Consumption chart (simplified bars) ── */
+.consumption-chart {
+  display: flex;
+  gap: 2px;
+  align-items: flex-end;
+  height: 60px;
+  width: 100%;
+  max-width: 320px;
+}
+.consumption-chart .month-bar {
+  flex: 1;
+  border-radius: 2px 2px 0 0;
+  min-width: 6px;
+}
+.consumption-chart .month-bar.high { background: var(--teal); }
+.consumption-chart .month-bar.low { background: #cbd5e1; }
+.consumption-chart .rop-line {
+  position: absolute;
+  width: 100%;
+  border-top: 2px dashed var(--red);
+  top: 20px;
+}
+
+/* ── Side-by-side charts ── */
+.chart-pair {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+  max-width: 440px;
+}
+.chart-box {
+  flex: 1;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+}
+.chart-box .chart-title {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+.chart-box .mini-bars {
+  display: flex;
+  gap: 2px;
+  align-items: flex-end;
+  height: 40px;
+  justify-content: center;
+}
+.chart-box .mini-bars .bar {
+  width: 8px;
+  border-radius: 2px 2px 0 0;
+}
+
+/* ── Exception donuts ── */
+.exception-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  width: 100%;
+  max-width: 400px;
+}
+.exception-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.exception-dot {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.exception-dot.increase { background: var(--amber); }
+.exception-dot.decrease { background: var(--green); }
+.exception-dot.unstock { background: var(--red); }
+.exception-dot.newstock { background: var(--blue); }
+.exception-count { font-size: 18px; font-weight: 700; color: var(--text); }
+.exception-label { font-size: 10px; color: var(--muted); }
+
+/* ── Parameter card ── */
+.param-card {
+  background: white;
+  border: 2px solid var(--teal);
+  border-radius: 10px;
+  padding: 14px 18px;
+  width: 100%;
+  max-width: 380px;
+}
+.param-card .param-title {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--teal);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+.param-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+  font-size: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.param-row:last-child { border-bottom: none; }
+.param-row .param-label { color: var(--muted); }
+.param-row .param-value { font-weight: 600; color: var(--text); }
+.param-row .param-value.alert { color: var(--red); }
+
+/* ── Recommendation diff ── */
+.rec-diff {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.rec-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 12px;
+}
+.rec-label { color: var(--muted); min-width: 50px; }
+.rec-old { color: var(--red); text-decoration: line-through; min-width: 40px; }
+.rec-arrow { color: var(--teal); }
+.rec-new { color: var(--green); font-weight: 700; min-width: 40px; }
+
+/* ── Action buttons mockup ── */
+.action-row {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+.action-btn {
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid var(--border);
+}
+.action-btn.accept { background: var(--teal); color: white; border-color: var(--teal); }
+.action-btn.override { background: var(--amber-bg); color: #92400e; border-color: var(--amber); }
+.action-btn.skip { background: white; color: var(--muted); }
+
+/* ── Batch summary ── */
+.batch-summary {
+  background: var(--green-bg);
+  border: 1px solid rgba(22,163,74,0.2);
+  border-radius: 10px;
+  padding: 14px 20px;
+  text-align: center;
+  width: 100%;
+  max-width: 380px;
+}
+.batch-summary .batch-count { font-size: 24px; font-weight: 700; color: var(--green); }
+.batch-summary .batch-label { font-size: 12px; color: var(--text); margin-top: 4px; }
+.batch-summary .batch-impact { font-size: 14px; font-weight: 700; color: var(--teal); margin-top: 8px; }
+
+/* ── Calendar row ── */
+.calendar-row {
+  display: flex;
+  gap: 4px;
+  width: 100%;
+  max-width: 400px;
+  justify-content: center;
+}
+.cal-month {
+  width: 28px; height: 28px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 600;
+}
+.cal-month.done { background: var(--green-bg); color: var(--green); border: 1px solid var(--green); }
+.cal-month.current { background: var(--teal); color: white; }
+.cal-month.future { background: #f1f5f9; color: var(--muted); border: 1px solid var(--border); }
+
+/* ── Trend chart ── */
+.trend-row {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  max-width: 440px;
+}
+.trend-box {
+  flex: 1;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  text-align: center;
+}
+.trend-box .trend-title { font-size: 10px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+.trend-box .trend-value { font-size: 22px; font-weight: 700; margin-top: 4px; }
+.trend-box .trend-dir { font-size: 11px; margin-top: 2px; }
+.trend-box .trend-dir.down { color: var(--green); }
+.trend-box .trend-dir.up { color: var(--red); }
+.trend-box .trend-dir.steady { color: var(--teal); }
+
+/* ── Side-by-side ── */
+.side-by-side {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  max-width: 480px;
+}
+.side-col {
+  flex: 1;
+  border-radius: 10px;
+  padding: 14px;
+}
+.side-col.before { background: var(--red-bg); border: 1px solid rgba(239,68,68,0.2); }
+.side-col.after { background: var(--green-bg); border: 1px solid rgba(22,163,74,0.2); }
+.side-col .col-title {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 1px; margin-bottom: 8px;
+}
+.side-col.before .col-title { color: var(--red); }
+.side-col.after .col-title { color: var(--green); }
+.side-col .col-item { font-size: 11px; color: var(--text); padding: 3px 0; }
+
+/* ── Metric spotlight ── */
+.metric-spotlight { text-align: center; }
+.metric-spotlight .metric-big { font-size: 48px; font-weight: 700; color: var(--teal); line-height: 1; }
+.metric-spotlight .metric-unit { font-size: 14px; color: var(--muted); margin-top: 4px; }
+.metric-spotlight .metric-compare { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+/* ── Cascade ── */
+.cascade-stack { display: flex; flex-direction: column; gap: 6px; max-width: 440px; text-align: center; }
+.cascade-item { font-size: 14px; color: var(--text); line-height: 1.5; }
+.cascade-connector { color: var(--teal); font-size: 16px; }
+
+</style>
+</head>
+<body>
+
+<div class="stage" id="stage">
+
+<!-- FRAMES START -->
+
+<!-- FRAMES START -->
+
+<!-- ═══════ ACT 1 · THE PROBLEM ═══════ -->
+
+<div class="frame" id="f1">
+  <div class="section-label">THE PROBLEM</div>
+  <div class="bin-card pop-in anim-target" style="animation-delay:0s">
+    <div class="bin-icon">📦</div>
+    <div class="bin-stock">150 units</div>
+    <div class="bin-label">Filter element, hydraulic 10μm</div>
+    <div class="bin-rop">ROP: 50 · Set in 2019</div>
+  </div>
+  <div style="height:16px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">The stock level was set <strong>six years ago</strong>. The world has changed. The ROP hasn't.</div>
+</div>
+
+<div class="frame" id="f2">
+  <div class="section-label">THE PROBLEM</div>
+  <div class="chart-pair fade-up anim-target" style="animation-delay:0s">
+    <div class="chart-box">
+      <div class="chart-title">2019 — Steady Demand</div>
+      <div class="mini-bars">
+        <div class="bar" style="height:30px; background:var(--teal)"></div>
+        <div class="bar" style="height:34px; background:var(--teal)"></div>
+        <div class="bar" style="height:28px; background:var(--teal)"></div>
+        <div class="bar" style="height:32px; background:var(--teal)"></div>
+        <div class="bar" style="height:30px; background:var(--teal)"></div>
+        <div class="bar" style="height:36px; background:var(--teal)"></div>
+      </div>
+    </div>
+    <div class="chart-box">
+      <div class="chart-title">Today — 70% Drop</div>
+      <div class="mini-bars">
+        <div class="bar" style="height:10px; background:#cbd5e1"></div>
+        <div class="bar" style="height:8px; background:#cbd5e1"></div>
+        <div class="bar" style="height:12px; background:#cbd5e1"></div>
+        <div class="bar" style="height:6px; background:#cbd5e1"></div>
+        <div class="bar" style="height:10px; background:#cbd5e1"></div>
+        <div class="bar" style="height:4px; background:#cbd5e1"></div>
+      </div>
+    </div>
+  </div>
+  <div style="height:16px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Static ROP means you're <strong>stocking for a reality that no longer exists</strong>.</div>
+</div>
+
+<div class="frame" id="f3">
+  <div class="section-label">THE PROBLEM</div>
+  <div class="param-card slide-right anim-target" style="animation-delay:0s">
+    <div class="param-title">SAP MD04 — Stock Overview</div>
+    <div class="param-row"><span class="param-label">On hand</span><span class="param-value">150 EA</span></div>
+    <div class="param-row"><span class="param-label">Demand (12 mo)</span><span class="param-value alert">0</span></div>
+    <div class="param-row"><span class="param-label">ROP trigger</span><span class="param-value">50 EA</span></div>
+    <div class="param-row"><span class="param-label">Auto-requisition</span><span class="param-value alert">50 EA — queued</span></div>
+  </div>
+  <div style="height:16px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">SAP is doing exactly what it was told. The problem is <strong>nobody updated the instructions</strong>.</div>
+</div>
+
+<div class="frame" id="f4">
+  <div class="section-label">THE PROBLEM</div>
+  <div class="side-by-side fade-up anim-target" style="animation-delay:0s">
+    <div class="side-col before">
+      <div class="col-title">Option A</div>
+      <div class="col-item" style="font-weight:600">Review 6,000 materials manually</div>
+      <div class="col-item" style="margin-top:6px; font-size:10px; color:var(--red)">→ Impossible</div>
+    </div>
+    <div class="side-col before">
+      <div class="col-title">Option B</div>
+      <div class="col-item" style="font-weight:600">Ignore it</div>
+      <div class="col-item" style="margin-top:6px; font-size:10px; color:var(--red)">→ Stock grows silently</div>
+    </div>
+  </div>
+  <div style="height:12px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">When there are too many materials to review, <strong>none get reviewed</strong>.</div>
+</div>
+
+<div class="frame" id="f5">
+  <div class="section-label">THE PROBLEM</div>
+  <div class="warn-card slide-right anim-target" style="animation-delay:0s">Overstocked items → $3.8M dead stock</div>
+  <div class="warn-card slide-right anim-target" style="animation-delay:0.15s">Understocked items → 14 stockouts last quarter</div>
+  <div class="warn-card slide-right anim-target" style="animation-delay:0.3s">No review cycle → both problems coexist</div>
+  <div style="height:12px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.5s">Overstocking and stockouts aren't opposites. <strong>They're symptoms of the same disease: no recalculation.</strong></div>
+</div>
+
+<div class="frame" id="f6">
+  <div class="section-label">THE PROBLEM</div>
+  <div class="metric-spotlight pop-in anim-target" style="animation-delay:0s">
+    <div class="metric-big">$3.8M</div>
+    <div class="metric-unit">dead stock</div>
+    <div class="metric-compare">while 14 stockouts occurred last quarter</div>
+  </div>
+  <div style="height:16px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Too much of the wrong stock. <strong>Too little of the right stock.</strong></div>
+</div>
+
+<div class="frame" id="f7">
+  <div class="section-label">THE PROBLEM</div>
+  <div class="big-text fade-up anim-target" style="animation-delay:0s">The fix isn't more stock.</div>
+  <div class="big-text fade-up anim-target" style="animation-delay:0.15s">It's stock that <em>recalculates</em>.</div>
+</div>
+
+<!-- ═══════ ACT 2 · THE SOLUTION ═══════ -->
+
+<div class="frame" id="f8">
+  <div class="big-text scale-in anim-target" style="animation-delay:0s">Stock levels that</div>
+  <div class="big-text scale-in anim-target" style="animation-delay:0.2s"><em>recalculate.</em></div>
+</div>
+
+<div class="frame" id="f9">
+  <div class="section-label">MILI ROP/ROQ</div>
+  <div class="exception-grid pop-in anim-target" style="animation-delay:0s">
+    <div class="exception-item">
+      <div class="exception-dot increase"></div>
+      <div><div class="exception-count">142</div><div class="exception-label">Increase recommended</div></div>
+    </div>
+    <div class="exception-item">
+      <div class="exception-dot decrease"></div>
+      <div><div class="exception-count">89</div><div class="exception-label">Decrease recommended</div></div>
+    </div>
+    <div class="exception-item">
+      <div class="exception-dot unstock"></div>
+      <div><div class="exception-count">23</div><div class="exception-label">Unstock recommended</div></div>
+    </div>
+    <div class="exception-item">
+      <div class="exception-dot newstock"></div>
+      <div><div class="exception-count">7</div><div class="exception-label">New stock recommended</div></div>
+    </div>
+  </div>
+  <div style="height:12px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Don't review everything. <strong>Review the exceptions.</strong></div>
+</div>
+
+<div class="frame" id="f10">
+  <div class="section-label">MILI ROP/ROQ</div>
+  <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:center" class="fade-up anim-target" style="animation-delay:0s">
+    <div class="result-tag">Plant 1000</div>
+    <div class="result-tag">MRP Controller 202</div>
+    <div class="result-tag" style="background:var(--teal-light); color:var(--teal); border-color:var(--teal)">34 exceptions</div>
+  </div>
+  <div style="height:8px"></div>
+  <div class="result-tag slide-right anim-target" style="animation-delay:0.15s">Sorted by capital impact ↓</div>
+  <div style="height:16px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Biggest impact first. That's how you <strong>move the needle</strong>.</div>
+</div>
+
+<div class="frame" id="f11">
+  <div class="section-label">MILI ROP/ROQ</div>
+  <div class="param-card pop-in anim-target" style="animation-delay:0s">
+    <div class="param-title">MC-3200 — Filter element, hydraulic 10μm</div>
+    <div class="param-row"><span class="param-label">ROP</span><span class="param-value">50</span></div>
+    <div class="param-row"><span class="param-label">ROQ</span><span class="param-value">25</span></div>
+    <div class="param-row"><span class="param-label">Current stock</span><span class="param-value alert">150</span></div>
+    <div class="param-row"><span class="param-label">Annual consumption</span><span class="param-value alert">12</span></div>
+  </div>
+  <div style="height:12px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">150 in stock. 12 used per year. <strong>That's 12 years of supply.</strong></div>
+</div>
+
+<div class="frame" id="f12">
+  <div class="section-label">MILI ROP/ROQ</div>
+  <div class="chart-box slide-right anim-target" style="animation-delay:0s; max-width:360px; width:100%">
+    <div class="chart-title">24-Month Consumption Trend</div>
+    <div class="mini-bars" style="height:50px">
+      <div class="bar" style="height:40px; background:var(--teal)"></div>
+      <div class="bar" style="height:35px; background:var(--teal)"></div>
+      <div class="bar" style="height:38px; background:var(--teal)"></div>
+      <div class="bar" style="height:30px; background:var(--teal)"></div>
+      <div class="bar" style="height:25px; background:var(--teal)"></div>
+      <div class="bar" style="height:22px; background:var(--teal)"></div>
+      <div class="bar" style="height:18px; background:#94a3b8"></div>
+      <div class="bar" style="height:14px; background:#94a3b8"></div>
+      <div class="bar" style="height:12px; background:#94a3b8"></div>
+      <div class="bar" style="height:10px; background:#cbd5e1"></div>
+      <div class="bar" style="height:8px; background:#cbd5e1"></div>
+      <div class="bar" style="height:6px; background:#cbd5e1"></div>
+    </div>
+    <div style="font-size:10px; color:var(--muted); margin-top:6px">Avg: 1.0/mo · Lead time: 30d · Service target: 95%</div>
+  </div>
+  <div style="height:16px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s"><em>MiLi</em> doesn't guess. It calculates from <strong>demonstrated demand</strong>.</div>
+</div>
+
+<div class="frame" id="f13">
+  <div class="section-label">MILI ROP/ROQ</div>
+  <div class="rec-diff pop-in anim-target" style="animation-delay:0s">
+    <div class="rec-row">
+      <span class="rec-label">ROP</span>
+      <span class="rec-old">50</span>
+      <span class="rec-arrow">→</span>
+      <span class="rec-new">3</span>
+    </div>
+    <div class="rec-row">
+      <span class="rec-label">ROQ</span>
+      <span class="rec-old">25</span>
+      <span class="rec-arrow">→</span>
+      <span class="rec-new">2</span>
+    </div>
+  </div>
+  <div style="height:8px"></div>
+  <div class="result-tag slide-right anim-target" style="animation-delay:0.15s; background:var(--green-bg); color:var(--green); border-color:var(--green)">Capital release: $8,820</div>
+  <div style="height:12px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.35s">The math is done. The user <strong>decides whether to accept</strong>.</div>
+</div>
+
+<div class="frame" id="f14">
+  <div class="section-label">MILI ROP/ROQ</div>
+  <div class="action-row pop-in anim-target" style="animation-delay:0s">
+    <div class="action-btn accept">✓ Accept recommendation</div>
+    <div class="action-btn override">✎ Override with reason</div>
+    <div class="action-btn skip">→ Skip</div>
+  </div>
+  <div style="height:8px"></div>
+  <div class="result-tag fade-up anim-target" style="animation-delay:0.15s; background:var(--amber-bg); color:#92400e; border-color:var(--amber)">Override expires: 6 months</div>
+  <div style="height:12px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.35s">Overrides are allowed. But they're <strong>temporary and tracked</strong>.</div>
+</div>
+
+<div class="frame" id="f15">
+  <div class="section-label">MILI ROP/ROQ</div>
+  <div class="batch-summary pop-in anim-target" style="animation-delay:0s">
+    <div class="batch-count">20 items selected</div>
+    <div class="batch-label">All recommended: Decrease</div>
+    <div class="batch-impact">$127,000 capital released</div>
+  </div>
+  <div style="height:8px"></div>
+  <div class="action-row fade-up anim-target" style="animation-delay:0.15s">
+    <div class="action-btn accept">Accept all selected</div>
+  </div>
+  <div style="height:12px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.35s">20 decisions. One click. <strong>$127K freed.</strong></div>
+</div>
+
+<div class="frame" id="f16">
+  <div class="section-label">MILI ROP/ROQ</div>
+  <div class="param-card slide-right anim-target" style="animation-delay:0s">
+    <div class="param-title">Approval Summary</div>
+    <div class="param-row"><span class="param-label">Changes</span><span class="param-value">20 ROP/ROQ updates</span></div>
+    <div class="param-row"><span class="param-label">Breakdown</span><span class="param-value">18 decreases · 2 unstocks</span></div>
+    <div class="param-row"><span class="param-label">Net capital release</span><span class="param-value" style="color:var(--green)">$127,000</span></div>
+    <div class="param-row"><span class="param-label">Approver</span><span class="param-value">Plant Controller</span></div>
+  </div>
+  <div style="height:12px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">The controller doesn't recalculate. They review <strong>the logic and approve the impact</strong>.</div>
+</div>
+
+<!-- ═══════ ACT 2b · THE CYCLE ═══════ -->
+
+<div class="frame" id="f17">
+  <div class="big-text scale-in anim-target" style="animation-delay:0s">Monthly refresh.</div>
+  <div class="big-text scale-in anim-target" style="animation-delay:0.2s"><em>Not annual project.</em></div>
+</div>
+
+<div class="frame" id="f18">
+  <div class="section-label">THE CYCLE</div>
+  <div class="calendar-row pop-in anim-target" style="animation-delay:0s">
+    <div class="cal-month done">Jan</div>
+    <div class="cal-month done">Feb</div>
+    <div class="cal-month done">Mar</div>
+    <div class="cal-month done">Apr</div>
+    <div class="cal-month done">May</div>
+    <div class="cal-month current">Jun</div>
+    <div class="cal-month future">Jul</div>
+    <div class="cal-month future">Aug</div>
+    <div class="cal-month future">Sep</div>
+    <div class="cal-month future">Oct</div>
+    <div class="cal-month future">Nov</div>
+    <div class="cal-month future">Dec</div>
+  </div>
+  <div style="height:8px"></div>
+  <div class="param-card fade-up anim-target" style="animation-delay:0.15s">
+    <div class="param-title">This Month's Run</div>
+    <div class="param-row"><span class="param-label">Exceptions generated</span><span class="param-value">412</span></div>
+    <div class="param-row"><span class="param-label">Auto-accepted</span><span class="param-value" style="color:var(--green)">287 (within tolerance)</span></div>
+    <div class="param-row"><span class="param-label">Require review</span><span class="param-value" style="color:var(--amber)">125</span></div>
+  </div>
+  <div style="height:12px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.4s">Most changes are small and auto-accepted. <strong>Humans focus on the meaningful shifts.</strong></div>
+</div>
+
+<div class="frame" id="f19">
+  <div class="section-label">THE CYCLE</div>
+  <div class="trend-row pop-in anim-target" style="animation-delay:0s">
+    <div class="trend-box">
+      <div class="trend-title">Stock Value</div>
+      <div class="trend-value" style="color:var(--green)">$3.1M</div>
+      <div class="trend-dir down">↓ from $4.2M</div>
+    </div>
+    <div class="trend-box">
+      <div class="trend-title">Service Level</div>
+      <div class="trend-value" style="color:var(--teal)">96%</div>
+      <div class="trend-dir steady">— Steady</div>
+    </div>
+    <div class="trend-box">
+      <div class="trend-title">Stockouts/Qtr</div>
+      <div class="trend-value" style="color:var(--green)">3</div>
+      <div class="trend-dir down">↓ from 14</div>
+    </div>
+  </div>
+  <div style="height:12px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Less stock. Better availability. <strong>That's not a tradeoff. That's governance.</strong></div>
+</div>
+
+<div class="frame" id="f20">
+  <div class="section-label">THE CYCLE</div>
+  <div class="check-circle check-draw anim-target" style="animation-delay:0s">✓</div>
+  <div style="height:6px"></div>
+  <div class="result-tag slide-right anim-target" style="animation-delay:0.15s; background:var(--green-bg); color:var(--green); border-color:var(--green)">125 ROP/ROQ changes written to SAP</div>
+  <div style="height:4px"></div>
+  <div class="result-tag slide-right anim-target" style="animation-delay:0.25s">MRP uses new parameters from next planning run</div>
+  <div style="height:12px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.4s"><em>MiLi</em> calculates. SAP executes. <strong>The loop closes automatically.</strong></div>
+</div>
+
+<!-- ═══════ ACT 3 · THE OUTCOME ═══════ -->
+
+<div class="frame" id="f21">
+  <div class="section-label">THE OUTCOME</div>
+  <div class="big-text fade-up anim-target" style="animation-delay:0s">What changes when stock levels</div>
+  <div class="big-text fade-up anim-target" style="animation-delay:0.15s"><em>recalculate continuously</em>?</div>
+</div>
+
+<div class="frame" id="f22">
+  <div class="section-label">THE OUTCOME</div>
+  <div class="side-by-side fade-up anim-target" style="animation-delay:0s">
+    <div class="side-col before">
+      <div class="col-title">Without MiLi</div>
+      <div class="col-item">Static ROP set years ago</div>
+      <div class="col-item">6,000 materials → impossible to review</div>
+      <div class="col-item">Overstocking and stockouts coexist</div>
+    </div>
+    <div class="side-col after">
+      <div class="col-title">With MiLi</div>
+      <div class="col-item">Monthly recalculation</div>
+      <div class="col-item">Exception-based review</div>
+      <div class="col-item">Stock matches demonstrated demand</div>
+    </div>
+  </div>
+  <div style="height:12px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">From static parameters to a <strong>living inventory system</strong>.</div>
+</div>
+
+<div class="frame" id="f23">
+  <div class="section-label">THE OUTCOME</div>
+  <div class="metric-spotlight pop-in anim-target" style="animation-delay:0s">
+    <div class="metric-big">$1.1M</div>
+    <div class="metric-unit">capital released in 6 months</div>
+    <div class="metric-compare">from right-sized stock levels</div>
+  </div>
+  <div style="height:16px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Money freed by <strong>matching stock to actual demand</strong>.</div>
+</div>
+
+<div class="frame" id="f24">
+  <div class="section-label">THE OUTCOME</div>
+  <div class="metric-spotlight pop-in anim-target" style="animation-delay:0s">
+    <div class="metric-big">96%</div>
+    <div class="metric-unit">service level maintained</div>
+    <div class="metric-compare">availability didn't drop — it stayed rock-solid</div>
+  </div>
+  <div style="height:16px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Less stock doesn't mean worse service. <strong>It means smarter stock.</strong></div>
+</div>
+
+<div class="frame" id="f25">
+  <div class="section-label">THE OUTCOME</div>
+  <div class="metric-spotlight pop-in anim-target" style="animation-delay:0s">
+    <div class="metric-big">78%</div>
+    <div class="metric-unit">fewer stockouts</div>
+    <div class="metric-compare">14/quarter → 3/quarter</div>
+  </div>
+  <div style="height:16px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">When the right parts are stocked, <strong>the plant keeps running</strong>.</div>
+</div>
+
+<div class="frame" id="f26">
+  <div class="section-label">THE OUTCOME</div>
+  <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:center">
+    <div class="summary-chip pop-in anim-target" style="animation-delay:0s">$1.1M released</div>
+    <div class="summary-chip pop-in anim-target" style="animation-delay:0.1s">96% service level</div>
+    <div class="summary-chip pop-in anim-target" style="animation-delay:0.2s">78% fewer stockouts</div>
+    <div class="summary-chip pop-in anim-target" style="animation-delay:0.3s">Monthly recalculation</div>
+    <div class="summary-chip pop-in anim-target" style="animation-delay:0.4s">Auto-acceptance</div>
+  </div>
+  <div style="height:16px"></div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.55s"><strong>Less stock, fewer stockouts.</strong> The math works when the inputs are current.</div>
+</div>
+
+<div class="frame" id="f27">
+  <div class="section-label">THE OUTCOME</div>
+  <div class="cascade-stack fade-up anim-target" style="animation-delay:0s">
+    <div class="cascade-item">When stock levels recalculate, <strong>capital flows to where it's needed</strong>.</div>
+    <div class="cascade-connector">↓</div>
+    <div class="cascade-item">When capital is efficient, <strong>availability improves</strong>.</div>
+    <div class="cascade-connector">↓</div>
+    <div class="cascade-item">When availability improves, <strong>nobody overstocks out of fear</strong>.</div>
+  </div>
+</div>
+
+<div class="frame" id="f28">
+  <div class="section-label">THE OUTCOME</div>
+  <div class="big-text fade-up anim-target" style="animation-delay:0s">Stock that thinks.</div>
+  <div style="height:8px"></div>
+  <div class="big-text fade-up anim-target" style="animation-delay:0.15s"><em>ROP / ROQ Calculator</em> — one of 13 modules.</div>
+</div>
+
+<div class="frame" id="f29">
+  <div style="display:flex; flex-direction:column; align-items:center; gap:12px">
+    <div class="big-text scale-in anim-target" style="animation-delay:0s"><em>MiLi</em></div>
+    <div style="font-size:13px; color:var(--muted)" class="fade-up anim-target" style="animation-delay:0.15s">by Lexin Solutions</div>
+    <div style="width:60px; height:2px; background:var(--teal); border-radius:1px" class="fade-up anim-target" style="animation-delay:0.25s"></div>
+    <div class="thought-text fade-up anim-target" style="animation-delay:0.35s">Stock levels that <em>recalculate</em>.</div>
+  </div>
+</div>
+
+<!-- FRAMES END -->
+
+<!-- FRAMES END -->
+
+  <!-- Progress bar -->
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+</div>
+
+<!-- Controls -->
+<div class="controls">
+  <button id="prevBtn" onclick="prev()" disabled>&larr;</button>
+  <div class="frame-counter" id="counter">1 / 29</div>
+  <button id="nextBtn" onclick="next()">&rarr;</button>
+  <button id="playBtn" onclick="autoPlay()">&#9654; Play</button>
+</div>
+
+<script>
+  const totalFrames = 29;
+  let current = 0;
+  let interval = null;
+
+  function show(n) {
+    document.querySelectorAll('.frame').forEach(f => f.classList.remove('active'));
+    const frame = document.getElementById(`f${n + 1}`);
+    frame.classList.add('active');
+
+    // Re-trigger animations
+    frame.querySelectorAll('.anim-target').forEach(el => {
+      const classes = [...el.classList];
+      const animClass = classes.find(c =>
+        ['pop-in','fade-up','slide-right','slide-left','scale-in','drop-in','stamp','check-draw'].includes(c)
+      );
+      if (animClass) {
+        el.classList.remove(animClass);
+        void el.offsetHeight;
+        el.classList.add(animClass);
+      }
+    });
+
+    document.getElementById('counter').textContent = `${n + 1} / ${totalFrames}`;
+    document.getElementById('prevBtn').disabled = n === 0;
+    document.getElementById('nextBtn').disabled = n === totalFrames - 1;
+    document.getElementById('progressFill').style.width = `${((n + 1) / totalFrames) * 100}%`;
+  }
+
+  function next() {
+    if (current < totalFrames - 1) { current++; show(current); }
+  }
+
+  function prev() {
+    if (current > 0) { current--; show(current); }
+  }
+
+  function autoPlay() {
+    const btn = document.getElementById('playBtn');
+    if (interval) {
+      clearInterval(interval);
+      interval = null;
+      btn.innerHTML = '&#9654; Play';
+      btn.classList.remove('active');
+      return;
+    }
+
+    btn.innerHTML = '&#9208; Pause';
+    btn.classList.add('active');
+    current = 0;
+    show(0);
+
+    interval = setInterval(() => {
+      if (current < totalFrames - 1) {
+        current++;
+        show(current);
+      } else {
+        clearInterval(interval);
+        interval = null;
+        btn.innerHTML = '&#9654; Play';
+        btn.classList.remove('active');
+      }
+    }, 1800);
+  }
+
+  // Keyboard navigation
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); next(); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
+  });
+
+  show(0);
+</script>
+<!-- Feedback: uncomment when deploying to mili-slides -->
+<!-- <script src="../feedback.js"></script> -->
+
+</body>
+</html>
