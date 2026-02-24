@@ -1,0 +1,1380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MiLi — Global Material Search + Material Details</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal: #2a7d7b;
+    --teal-light: #e8f4f3;
+    --dark: #0f172a;
+    --card-bg: #ffffff;
+    --border: #e2e8f0;
+    --text: #1e293b;
+    --muted: #94a3b8;
+    --green: #16a34a;
+    --green-bg: #dcfce7;
+    --red: #ef4444;
+    --red-bg: #fef2f2;
+    --amber: #f59e0b;
+    --amber-bg: #fef3c7;
+    --blue: #3b82f6;
+    --blue-bg: #eff6ff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--dark);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    color: var(--text);
+    overflow: hidden;
+  }
+
+  /* ── Stage ── */
+  .stage {
+    width: 720px;
+    height: 480px;
+    background: #f8fafc;
+    border-radius: 16px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+  }
+
+  /* ── Frame ── */
+  .frame {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 64px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+  }
+
+  .frame.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* ── Animation classes ── */
+  .pop-in     { animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+  .fade-up    { animation: fadeUp 0.4s ease forwards; }
+  .slide-right { animation: slideRight 0.4s ease forwards; }
+  .slide-left  { animation: slideLeft 0.4s ease forwards; }
+  .scale-in   { animation: scaleIn 0.35s ease forwards; }
+  .draw-line  { animation: drawLine 0.6s ease forwards; }
+  .pulse-glow { animation: pulseGlow 1.5s ease-in-out infinite; }
+  .stamp      { animation: stamp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+  .count-up   { animation: fadeUp 0.3s ease forwards; }
+  .shake      { animation: shake 0.4s ease; }
+  .check-draw { animation: checkDraw 0.4s ease forwards; }
+  .fly-out    { animation: flyOut 0.5s ease forwards; }
+  .drop-in    { animation: dropIn 0.4s ease forwards; }
+
+  .typewriter {
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: 2px solid var(--teal);
+    animation: typewriter 0.8s steps(20) forwards, blinkCaret 0.6s step-end infinite;
+  }
+
+  @keyframes popIn {
+    0%   { opacity: 0; transform: scale(0.7); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+
+  @keyframes fadeUp {
+    0%   { opacity: 0; transform: translateY(16px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes slideRight {
+    0%   { opacity: 0; transform: translateX(-24px); }
+    100% { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes slideLeft {
+    0%   { opacity: 0; transform: translateX(24px); }
+    100% { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes scaleIn {
+    0%   { opacity: 0; transform: scale(0); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+
+  @keyframes drawLine {
+    0%   { width: 0; }
+    100% { width: 100%; }
+  }
+
+  @keyframes pulseGlow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(42, 125, 123, 0); }
+    50%      { box-shadow: 0 0 0 8px rgba(42, 125, 123, 0.12); }
+  }
+
+  @keyframes typewriter {
+    0%   { width: 0; }
+    100% { width: 100%; }
+  }
+
+  @keyframes blinkCaret {
+    50% { border-color: transparent; }
+  }
+
+  @keyframes stamp {
+    0%   { opacity: 0; transform: scale(2.5) rotate(-12deg); }
+    100% { opacity: 1; transform: scale(1) rotate(-6deg); }
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%  { transform: translateX(-6px); }
+    40%  { transform: translateX(6px); }
+    60%  { transform: translateX(-4px); }
+    80%  { transform: translateX(4px); }
+  }
+
+  @keyframes checkDraw {
+    0%  { opacity: 0; transform: scale(0) rotate(-45deg); }
+    50% { transform: scale(1.2) rotate(0deg); }
+    100% { opacity: 1; transform: scale(1) rotate(0deg); }
+  }
+
+  @keyframes flyOut {
+    0%   { opacity: 1; transform: translateX(0) scale(1); }
+    100% { opacity: 0; transform: translateX(80px) scale(0.8); }
+  }
+
+  @keyframes expandWidth {
+    0%   { width: 0; opacity: 0; }
+    100% { width: auto; opacity: 1; }
+  }
+
+  @keyframes fillBar {
+    0%   { width: 0%; }
+    100% { width: var(--fill); }
+  }
+
+  @keyframes dropIn {
+    0%  { opacity: 0; transform: translateY(-30px); }
+    60% { transform: translateY(4px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Text styles ── */
+  .thought-text {
+    font-size: 15px;
+    color: var(--muted);
+    text-align: center;
+    line-height: 1.6;
+    max-width: 480px;
+  }
+  .thought-text strong { color: var(--text); }
+  .thought-text em { color: var(--teal); font-style: normal; font-weight: 600; }
+
+  .big-text {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text);
+    text-align: center;
+    line-height: 1.3;
+  }
+  .big-text em { color: var(--teal); font-style: normal; }
+
+  .mid-text {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
+    text-align: center;
+  }
+
+  .small-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+  }
+
+  /* ── Section label (top left) ── */
+  .section-label {
+    position: absolute;
+    top: 16px;
+    left: 20px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--muted);
+    opacity: 0.6;
+  }
+
+  /* ── Material card ── */
+  .mat-card {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+
+  .mat-card .mat-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: var(--teal-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .mat-card .mat-icon svg { width: 20px; height: 20px; color: var(--teal); }
+  .mat-card .mat-info { display: flex; flex-direction: column; gap: 2px; }
+  .mat-card .mat-number { font-size: 14px; font-weight: 700; color: var(--text); }
+  .mat-card .mat-desc { font-size: 12px; color: var(--muted); }
+
+  /* ── Plant badge ── */
+  .plant-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    border: 2px solid;
+  }
+
+  .plant-badge.solid-blue {
+    background: var(--blue-bg);
+    border-color: var(--blue);
+    color: var(--blue);
+  }
+
+  .plant-badge.solid-teal {
+    background: var(--teal-light);
+    border-color: var(--teal);
+    color: var(--teal);
+  }
+
+  .plant-badge.solid-green {
+    background: var(--green-bg);
+    border-color: var(--green);
+    color: var(--green);
+  }
+
+  .plant-badge.dashed {
+    border-style: dashed;
+    background: transparent;
+    border-color: var(--muted);
+    color: var(--muted);
+  }
+
+  /* ── Arrow ── */
+  .arrow {
+    color: var(--muted);
+    font-size: 20px;
+  }
+
+  /* ── Field row ── */
+  .field-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 20px;
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .field-label {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 500;
+    min-width: 100px;
+  }
+
+  .field-value {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  /* ── Warning card ── */
+  .warn-card {
+    background: var(--red-bg);
+    border: 2px solid var(--red);
+    border-radius: 12px;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .warn-card .warn-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--red);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: white;
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .warn-card .warn-text { font-size: 13px; color: #991b1b; font-weight: 500; }
+
+  /* ── Stacked cards ── */
+  .stacked-cards {
+    position: relative;
+    width: 320px;
+    height: 100px;
+  }
+
+  .stacked-cards .mat-card { position: absolute; width: 300px; }
+  .stacked-cards .mat-card:nth-child(1) { top: 0; left: 0; z-index: 3; }
+  .stacked-cards .mat-card:nth-child(2) { top: 8px; left: 10px; z-index: 2; opacity: 0.6; border-color: var(--red); }
+  .stacked-cards .mat-card:nth-child(3) { top: 16px; left: 20px; z-index: 1; opacity: 0.3; border-color: var(--red); }
+
+  /* ── Detail grid ── */
+  .detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    width: 100%;
+    max-width: 420px;
+  }
+
+  /* ── Criticality option ── */
+  .crit-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    transition: all 0.3s;
+  }
+
+  .crit-option.selected {
+    border-color: var(--teal);
+    background: var(--teal-light);
+  }
+
+  .crit-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+    transition: all 0.3s;
+  }
+
+  .crit-option.selected .crit-dot {
+    border-color: var(--teal);
+    background: var(--teal);
+    box-shadow: inset 0 0 0 3px white;
+  }
+
+  /* ── Result tag ── */
+  .result-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .result-tag.green { background: var(--green-bg); color: var(--green); }
+  .result-tag.amber { background: var(--amber-bg); color: #92400e; }
+  .result-tag.red   { background: var(--red-bg); color: var(--red); }
+
+  /* ── Check circle ── */
+  .check-circle {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--green-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .check-circle svg { width: 28px; height: 28px; color: var(--green); }
+
+  /* ── Summary chip ── */
+  .summary-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    background: white;
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+
+  /* ── CTA button ── */
+  .cta-btn {
+    background: var(--teal);
+    color: white;
+    padding: 16px 48px;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  /* ── Score bar ── */
+  .score-bar-track {
+    width: 300px;
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .score-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    animation: fillBar 0.8s ease forwards;
+  }
+
+  /* ── Connector line ── */
+  .connector-line {
+    width: 2px;
+    height: 32px;
+    background: var(--border);
+  }
+
+  /* ── Hidden until frame active ── */
+  .frame .anim-target { opacity: 0; }
+
+  .frame.active .anim-target.pop-in,
+  .frame.active .anim-target.fade-up,
+  .frame.active .anim-target.slide-right,
+  .frame.active .anim-target.slide-left,
+  .frame.active .anim-target.scale-in,
+  .frame.active .anim-target.drop-in,
+  .frame.active .anim-target.stamp,
+  .frame.active .anim-target.check-draw {
+    /* animations handle opacity */
+  }
+
+  /* ── Progress bar ── */
+  .progress-track {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: rgba(0,0,0,0.06);
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--teal);
+    transition: width 0.35s ease;
+  }
+
+  /* ── Controls ── */
+  .controls {
+    position: fixed;
+    bottom: 24px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    z-index: 100;
+  }
+
+  .controls button {
+    background: rgba(255,255,255,0.1);
+    color: #94a3b8;
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .controls button:hover { background: rgba(255,255,255,0.15); color: white; }
+  .controls button:disabled { opacity: 0.3; cursor: not-allowed; }
+  .controls button.active { background: var(--teal); color: white; border-color: var(--teal); }
+
+  .frame-counter {
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    min-width: 60px;
+    text-align: center;
+  }
+
+  /* ═══ CUSTOM: Search bar ═══ */
+  .search-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 20px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+
+  .search-bar .search-icon {
+    color: var(--muted);
+    flex-shrink: 0;
+  }
+
+  .search-bar .search-query {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .search-bar .search-placeholder {
+    font-size: 15px;
+    color: var(--muted);
+    font-weight: 400;
+  }
+
+  .search-bar.mili {
+    border-color: var(--teal);
+    box-shadow: 0 2px 12px rgba(42, 125, 123, 0.1);
+  }
+
+  /* ═══ CUSTOM: SAP screen tiles ═══ */
+  .sap-tile {
+    background: #f1f5f9;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  /* ═══ CUSTOM: Result list card (compact) ═══ */
+  .result-card {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    max-width: 480px;
+  }
+
+  .result-card .rc-number {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--teal);
+  }
+
+  .result-card .rc-desc {
+    font-size: 11px;
+    color: var(--muted);
+    flex: 1;
+  }
+
+  .result-card .rc-meta {
+    font-size: 10px;
+    color: var(--muted);
+    background: #f8fafc;
+    padding: 3px 8px;
+    border-radius: 6px;
+  }
+
+  .result-card.selected {
+    border-color: var(--green);
+    background: var(--green-bg);
+  }
+
+  .result-card.selected .rc-number { color: var(--green); }
+
+  .result-card.dimmed {
+    opacity: 0.3;
+  }
+
+  /* ═══ CUSTOM: Preview panel ═══ */
+  .preview-panel {
+    background: white;
+    border: 2px solid var(--teal);
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 200px;
+    box-shadow: 0 4px 16px rgba(42,125,123,0.08);
+  }
+
+  /* ═══ CUSTOM: Tab bar ═══ */
+  .tab-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 130px;
+  }
+
+  .tab-item {
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    background: transparent;
+    transition: all 0.2s;
+  }
+
+  .tab-item.active {
+    background: var(--teal-light);
+    color: var(--teal);
+  }
+
+  /* ═══ CUSTOM: Data table ═══ */
+  .data-table {
+    width: 100%;
+    max-width: 520px;
+    border-collapse: collapse;
+    font-size: 11px;
+  }
+
+  .data-table th {
+    text-align: left;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+    padding: 6px 10px;
+    border-bottom: 2px solid var(--border);
+  }
+
+  .data-table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .data-table td .stock-check {
+    color: var(--green);
+    font-weight: 700;
+    font-size: 12px;
+  }
+
+  /* ═══ CUSTOM: Context panel ═══ */
+  .context-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+  }
+
+  .context-row .ctx-label {
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  .context-row .ctx-value {
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  /* ═══ CUSTOM: Action pill ═══ */
+  .action-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    background: white;
+    border: 2px solid var(--border);
+    color: var(--text);
+    cursor: pointer;
+  }
+
+  .action-pill .pill-arrow {
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  /* ═══ CUSTOM: Comparison panel ═══ */
+  .compare-col {
+    flex: 1;
+    padding: 16px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .compare-col.bad {
+    background: var(--red-bg);
+    border: 1px solid rgba(239, 68, 68, 0.15);
+  }
+
+  .compare-col.good {
+    background: var(--green-bg);
+    border: 1px solid rgba(22, 163, 74, 0.15);
+  }
+
+  .compare-col .compare-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+  }
+
+  .compare-col.bad .compare-title { color: var(--red); }
+  .compare-col.good .compare-title { color: var(--green); }
+
+  .compare-col .compare-item {
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.5;
+  }
+
+  .compare-col.bad .compare-item { color: #991b1b; }
+  .compare-col.good .compare-item { color: #166534; }
+
+  /* ═══ CUSTOM: Metric chip ═══ */
+  .metric-chip {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 10px 20px;
+    border-radius: 12px;
+    background: white;
+    border: 1px solid var(--border);
+  }
+
+  .metric-chip .mc-value {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--teal);
+  }
+
+  .metric-chip .mc-context {
+    font-size: 10px;
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  /* ═══ CUSTOM: Fork diagram ═══ */
+  .fork-path {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    width: 200px;
+    text-align: center;
+  }
+
+  .fork-path .fp-label {
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  .fork-path.bad {
+    background: var(--red-bg);
+    border: 1px solid rgba(239, 68, 68, 0.15);
+  }
+
+  .fork-path.bad .fp-label { color: #991b1b; }
+
+  .fork-path.wait {
+    background: var(--amber-bg);
+    border: 1px solid rgba(245, 158, 11, 0.15);
+  }
+
+  .fork-path.wait .fp-label { color: #92400e; }
+</style>
+</head>
+<body>
+
+<div class="stage" id="stage">
+
+<!-- FRAMES START -->
+
+  <!-- Frame 1: Search bar — the need -->
+  <div class="frame" id="f1">
+    <div class="section-label">The situation</div>
+    <div class="search-bar pop-in anim-target">
+      <svg class="search-icon" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="9" r="5"/><line x1="13" y1="13" x2="17" y2="17"/></svg>
+      <span class="search-placeholder">Search materials…</span>
+    </div>
+    <div style="height:20px"></div>
+    <div class="thought-text fade-up anim-target" style="animation-delay:0.3s;">A maintenance planner needs a <strong>pump seal</strong>.</div>
+  </div>
+
+  <!-- Frame 2: SAP screens cascade -->
+  <div class="frame" id="f2">
+    <div class="section-label">The situation</div>
+    <div style="font-size:20px;font-weight:700;color:var(--text);font-family:monospace;letter-spacing:1px;" class="pop-in anim-target">MM03</div>
+    <div style="height:14px"></div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;max-width:420px;">
+      <div class="sap-tile slide-right anim-target" style="animation-delay:0.15s;">Material Type</div>
+      <div class="sap-tile slide-right anim-target" style="animation-delay:0.22s;">Plant View</div>
+      <div class="sap-tile slide-right anim-target" style="animation-delay:0.29s;">Storage View</div>
+      <div class="sap-tile slide-right anim-target" style="animation-delay:0.36s;">MRP View</div>
+      <div class="sap-tile slide-right anim-target" style="animation-delay:0.43s;">Purchasing View</div>
+      <div class="sap-tile slide-right anim-target" style="animation-delay:0.5s;">Accounting View</div>
+    </div>
+    <div style="height:18px"></div>
+    <div class="thought-text fade-up anim-target" style="animation-delay:0.6s;">In SAP, "finding a part" means knowing <strong>where to look</strong> before you start.</div>
+  </div>
+
+  <!-- Frame 3: SAP search fails -->
+  <div class="frame" id="f3">
+    <div class="section-label">Without MiLi</div>
+    <div class="search-bar pop-in anim-target">
+      <svg class="search-icon" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="9" r="5"/><line x1="13" y1="13" x2="17" y2="17"/></svg>
+      <span class="search-query">pump seal 250kw</span>
+    </div>
+    <div style="height:12px"></div>
+    <div class="result-tag red stamp anim-target" style="animation-delay:0.3s;font-size:13px;">0 results</div>
+    <div style="height:8px"></div>
+    <div style="font-size:11px;color:var(--muted);text-align:center;max-width:380px;" class="fade-up anim-target" style="animation-delay:0.45s;">
+      Catalogued as: <strong style="color:var(--text);">"Seal, mechanical shaft KSPA 250"</strong>
+    </div>
+    <div style="height:14px"></div>
+    <div class="thought-text fade-up anim-target" style="animation-delay:0.55s;">SAP searches <strong>exact text</strong>. Users think in <strong>what they need</strong>.</div>
+  </div>
+
+  <!-- Frame 4: Decision fork -->
+  <div class="frame" id="f4">
+    <div class="section-label">Without MiLi</div>
+    <div style="font-size:13px;font-weight:600;color:var(--muted);margin-bottom:8px;" class="fade-up anim-target">Search failed. Now what?</div>
+    <div style="display:flex;gap:20px;align-items:stretch;">
+      <div class="fork-path bad pop-in anim-target" style="animation-delay:0.15s;">
+        <div style="font-size:18px;">⚠️</div>
+        <div class="fp-label">Give up → Free-text PO</div>
+      </div>
+      <div style="display:flex;align-items:center;color:var(--muted);font-size:14px;font-weight:600;" class="fade-up anim-target" style="animation-delay:0.25s;">or</div>
+      <div class="fork-path wait pop-in anim-target" style="animation-delay:0.35s;">
+        <div style="font-size:18px;">⏳</div>
+        <div class="fp-label">Ask someone → Wait</div>
+      </div>
+    </div>
+    <div style="height:16px"></div>
+    <div class="thought-text fade-up anim-target" style="animation-delay:0.55s;">When search fails, users don't try harder. They <strong>go around the system</strong>.</div>
+  </div>
+
+  <!-- Frame 5: Three consequences -->
+  <div class="frame" id="f5">
+    <div class="section-label">Without MiLi</div>
+    <div style="display:flex;flex-direction:column;gap:8px;width:100%;max-width:440px;">
+      <div class="warn-card slide-right anim-target">
+        <div class="warn-icon">!</div>
+        <div class="warn-text">Free-text PO → <strong>$127 processing cost</strong></div>
+      </div>
+      <div class="warn-card slide-right anim-target" style="animation-delay:0.15s;">
+        <div class="warn-icon">!</div>
+        <div class="warn-text">Duplicate created → <strong>inventory inflated</strong></div>
+      </div>
+      <div class="warn-card slide-right anim-target" style="animation-delay:0.3s;">
+        <div class="warn-icon">!</div>
+        <div class="warn-text">Material exists at 3 plants — <strong>nobody found it</strong></div>
+      </div>
+    </div>
+    <div style="height:14px"></div>
+    <div class="thought-text fade-up anim-target" style="animation-delay:0.55s;">The part was there the whole time. <strong>The search failed, not the person.</strong></div>
+  </div>
+
+  <!-- Frame 6: Hero — Find first -->
+  <div class="frame" id="f6">
+    <div class="section-label">With MiLi</div>
+    <div class="big-text pop-in anim-target">Find first. <em>Create never.</em></div>
+  </div>
+
+  <!-- Frame 7: MiLi search bar -->
+  <div class="frame" id="f7">
+    <div class="section-label">Step 1 · Search</div>
+    <div class="search-bar mili pop-in anim-target">
+      <svg class="search-icon" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="var(--teal)" stroke-width="1.5"><circle cx="9" cy="9" r="5"/><line x1="13" y1="13" x2="17" y2="17"/></svg>
+      <span class="search-query typewriter" style="animation-delay:0.3s;">pump seal 250</span>
+    </div>
+    <div style="height:20px"></div>
+    <div class="thought-text fade-up anim-target" style="animation-delay:0.5s;">Type what you know. <strong>In any order.</strong></div>
+  </div>
+
+  <!-- Frame 8: Results list -->
+  <div class="frame" id="f8">
+    <div class="section-label">Step 1 · Results</div>
+    <div style="display:flex;flex-direction:column;gap:6px;width:100%;max-width:480px;">
+      <div class="result-card slide-right anim-target">
+        <div class="rc-number">MC-4501</div>
+        <div class="rc-desc">Seal, mechanical shaft KSPA 250 kW</div>
+        <div class="rc-meta">3 plants</div>
+      </div>
+      <div class="result-card slide-right anim-target" style="animation-delay:0.12s;">
+        <div class="rc-number">MC-4502</div>
+        <div class="rc-desc">Seal kit, pump mech. 250 kW</div>
+        <div class="rc-meta">2 plants</div>
+      </div>
+      <div class="result-card slide-right anim-target" style="animation-delay:0.24s;">
+        <div class="rc-number">MC-7120</div>
+        <div class="rc-desc">Seal, gland packing pump 200–300 kW</div>
+        <div class="rc-meta">1 plant</div>
+      </div>
+      <div class="result-card slide-right anim-target" style="animation-delay:0.36s;">
+        <div class="rc-number">MC-9004</div>
+        <div class="rc-desc">Housing, pump motor elec. 250 kW</div>
+        <div class="rc-meta">2 plants</div>
+      </div>
+    </div>
+    <div style="height:12px"></div>
+    <div class="thought-text fade-up anim-target" style="animation-delay:0.55s;">Short text, long text, MPN, manufacturer — MiLi searches <strong>everything</strong>.</div>
+  </div>
+
+  <!-- Frame 9: Hover preview -->
+  <div class="frame" id="f9">
+    <div class="section-label">Step 1 · Preview</div>
+    <div style="display:flex;gap:14px;align-items:flex-start;width:100%;max-width:520px;">
+      <div style="flex:1;display:flex;flex-direction:column;gap:6px;">
+        <div class="result-card" style="opacity:1;border-color:var(--teal);background:var(--teal-light);">
+          <div class="rc-number" style="color:var(--teal);">MC-4501</div>
+          <div class="rc-desc" style="color:var(--text);">Seal, mechanical shaft KSPA 250 kW</div>
+        </div>
+        <div class="result-card" style="opacity:0.3;"><div class="rc-number">MC-4502</div><div class="rc-desc">Seal kit, pump mech.</div></div>
+        <div class="result-card" style="opacity:0.3;"><div class="rc-number">MC-7120</div><div class="rc-desc">Seal, gland packing</div></div>
+      </div>
+      <div class="preview-panel slide-left anim-target" style="animation-delay:0.2s;">
+        <div style="font-size:11px;font-weight:700;color:var(--teal);">MC-4501</div>
+        <div style="font-size:10px;color:var(--muted);line-height:1.4;">Seal, mechanical shaft<br>KSPA 250 kW</div>
+        <div style="height:2px;background:var(--border);margin:4px 0;"></div>
+        <div style="font-size:10px;"><span style="color:var(--muted);">Mfr:</span> <strong style="font-size:10px;">KSB</strong></div>
+        <div style="font-size:10px;"><span style="color:var(--muted);">MPN:</span> <strong style="font-size:10px;">KSPA-250-SEAL</strong></div>
+        <div style="margin-top:4px;">
+          <div class="result-tag green" style="font-size:10px;padding:3px 10px;">Stocked at 3 plants</div>
+        </div>
+      </div>
+    </div>
+    <div style="height:12px"></div>
+    <div class="thought-text fade-up anim-target" style="animation-delay:0.45s;">Preview before you click. <strong>Resolve uncertainty without leaving the list.</strong></div>
+  </div>
+
+  <!-- Frame 10: Selected result -->
+  <div class="frame" id="f10">
+    <div class="section-label">Step 1 · Found</div>
+    <div class="result-card selected pop-in anim-target" style="max-width:400px;">
+      <div style="color:var(--green);font-size:16px;font-weight:700;">✓</div>
+      <div class="rc-number" style="color:var(--green);">MC-4501</div>
+      <div class="rc-desc" style="color:var(--text);">Seal, mechanical shaft KSPA 250 kW</div>
+    </div>
+    <div style="height:20px"></div>
+    <div class="thought-text fade-up anim-target" style="animation-delay:0.35s;">Found in <strong>4 seconds</strong>. Not 4 phone calls.</div>
+  </div>
+
+  <!-- Frame 11: Hero — Material Details -->
+  <div class="frame" id="f11">
+    <div class="section-label">Material Details</div>
+    <div class="big-text pop-in anim-target">One material.<br><em>Everything about it.</em></div>
+  </div>
+
+  <!-- Frame 12: Material header -->
+  <div class="frame" id="f12">
+    <div class="section-label">Material Detail · Header</div>
+    <div class="mat-card pop-in anim-target" style="flex-direction:column;align-items:flex-start;gap:10px;max-width:420px;padding:20px 28px;">
+      <div style="display:flex;align-items:center;gap:12px;width:100%;">
+        <div style="font-size:18px;font-weight:700;color:var(--text);">MC-4501</div>
+        <div class="result-tag green" style="font-size:10px;padding:3px 10px;">Active</div>
+      </div>
+      <div style="font-size:13px;color:var(--text);font-weight:500;">Seal, mechanical shaft KSPA 250 kW</div>
+      <div style="display:flex;gap:16px;font-size:11px;color:var(--muted);">
+        <span>Mfr: <strong style="color:var(--text);">KSB</strong></span>
+        <span>MPN: <strong style="color:var(--text);">KSPA-250-SEAL</strong></span>
+      </div>
+    </div>
+    <div style="height:16px"></div>
+    <div class="thought-text fade-up anim-target" style="animation-delay:0.35s;">Identity confirmed <strong>in one glance</strong>.</div>
+  </div>
+
+  <!-- Frame 13: Navigation tabs -->
+  <div class="frame" id="f13">
+    <div class="section-label">Material Detail · Tabs</div>
+    <div style="display:flex;gap:20px;align-items:flex-start;width:100%;max-width:480px;">
+      <div class="tab-bar">
+        <div class="tab-item active slide-right anim-target">Plant Data</div>
+        <div class="tab-item slide-right anim-target" style="animation-delay:0.08s;">Storage Locations</div>
+        <div class="tab-item slide-right anim-target" style="animation-delay:0.16s;">BOMs</div>
+        <div class="tab-item slide-right anim-target" style="animation-delay:0.24s;">Work Orders</div>
+        <div class="tab-item slide-right anim-target" style="animation-delay:0.32s;">Contracts</div>
+        <div class="tab-item slide-right anim-target" style="animation-delay:0.4s;">Purchase History</div>
+        <div class="tab-item slide-right anim-target" style="animation-delay:0.48s;">Files</div>
+      </div>
+      <div style="flex:1;background:white;border:1px solid var(--border);border-radius:10px;height:180px;display:flex;align-items:center;justify-content:center;" class="pop-in anim-target" style="animation-delay:0.2s;">
+        <div style="font-size:12px;color:var(--muted);">← Select a tab</div>
+      </div>
+    </div>
+    <div style="height:12px"></div>
+    <div class="thought-text fade-up anim-target" style="animation-delay:0.6s;">In SAP, this is <strong>7 different transactions</strong>. In MiLi, it's tabs.</div>
+  </div>
+
+  <!-- Frame 14: Plant data table -->
+  <div class="frame" id="f14">
+    <div class="section-label">Material Detail · Plant data</div>
+    <table class="data-table pop-in anim-target">
+      <thead>
+        <tr>
+          <th>Plant</th>
+          <th>Status</th>
+          <th>Stock</th>
+          <th>ROP</th>
+          <th>Lead Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="slide-right anim-target" style="animation-delay:0.15s;">
+          <td>1000 – Hamburg</td>
+          <td><span class="stock-check">✓</span> Stocked</td>
+          <td>12 EA</td>
+          <td>5</td>
+          <td>45 days</td>
+        </tr>
+        <tr class="slide-right anim-target" style="animation-delay:0.25s;">
+          <td>2000 – Paris</td>
+          <td><span class="stock-check">✓</span> Stocked</td>
+          <td>4 EA</td>
+          <td>3</td>
+          <td>60 days</td>
+        </tr>
+        <tr class="slide-right anim-target" style="animation-delay:0.35s;">
+          <td>3000 – Perth</td>
+          <td><span class="stock-check">✓</span> Stocked</td>
+          <td>8 EA</td>
+          <td>4</td>
+          <td>90 days</td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="height:14px"></div>
+    <div class="thought-text fade-up anim-target" style="animation-delay:0.55s;">Every plant, every stock level, every parameter — <strong>one table, no screen-hopping</strong>.</div>
+  </div>
+
+  <!-- Frame 15: Right panel context -->
+  <div class="frame" id="f15">
+    <div class="section-label">Material Detail · Context</div>
+    <div style="display:flex;gap:16px;width:100%;max-width:480px;">
+      <div style="flex:1;background:#f8fafc;border:1px solid var(--border);border-radius:10px;padding:16px;display:flex;align-items:center;justify-content:center;">
+        <div style="font-size:11px;color:var(--muted);text-align:center;">Plant data table<br>(previous view)</div>
+      </div>
+      <div style="width:200px;display:flex;flex-direction:column;gap:0;" class="slide-left anim-target" style="animation-delay:0.15s;">
+        <div class="context-row">
+          <span class="ctx-label">Criticality</span>
+          <div class="result-tag amber" style="font-size:10px;padding:2px 10px;">B – High</div>
+        </div>
+        <div class="context-row fade-up anim-target" style="animation-delay:0.25s;">
+          <span class="ctx-label">Total stock value</span>
+          <span class="ctx-value">$14,400</span>
+        </div>
+        <div class="context-row fade-up anim-target" style="animation-delay:0.35s;">
+          <span class="ctx-label">Last issued</span>
+          <span class="ctx-value">12 days ago</span>
+        </div>
+        <div class="context-row fade-up anim-target" style="animation-delay:0.45s;">
+          <span class="ctx-label">Open POs</span>
+          <span class="ctx-value">1</span>
+        </div>
+      </div>
+    </div>
+    <div style="height:12px"></div>
+    <div class="thought-text fade-up anim-target" style="animation-delay:0.6s;">Context lives next to the data. You don't have to <strong>assemble the picture yourself</strong>.</div>
+  </div>
+
+  <!-- Frame 16: Work Orders tab -->
+  <div class="frame" id="f16">
+    <div class="section-label">Material Detail · Work orders</div>
+    <div style="display:flex;flex-direction:column;gap:6px;width:100%;max-width:460px;">
+      <div class="field-row slide-right anim-target" style="max-width:none;">
+        <div class="field-label" style="min-width:80px;">WO-40281</div>
+        <div class="field-value" style="flex:1;font-size:11px;">FL-PUMP-001 · Replace seal</div>
+        <div style="font-size:10px;color:var(--muted);">3 days ago</div>
+      </div>
+      <div class="field-row slide-right anim-target" style="max-width:none;animation-delay:0.12s;">
+        <div class="field-label" style="min-width:80px;">WO-39855</div>
+        <div class="field-value" style="flex:1;font-size:11px;">FL-PUMP-003 · PM overhaul</div>
+        <div style="font-size:10px;color:var(--muted);">18 days ago</div>
+      </div>
+      <div class="field-row slide-right anim-target" style="max-width:none;animation-delay:0.24s;">
+        <div class="field-label" style="min-width:80px;">WO-38110</div>
+        <div class="field-value" style="flex:1;font-size:11px;">FL-PUMP-001 · Breakdown repair</div>
+        <div style="font-size:10px;color:var(--muted);">45 days ago</div>
+      </div>
+    </div>
+    <div style="height:14px"></div>
+    <div class="thought-text fade-up anim-target" style="animation-delay:0.45s;">"Where has this been used?" answered <strong>without leaving the screen</strong>.</div>
+  </div>
+
+  <!-- Frame 17: BOMs tab -->
+  <div class="frame" id="f17">
+    <div class="section-label">Material Detail · BOMs</div>
+    <div style="display:flex;flex-direction:column;gap:8px;width:100%;max-width:400px;">
+      <div class="mat-card pop-in anim-target" style="padding:12px 18px;">
+        <div class="mat-icon" style="width:32px;height:32px;border-radius:8px;">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" style="width:16px;height:16px;">
+            <rect x="3" y="3" width="14" height="14" rx="2"/>
+            <line x1="7" y1="7" x2="7" y2="13"/>
+            <line x1="10" y1="9" x2="10" y2="13"/>
+            <line x1="13" y1="5" x2="13" y2="13"/>
+          </svg>
+        </div>
+        <div class="mat-info">
+          <div class="mat-number" style="font-size:13px;">FL-PUMP-001</div>
+          <div class="mat-desc">Cooling water pump A</div>
+        </div>
+      </div>
+      <div class="mat-card pop-in anim-target" style="padding:12px 18px;animation-delay:0.15s;">
+        <div class="mat-icon" style="width:32px;height:32px;border-radius:8px;">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" style="width:16px;height:16px;">
+            <rect x="3" y="3" width="14" height="14" rx="2"/>
+            <line x1="7" y1="7" x2="7" y2="13"/>
+            <line x1="10" y1="9" x2="10" y2="13"/>
+            <line x1="13" y1="5" x2="13" y2="13"/>
+          </svg>
+        </div>
+        <div class="mat-info">
+          <div class="mat-number" style="font-size:13px;">FL-PUMP-003</div>
+          <div class="mat-desc">Cooling water pump C</div>
+        </div>
+      </div>
+    </div>
+    <div style="height:6px"></div>
+    <div style="font-size:10px;color:var(--muted);text-align:center;" class="fade-up anim-target" style="animation-delay:0.3s;">Listed in 2 BOMs · Last BOM update: 6 months ago</div>
+    <div style="height:10px"></div>
+    <div class="thought-text fade-up anim-target" style="animation-delay:0.45s;">You can see <strong>where it belongs</strong>, not just what it is.</div>
+  </div>
+
+  <!-- Frame 18: Action buttons -->
+  <div class="frame" id="f18">
+    <div class="section-label">Material Detail · Actions</div>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:420px;">
+      <div class="action-pill pop-in anim-target">Enrich <span class="pill-arrow">→</span></div>
+      <div class="action-pill pop-in anim-target" style="animation-delay:0.12s;">Extend to Plant <span class="pill-arrow">→</span></div>
+      <div class="action-pill pop-in anim-target" style="animation-delay:0.24s;">Flag for Deletion <span class="pill-arrow">→</span></div>
+      <div class="action-pill pop-in anim-target" style="animation-delay:0.36s;">New Stock Request <span class="pill-arrow">→</span></div>
+    </div>
+    <div style="height:18px"></div>
+    <div class="thought-text fade-up anim-target" style="animation-delay:0.55s;">From understanding to <strong>action</strong> without navigating away.</div>
+  </div>
+
+  <!-- Frame 19: Comparison -->
+  <div class="frame" id="f19">
+    <div class="section-label">The difference</div>
+    <div style="display:flex;gap:12px;width:100%;max-width:500px;">
+      <div class="compare-col bad slide-right anim-target">
+        <div class="compare-title">Without MiLi</div>
+        <div class="compare-item">Search fails → free text → $127/PO</div>
+        <div class="compare-item">4 transactions to understand one material</div>
+        <div class="compare-item">Decision on incomplete data</div>
+      </div>
+      <div class="compare-col good slide-left anim-target" style="animation-delay:0.2s;">
+        <div class="compare-title">With MiLi</div>
+        <div class="compare-item">Search resolves in seconds → $12/PO</div>
+        <div class="compare-item">One screen, full context</div>
+        <div class="compare-item">Decision on complete picture</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Frame 20: Key metrics -->
+  <div class="frame" id="f20">
+    <div class="section-label">Result</div>
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+      <div class="search-bar mili pop-in anim-target" style="max-width:240px;padding:10px 16px;">
+        <svg class="search-icon" width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="var(--teal)" stroke-width="1.5"><circle cx="9" cy="9" r="5"/><line x1="13" y1="13" x2="17" y2="17"/></svg>
+        <span class="search-query" style="font-size:12px;">pump seal 250</span>
+      </div>
+      <div class="arrow fade-up anim-target" style="animation-delay:0.15s;">→</div>
+      <div class="check-circle check-draw anim-target" style="width:36px;height:36px;animation-delay:0.3s;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:18px;height:18px;"><polyline points="6,12 10,16 18,8"/></svg>
+      </div>
+      <div style="font-size:13px;font-weight:700;color:var(--green);" class="fade-up anim-target" style="animation-delay:0.4s;">MC-4501 found</div>
+    </div>
+    <div style="height:20px"></div>
+    <div style="display:flex;gap:14px;">
+      <div class="metric-chip pop-in anim-target" style="animation-delay:0.3s;">
+        <div class="mc-value">4 seconds</div>
+        <div class="mc-context">vs. 15 minutes</div>
+      </div>
+      <div class="metric-chip pop-in anim-target" style="animation-delay:0.42s;">
+        <div class="mc-value">$12 PO</div>
+        <div class="mc-context">vs. $127 free text</div>
+      </div>
+      <div class="metric-chip pop-in anim-target" style="animation-delay:0.54s;">
+        <div class="mc-value">0 duplicates</div>
+        <div class="mc-context">created</div>
+      </div>
+    </div>
+    <div style="height:16px"></div>
+    <div class="thought-text fade-up anim-target" style="animation-delay:0.7s;"><strong>Finding is faster than free text.</strong> That's the only threshold that matters.</div>
+  </div>
+
+  <!-- Frame 21: Net effect — cascading logic -->
+  <div class="frame" id="f21">
+    <div class="section-label">Net effect</div>
+    <div style="display:flex;flex-direction:column;gap:12px;align-items:center;max-width:440px;">
+      <div class="thought-text fade-up anim-target" style="font-size:14px;line-height:1.8;max-width:440px;">
+        When search works, users <strong>stay in the system</strong>.
+      </div>
+      <div class="thought-text fade-up anim-target" style="font-size:14px;line-height:1.8;max-width:440px;animation-delay:0.2s;">
+        When users stay in the system, <strong>demand becomes structured</strong>.
+      </div>
+      <div class="thought-text fade-up anim-target" style="font-size:14px;line-height:1.8;max-width:440px;animation-delay:0.4s;">
+        When demand is structured, <strong>everything downstream improves</strong>.
+      </div>
+    </div>
+  </div>
+
+  <!-- Frame 22: Closer -->
+  <div class="frame" id="f22">
+    <div class="big-text pop-in anim-target" style="font-size:22px;">Search that works means systems that work.</div>
+    <div style="height:16px"></div>
+    <div class="thought-text fade-up anim-target" style="animation-delay:0.4s;"><em>Global Material Search + Material Details</em> — one of 13 MiLi modules.</div>
+  </div>
+
+<!-- FRAMES END -->
+
+  <!-- Progress bar -->
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+</div>
+
+<!-- Controls -->
+<div class="controls">
+  <button id="prevBtn" onclick="prev()" disabled>&larr;</button>
+  <div class="frame-counter" id="counter">1 / 22</div>
+  <button id="nextBtn" onclick="next()">&rarr;</button>
+  <button id="playBtn" onclick="autoPlay()">&#9654; Play</button>
+</div>
+
+<script>
+  const totalFrames = 22;
+  let current = 0;
+  let interval = null;
+
+  function show(n) {
+    document.querySelectorAll('.frame').forEach(f => f.classList.remove('active'));
+    const frame = document.getElementById(`f${n + 1}`);
+    frame.classList.add('active');
+
+    // Re-trigger animations
+    frame.querySelectorAll('.anim-target').forEach(el => {
+      const classes = [...el.classList];
+      const animClass = classes.find(c =>
+        ['pop-in','fade-up','slide-right','slide-left','scale-in','drop-in','stamp','check-draw'].includes(c)
+      );
+      if (animClass) {
+        el.classList.remove(animClass);
+        void el.offsetHeight;
+        el.classList.add(animClass);
+      }
+    });
+
+    document.getElementById('counter').textContent = `${n + 1} / ${totalFrames}`;
+    document.getElementById('prevBtn').disabled = n === 0;
+    document.getElementById('nextBtn').disabled = n === totalFrames - 1;
+    document.getElementById('progressFill').style.width = `${((n + 1) / totalFrames) * 100}%`;
+  }
+
+  function next() {
+    if (current < totalFrames - 1) { current++; show(current); }
+  }
+
+  function prev() {
+    if (current > 0) { current--; show(current); }
+  }
+
+  function autoPlay() {
+    const btn = document.getElementById('playBtn');
+    if (interval) {
+      clearInterval(interval);
+      interval = null;
+      btn.innerHTML = '&#9654; Play';
+      btn.classList.remove('active');
+      return;
+    }
+
+    btn.innerHTML = '&#9208; Pause';
+    btn.classList.add('active');
+    current = 0;
+    show(0);
+
+    interval = setInterval(() => {
+      if (current < totalFrames - 1) {
+        current++;
+        show(current);
+      } else {
+        clearInterval(interval);
+        interval = null;
+        btn.innerHTML = '&#9654; Play';
+        btn.classList.remove('active');
+      }
+    }, 1800);
+  }
+
+  // Keyboard navigation
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); next(); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
+  });
+
+  show(0);
+</script>
+<script src="../feedback.js"></script>
+
+</body>
+</html>
