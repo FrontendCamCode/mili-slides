@@ -700,22 +700,35 @@
     <div class="metric-big">18,000</div>
     <div class="metric-unit">materials with zero movement in 24+ months</div>
   </div>
-  <div class="blocker-list pop-in anim-target" style="animation-delay:0.15s">
-    <div class="blocker-item"><span class="blocker-icon">🚫</span><span class="blocker-label">Material has open PO</span><span class="blocker-status blocked">Blocked</span></div>
-    <div class="blocker-item"><span class="blocker-icon">🔗</span><span class="blocker-label">Material listed in BOM for FL-COMP-007</span><span class="blocker-status blocked">Blocked</span></div>
-    <div class="blocker-item"><span class="blocker-icon">📦</span><span class="blocker-label">Stock on hand: 24 EA</span><span class="blocker-status blocked">Blocked</span></div>
+  <div class="pop-in anim-target" style="animation-delay:0.15s; position:relative; width:100%; max-width:420px; height:120px; margin-top:8px;">
+    <!-- Back row — 30% opacity -->
+    <div class="blocker-item" style="position:absolute; top:0; left:50%; transform:translateX(-50%) scale(0.92); width:90%; opacity:0.3; z-index:1;">
+      <span class="blocker-icon">📦</span><span class="blocker-label">MAT-44210 Mech Seal · 24 EA on hand</span><span class="blocker-status blocked">Blocked</span>
+    </div>
+    <!-- Middle row — 60% opacity -->
+    <div class="blocker-item" style="position:absolute; top:20px; left:50%; transform:translateX(-50%) scale(0.96); width:95%; opacity:0.6; z-index:2;">
+      <span class="blocker-icon">🔗</span><span class="blocker-label">MAT-31087 V-Belt · active in BOM P-4400</span><span class="blocker-status blocked">Blocked</span>
+    </div>
+    <!-- Front row — fully visible -->
+    <div class="blocker-item" style="position:absolute; top:40px; left:50%; transform:translateX(-50%); width:100%; opacity:1; z-index:3;">
+      <span class="blocker-icon">🚫</span><span class="blocker-label">MAT-10552 Bearing Assy · open PO 4500298814</span><span class="blocker-status blocked">Blocked</span>
+    </div>
   </div>
-  <div class="result-tag fade-up anim-target" style="animation-delay:0.3s; background:transparent; color:var(--red); border:1.5px solid rgba(224, 82, 82, 0.4)">Deletion blocked — no resolution guidance</div>
-  <div class="thought-text fade-up anim-target" style="animation-delay:0.45s">SAP prevents deletion but <strong>doesn't tell you how to resolve the blockers</strong>.</div>
+  <div class="result-tag fade-up anim-target" style="animation-delay:0.35s; background:transparent; color:var(--red); border:1.5px solid rgba(224, 82, 82, 0.4)">Deletion blocked — no resolution guidance</div>
+  <div class="thought-text fade-up anim-target" style="animation-delay:0.5s">SAP prevents deletion but <strong>doesn't tell you how to resolve the blockers</strong>.</div>
 </div>
 
 <div class="frame" id="f4">
   <div class="section-label">THE PROBLEM</div>
-  <div class="mat-card pop-in anim-target" style="animation-delay:0s">
-    <div style="font-size:13px; color:var(--text); text-align:center">Planner gives up. Moves to next material. <strong>Same blockers.</strong></div>
-    <div style="font-size:12px; color:var(--red); margin-top:8px; text-align:center">Dead stock report sits unchanged from last quarter.</div>
+  <div class="pop-in anim-target" style="animation-delay:0s; display:flex; align-items:center; gap:12px; width:100%; max-width:420px;">
+    <div style="padding:10px 16px; background:var(--card-bg); border:1px solid var(--border); border-radius:8px; font-size:12px; color:var(--text-secondary); text-align:center; flex:1;">Planner reviews material</div>
+    <div style="font-size:14px; color:var(--text-muted);">→</div>
+    <div style="padding:10px 16px; background:var(--card-bg); border:1px solid var(--border); border-radius:8px; font-size:12px; color:var(--text-secondary); text-align:center; flex:1;">Hits blocker</div>
+    <div style="font-size:14px; color:var(--text-muted);">→</div>
+    <div style="padding:10px 16px; background:var(--card-bg); border:1px solid var(--red-border); border-radius:8px; font-size:12px; color:var(--red); text-align:center; flex:1; font-weight:600;">Gives up</div>
   </div>
-  <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">When deletion is hard, <strong>nothing gets deleted</strong>. The dead stock grows.</div>
+  <div class="fade-up anim-target" style="animation-delay:0.2s; font-size:32px; font-weight:600; color:var(--red); text-align:center; line-height:1.2; margin-top:4px;">Nothing gets deleted.</div>
+  <div class="fade-up anim-target" style="animation-delay:0.35s; font-size:13px; color:var(--text-muted); text-align:center; max-width:360px; line-height:1.5;">Dead stock report sits unchanged quarter after quarter. The catalog only grows — <span style="font-weight:600; color:rgba(255,255,255,0.7);">$6.2M locked in parts no one orders</span>.</div>
 </div>
 
 <div class="frame" id="f5">
