@@ -1,0 +1,156 @@
+name: Fix slide from feedback
+
+on:
+  issues:
+    types: [opened, edited]
+
+jobs:
+  fix-slide:
+    if: contains(github.event.issue.labels.*.name, 'slide-feedback')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Claude Code
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Parse issue and build prompt
+        id: parse
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = context.payload.issue.title;
+            const body = context.payload.issue.body || '';
+
+            // Parse "[Deck Name] Slide N — Section" from title
+            const match = title.match(/^\[(.+?)\]\s*Slide\s*(\d+)/);
+            const deckName = match ? match[1] : '';
+            const slideNum = match ? match[2] : '';
+
+            // Map deck name to filename
+            const nameToFile = {
+              'Global Material Search + Material Details': 'global-material-search',
+              'Global Material Search': 'global-material-search',
+              'Material Extension Micro-Animation': 'material-extension',
+              'Material Extension': 'material-extension',
+              'Material Creation': 'material-creation',
+              'Material Enrichment': 'material-enrichment',
+              'Criticality Calculator': 'criticality-calculator',
+              'ROP ROQ Calculator': 'rop-roq-calculator',
+              'Lead Time Calculator': 'lead-time-calculator',
+              'BOM Monitor': 'bom-monitor',
+              'Free Text Monitor': 'free-text-monitor',
+              'Duplicate Detection': 'duplicate-detection',
+              'Flag for Deletion': 'flag-for-deletion',
+              'New Stock Requests': 'new-stock-requests',
+              'Workflow & Governance': 'workflow-governance',
+              'Workflow &amp; Governance': 'workflow-governance',
+            };
+
+            const slug = nameToFile[deckName] || deckName.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+            const filePath = `decks/${slug}.html`;
+
+            core.setOutput('deck_name', deckName);
+            core.setOutput('slide_num', slideNum);
+            core.setOutput('file_path', filePath);
+            core.setOutput('issue_title', title);
+            core.setOutput('issue_body', body);
+
+      - name: Run Claude Code to fix slide
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          cat <<'PROMPT_EOF' > /tmp/fix-prompt.md
+          You are fixing a slide in a MiLi animated slide deck.
+
+          ## Issue
+          **Title:** ${{ steps.parse.outputs.issue_title }}
+
+          **Feedback:**
+          ${{ steps.parse.outputs.issue_body }}
+
+          ## File to edit
+          `${{ steps.parse.outputs.file_path }}`
+
+          ## Slide to fix
+          Slide ${{ steps.parse.outputs.slide_num }} — this is frame `f${{ steps.parse.outputs.slide_num }}` (the div with `id="f${{ steps.parse.outputs.slide_num }}"`).
+
+          ## Instructions
+          1. Read the file `${{ steps.parse.outputs.file_path }}`
+          2. Find frame `f${{ steps.parse.outputs.slide_num }}`
+          3. Apply the feedback — fix what the reviewer described
+          4. Keep all existing animations, classes, and structure intact
+          5. Do NOT change the total frame count, frame IDs, or the JavaScript
+          6. Only edit the specific frame(s) mentioned unless the feedback clearly requires broader changes
+          PROMPT_EOF
+
+          claude -p "$(cat /tmp/fix-prompt.md)" \
+            --allowedTools Read,Edit,Write,Glob,Grep
+
+      - name: Check for changes
+        id: changes
+        run: |
+          if git diff --quiet; then
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_changes=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Commit and push
+        if: steps.changes.outputs.has_changes == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add decks/
+          git commit -m "Fix: ${{ steps.parse.outputs.issue_title }}
+
+          Closes #${{ github.event.issue.number }}
+
+          Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>"
+          git push
+
+      - name: Comment on issue
+        if: steps.changes.outputs.has_changes == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.issue.number,
+              body: `Fixed and deployed. The change will be live at https://frontendcamcode.github.io/mili-slides/${{ steps.parse.outputs.file_path }} once GitHub Pages rebuilds (~30s).\n\nCommit: ${context.sha}`
+            });
+            await github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.issue.number,
+              state: 'closed'
+            });
+
+      - name: Comment if no changes needed
+        if: steps.changes.outputs.has_changes == 'false'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.issue.number,
+              body: `I reviewed the feedback but couldn't determine a specific code change to make. A human may need to look at this one.\n\nLabeling for manual review.`
+            });
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.issue.number,
+              labels: ['needs-manual-review']
+            });
