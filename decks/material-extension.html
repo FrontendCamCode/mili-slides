@@ -4,31 +4,39 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MiLi — Material Extension Micro-Animation</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
-    --teal: #2a7d7b;
-    --teal-light: #e8f4f3;
-    --dark: #0f172a;
+    /* MiLi Design System */
+    --navy: #001E27;
+    --navy-soft: #0a2e38;
+    --green: #a3d64b;
+    --green-bg: rgba(163, 214, 75, 0.10);
+    --green-border: rgba(163, 214, 75, 0.25);
+    --green-dim: rgba(163, 214, 75, 0.6);
     --card-bg: #ffffff;
-    --border: #e2e8f0;
-    --text: #1e293b;
-    --muted: #94a3b8;
-    --green: #16a34a;
-    --green-bg: #dcfce7;
-    --red: #ef4444;
-    --red-bg: #fef2f2;
-    --amber: #f59e0b;
-    --amber-bg: #fef3c7;
-    --blue: #3b82f6;
-    --blue-bg: #eff6ff;
+    --stage-bg: #0d1b20;
+    --border: rgba(0, 30, 39, 0.08);
+    --border-card: rgba(0, 30, 39, 0.06);
+    --text: #001E27;
+    --text-secondary: #4a6670;
+    --text-muted: #8a9ea6;
+    --red: #e05252;
+    --red-bg: rgba(224, 82, 82, 0.08);
+    --red-border: rgba(224, 82, 82, 0.2);
+    --amber: #d4a030;
+    --amber-bg: rgba(212, 160, 48, 0.08);
+    --amber-border: rgba(212, 160, 48, 0.2);
+    --blue: #4a8ec2;
+    --blue-bg: rgba(74, 142, 194, 0.08);
+    --blue-border: rgba(74, 142, 194, 0.2);
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--dark);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #0a1014;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -42,11 +50,12 @@
   .stage {
     width: 720px;
     height: 480px;
-    background: #f8fafc;
+    background: var(--stage-bg);
     border-radius: 16px;
     position: relative;
     overflow: hidden;
     box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+    border: 1px solid rgba(255,255,255,0.04);
   }
 
   /* ── Frame ── */
@@ -68,215 +77,132 @@
     pointer-events: auto;
   }
 
-  /* ── Shared micro-animation classes ── */
-  .pop-in {
-    animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-  }
-
-  .fade-up {
-    animation: fadeUp 0.4s ease forwards;
-  }
-
-  .slide-right {
-    animation: slideRight 0.4s ease forwards;
-  }
-
-  .slide-left {
-    animation: slideLeft 0.4s ease forwards;
-  }
-
-  .scale-in {
-    animation: scaleIn 0.35s ease forwards;
-  }
-
-  .draw-line {
-    animation: drawLine 0.6s ease forwards;
-  }
-
-  .pulse-glow {
-    animation: pulseGlow 1.5s ease-in-out infinite;
-  }
-
-  .typewriter {
-    overflow: hidden;
-    white-space: nowrap;
-    border-right: 2px solid var(--teal);
-    animation: typewriter 0.8s steps(20) forwards, blinkCaret 0.6s step-end infinite;
-  }
-
-  .stamp {
-    animation: stamp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-  }
-
-  .count-up {
-    animation: fadeUp 0.3s ease forwards;
-  }
-
-  .shake {
-    animation: shake 0.4s ease;
-  }
-
-  .check-draw {
-    animation: checkDraw 0.4s ease forwards;
-  }
-
-  .fly-out {
-    animation: flyOut 0.5s ease forwards;
-  }
+  /* ── Animations ── */
+  .pop-in { animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+  .fade-up { animation: fadeUp 0.4s ease forwards; }
+  .slide-right { animation: slideRight 0.4s ease forwards; }
+  .slide-left { animation: slideLeft 0.4s ease forwards; }
+  .scale-in { animation: scaleIn 0.35s ease forwards; }
+  .stamp { animation: stamp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+  .check-draw { animation: checkDraw 0.4s ease forwards; }
+  .pulse-glow { animation: pulseGlow 1.5s ease-in-out infinite; }
 
   @keyframes popIn {
     0% { opacity: 0; transform: scale(0.7); }
     100% { opacity: 1; transform: scale(1); }
   }
-
   @keyframes fadeUp {
     0% { opacity: 0; transform: translateY(16px); }
     100% { opacity: 1; transform: translateY(0); }
   }
-
   @keyframes slideRight {
     0% { opacity: 0; transform: translateX(-24px); }
     100% { opacity: 1; transform: translateX(0); }
   }
-
   @keyframes slideLeft {
     0% { opacity: 0; transform: translateX(24px); }
     100% { opacity: 1; transform: translateX(0); }
   }
-
   @keyframes scaleIn {
     0% { opacity: 0; transform: scale(0); }
     100% { opacity: 1; transform: scale(1); }
   }
-
-  @keyframes drawLine {
-    0% { width: 0; }
-    100% { width: 100%; }
-  }
-
-  @keyframes pulseGlow {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(42, 125, 123, 0); }
-    50% { box-shadow: 0 0 0 8px rgba(42, 125, 123, 0.12); }
-  }
-
-  @keyframes typewriter {
-    0% { width: 0; }
-    100% { width: 100%; }
-  }
-
-  @keyframes blinkCaret {
-    50% { border-color: transparent; }
-  }
-
   @keyframes stamp {
     0% { opacity: 0; transform: scale(2.5) rotate(-12deg); }
     100% { opacity: 1; transform: scale(1) rotate(-6deg); }
   }
-
-  @keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    20% { transform: translateX(-6px); }
-    40% { transform: translateX(6px); }
-    60% { transform: translateX(-4px); }
-    80% { transform: translateX(4px); }
-  }
-
   @keyframes checkDraw {
     0% { opacity: 0; transform: scale(0) rotate(-45deg); }
     50% { transform: scale(1.2) rotate(0deg); }
     100% { opacity: 1; transform: scale(1) rotate(0deg); }
   }
-
-  @keyframes flyOut {
-    0% { opacity: 1; transform: translateX(0) scale(1); }
-    100% { opacity: 0; transform: translateX(80px) scale(0.8); }
+  @keyframes pulseGlow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(163, 214, 75, 0); }
+    50% { box-shadow: 0 0 0 10px rgba(163, 214, 75, 0.15); }
   }
-
-  @keyframes expandWidth {
-    0% { width: 0; opacity: 0; }
-    100% { width: auto; opacity: 1; }
-  }
-
   @keyframes fillBar {
     0% { width: 0%; }
     100% { width: var(--fill); }
   }
 
-  @keyframes dropIn {
-    0% { opacity: 0; transform: translateY(-30px); }
-    60% { transform: translateY(4px); }
-    100% { opacity: 1; transform: translateY(0); }
-  }
-
-  .drop-in {
-    animation: dropIn 0.4s ease forwards;
-  }
-
-  /* ── Shared element styles ── */
+  /* ── Text on dark stage ── */
   .thought-text {
-    font-size: 15px;
-    color: var(--muted);
+    font-size: 14px;
+    color: rgba(255,255,255,0.45);
     text-align: center;
-    line-height: 1.6;
+    line-height: 1.7;
     max-width: 480px;
+    letter-spacing: -0.01em;
   }
-
-  .thought-text strong { color: var(--text); }
-  .thought-text em { color: var(--teal); font-style: normal; font-weight: 600; }
+  .thought-text strong { color: rgba(255,255,255,0.8); font-weight: 600; }
+  .thought-text em { color: var(--green); font-style: normal; font-weight: 600; }
 
   .big-text {
     font-size: 28px;
     font-weight: 700;
-    color: var(--text);
+    color: #ffffff;
     text-align: center;
     line-height: 1.3;
+    letter-spacing: -0.03em;
   }
-
-  .big-text em { color: var(--teal); font-style: normal; }
+  .big-text em { color: var(--green); font-style: normal; }
 
   .mid-text {
-    font-size: 18px;
+    font-size: 17px;
     font-weight: 600;
-    color: var(--text);
+    color: #ffffff;
     text-align: center;
+    letter-spacing: -0.02em;
   }
 
   .small-label {
-    font-size: 11px;
-    font-weight: 600;
+    font-size: 10px;
+    font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 1.5px;
-    color: var(--muted);
+    color: rgba(255,255,255,0.3);
   }
 
-  /* ── Material card ── */
+  /* ── Section label ── */
+  .section-label {
+    position: absolute;
+    top: 16px;
+    left: 20px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.2);
+  }
+
+  /* ── Material card (white on dark) ── */
   .mat-card {
-    background: white;
-    border: 2px solid var(--border);
+    background: var(--card-bg);
+    border: 1px solid var(--border-card);
     border-radius: 12px;
     padding: 16px 24px;
     display: flex;
     align-items: center;
     gap: 14px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
   }
 
   .mat-card .mat-icon {
     width: 40px;
     height: 40px;
     border-radius: 10px;
-    background: var(--teal-light);
+    background: var(--green-bg);
+    border: 1px solid var(--green-border);
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
   }
-
-  .mat-card .mat-icon svg { width: 20px; height: 20px; color: var(--teal); }
+  .mat-card .mat-icon svg { width: 20px; height: 20px; color: var(--green); }
 
   .mat-card .mat-info { display: flex; flex-direction: column; gap: 2px; }
-  .mat-card .mat-number { font-size: 14px; font-weight: 700; color: var(--text); }
-  .mat-card .mat-desc { font-size: 12px; color: var(--muted); }
+  .mat-card .mat-number { font-size: 14px; font-weight: 700; color: var(--navy); letter-spacing: -0.02em; }
+  .mat-card .mat-desc { font-size: 12px; color: var(--text-secondary); }
 
   /* ── Plant badge ── */
   .plant-badge {
@@ -287,73 +213,53 @@
     border-radius: 10px;
     font-size: 13px;
     font-weight: 600;
-    border: 2px solid;
+    border: 1.5px solid;
+    letter-spacing: -0.01em;
   }
-
   .plant-badge.hamburg {
-    background: var(--blue-bg);
-    border-color: var(--blue);
-    color: var(--blue);
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.7);
   }
-
   .plant-badge.paris {
-    background: var(--teal-light);
-    border-color: var(--teal);
-    color: var(--teal);
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.7);
   }
-
   .plant-badge.new {
     border-style: dashed;
     background: transparent;
-    border-color: var(--muted);
-    color: var(--muted);
+    border-color: rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.4);
   }
 
-  /* ── Arrow ── */
-  .arrow {
-    color: var(--muted);
-    font-size: 20px;
-  }
+  .arrow { color: rgba(255,255,255,0.2); font-size: 20px; }
 
   /* ── Field row ── */
   .field-row {
     display: flex;
     align-items: center;
     gap: 12px;
-    background: white;
-    border: 1px solid var(--border);
+    background: var(--card-bg);
+    border: 1px solid var(--border-card);
     border-radius: 10px;
     padding: 12px 20px;
     width: 100%;
     max-width: 400px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
   }
-
   .field-label {
-    font-size: 12px;
-    color: var(--muted);
+    font-size: 11px;
+    color: var(--text-muted);
     font-weight: 500;
     min-width: 100px;
+    letter-spacing: -0.01em;
   }
-
   .field-value {
     font-size: 14px;
-    font-weight: 600;
-    color: var(--text);
-  }
-
-  /* ── Score meter ── */
-  .score-bar-track {
-    width: 300px;
-    height: 8px;
-    background: #e2e8f0;
-    border-radius: 4px;
-    overflow: hidden;
-  }
-
-  .score-bar-fill {
-    height: 100%;
-    border-radius: 4px;
-    animation: fillBar 0.8s ease forwards;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: -0.02em;
   }
 
   /* ── Check circle ── */
@@ -362,96 +268,24 @@
     height: 56px;
     border-radius: 50%;
     background: var(--green-bg);
+    border: 2px solid var(--green-border);
     display: flex;
     align-items: center;
     justify-content: center;
   }
-
   .check-circle svg { width: 28px; height: 28px; color: var(--green); }
 
-  /* ── Connector dot ── */
-  .connector-line {
-    width: 2px;
-    height: 32px;
-    background: var(--border);
-  }
-
-  /* ── Controls ── */
-  .controls {
-    position: fixed;
-    bottom: 24px;
-    display: flex;
-    gap: 12px;
-    align-items: center;
-    z-index: 100;
-  }
-
-  .controls button {
-    background: rgba(255,255,255,0.1);
-    color: #94a3b8;
-    border: 1px solid rgba(255,255,255,0.1);
-    padding: 8px 16px;
-    border-radius: 8px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-
-  .controls button:hover { background: rgba(255,255,255,0.15); color: white; }
-  .controls button:disabled { opacity: 0.3; cursor: not-allowed; }
-  .controls button.active { background: var(--teal); color: white; border-color: var(--teal); }
-
-  .frame-counter {
-    color: #64748b;
-    font-size: 12px;
-    font-weight: 600;
-    font-variant-numeric: tabular-nums;
-    min-width: 60px;
-    text-align: center;
-  }
-
-  /* ── Progress bar ── */
-  .progress-track {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: rgba(0,0,0,0.06);
-  }
-
-  .progress-fill {
-    height: 100%;
-    background: var(--teal);
-    transition: width 0.35s ease;
-  }
-
-  /* ── Section label (top left) ── */
-  .section-label {
-    position: absolute;
-    top: 16px;
-    left: 20px;
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    color: var(--muted);
-    opacity: 0.6;
-  }
-
-  /* ── Duplicate warning card ── */
+  /* ── Warn card ── */
   .warn-card {
-    background: var(--red-bg);
-    border: 2px solid var(--red);
+    background: var(--card-bg);
+    border: 1.5px solid var(--red-border);
     border-radius: 12px;
     padding: 16px 24px;
     display: flex;
     align-items: center;
     gap: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
   }
-
   .warn-card .warn-icon {
     width: 36px;
     height: 36px;
@@ -462,29 +296,20 @@
     justify-content: center;
     flex-shrink: 0;
     color: white;
-    font-size: 18px;
-    font-weight: 700;
+    font-size: 16px;
+    font-weight: 800;
   }
+  .warn-card .warn-text { font-size: 13px; color: var(--navy); font-weight: 500; letter-spacing: -0.01em; }
+  .warn-card .warn-text strong { color: var(--red); }
 
-  .warn-card .warn-text { font-size: 13px; color: #991b1b; font-weight: 500; }
-
-  /* ── Stacked cards for duplicate ── */
-  .stacked-cards {
-    position: relative;
-    width: 320px;
-    height: 100px;
-  }
-
-  .stacked-cards .mat-card {
-    position: absolute;
-    width: 300px;
-  }
-
+  /* ── Stacked cards ── */
+  .stacked-cards { position: relative; width: 320px; height: 100px; }
+  .stacked-cards .mat-card { position: absolute; width: 300px; }
   .stacked-cards .mat-card:nth-child(1) { top: 0; left: 0; z-index: 3; }
-  .stacked-cards .mat-card:nth-child(2) { top: 8px; left: 10px; z-index: 2; opacity: 0.6; border-color: var(--red); }
-  .stacked-cards .mat-card:nth-child(3) { top: 16px; left: 20px; z-index: 1; opacity: 0.3; border-color: var(--red); }
+  .stacked-cards .mat-card:nth-child(2) { top: 8px; left: 10px; z-index: 2; opacity: 0.7; border-color: rgba(224,82,82,0.2); }
+  .stacked-cards .mat-card:nth-child(3) { top: 16px; left: 20px; z-index: 1; opacity: 0.35; border-color: rgba(224,82,82,0.15); }
 
-  /* ── Grid layout ── */
+  /* ── Detail grid ── */
   .detail-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -493,38 +318,37 @@
     max-width: 420px;
   }
 
-  /* ── Criticality radio visual ── */
+  /* ── Criticality options ── */
   .crit-option {
     display: flex;
     align-items: center;
     gap: 10px;
     padding: 10px 16px;
-    background: white;
-    border: 2px solid var(--border);
+    background: var(--card-bg);
+    border: 1.5px solid var(--border-card);
     border-radius: 10px;
     font-size: 13px;
     font-weight: 500;
-    color: var(--text);
+    color: var(--navy);
     transition: all 0.3s;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    letter-spacing: -0.01em;
   }
-
   .crit-option.selected {
-    border-color: var(--teal);
-    background: var(--teal-light);
+    border-color: var(--green);
+    background: var(--green-bg);
   }
-
   .crit-dot {
     width: 16px;
     height: 16px;
     border-radius: 50%;
-    border: 2px solid var(--border);
+    border: 2px solid rgba(0,30,39,0.15);
     flex-shrink: 0;
     transition: all 0.3s;
   }
-
   .crit-option.selected .crit-dot {
-    border-color: var(--teal);
-    background: var(--teal);
+    border-color: var(--green);
+    background: var(--green);
     box-shadow: inset 0 0 0 3px white;
   }
 
@@ -537,38 +361,109 @@
     border-radius: 20px;
     font-size: 14px;
     font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .result-tag.green { background: var(--green-bg); color: var(--green); border: 1.5px solid var(--green-border); }
+  .result-tag.amber { background: var(--amber-bg); color: var(--amber); border: 1.5px solid var(--amber-border); }
+  .result-tag.red { background: var(--red-bg); color: var(--red); border: 1.5px solid var(--red-border); }
+
+  /* ── Completed field-row ── */
+  .field-row.completed {
+    border-color: var(--green-border);
+    background: var(--card-bg);
+  }
+  .field-row.completed .check-mark { color: var(--green); font-size: 16px; font-weight: 700; }
+  .field-row.completed .field-label { color: var(--green); font-weight: 600; }
+
+  /* ── Controls ── */
+  .controls {
+    position: fixed;
+    bottom: 24px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    z-index: 100;
+  }
+  .controls button {
+    background: rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.4);
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: -0.01em;
+  }
+  .controls button:hover { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); }
+  .controls button:disabled { opacity: 0.3; cursor: not-allowed; }
+  .controls button.active { background: var(--green); color: var(--navy); border-color: var(--green); font-weight: 700; }
+
+  .frame-counter {
+    color: rgba(255,255,255,0.25);
+    font-size: 12px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    min-width: 60px;
+    text-align: center;
+    letter-spacing: -0.01em;
   }
 
-  .result-tag.green { background: var(--green-bg); color: var(--green); }
-  .result-tag.amber { background: var(--amber-bg); color: #92400e; }
-  .result-tag.red { background: var(--red-bg); color: var(--red); }
-
-  /* hidden until active */
-  .frame .anim-target {
-    opacity: 0;
+  /* ── Progress bar ── */
+  .progress-track {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: rgba(255,255,255,0.04);
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--green);
+    transition: width 0.35s ease;
   }
 
-  .frame.active .anim-target.pop-in,
-  .frame.active .anim-target.fade-up,
-  .frame.active .anim-target.slide-right,
-  .frame.active .anim-target.slide-left,
-  .frame.active .anim-target.scale-in,
-  .frame.active .anim-target.drop-in,
-  .frame.active .anim-target.stamp,
-  .frame.active .anim-target.check-draw {
-    /* animations handle opacity */
+  /* ── Submit CTA ── */
+  .cta-btn {
+    background: var(--green);
+    color: var(--navy);
+    padding: 16px 48px;
+    border-radius: 12px;
+    font-size: 17px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    letter-spacing: -0.02em;
+    border: none;
   }
+
+  /* ── Summary chip ── */
+  .summary-chip {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    padding: 6px 14px;
+    border: 1.5px solid var(--border-card);
+    border-radius: 10px;
+    background: var(--card-bg);
+    letter-spacing: -0.01em;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  }
+
+  .frame .anim-target { opacity: 0; }
 </style>
 </head>
 <body>
 
 <div class="stage" id="stage">
 
-  <!-- ══════════════════════════════════════ -->
-  <!-- SECTION A: THE PROBLEM (Frames 1-4)   -->
-  <!-- ══════════════════════════════════════ -->
+  <!-- SECTION A: THE PROBLEM (Frames 1-4) -->
 
-  <!-- Frame 1: A material exists -->
   <div class="frame" id="f1">
     <div class="section-label">The situation</div>
     <div class="mat-card pop-in anim-target">
@@ -582,7 +477,6 @@
     <div class="thought-text fade-up anim-target" style="animation-delay:0.3s;">A material exists at <strong>one plant</strong>.</div>
   </div>
 
-  <!-- Frame 2: It lives at Hamburg -->
   <div class="frame" id="f2">
     <div class="section-label">The situation</div>
     <div class="mat-card" style="opacity:1;">
@@ -596,11 +490,10 @@
     <div class="plant-badge hamburg pop-in anim-target">📍 1000 – Hamburg</div>
   </div>
 
-  <!-- Frame 3: Paris needs it too -->
   <div class="frame" id="f3">
     <div class="section-label">The situation</div>
     <div style="display:flex;align-items:center;gap:24px;">
-      <div class="plant-badge hamburg" style="opacity:0.4;">📍 Hamburg</div>
+      <div class="plant-badge hamburg" style="opacity:0.5;">📍 Hamburg</div>
       <div class="arrow">→</div>
       <div class="plant-badge new pop-in anim-target">📍 Paris needs it too</div>
     </div>
@@ -608,7 +501,6 @@
     <div class="thought-text fade-up anim-target" style="animation-delay:0.3s;">Another plant needs the <strong>same part</strong>.</div>
   </div>
 
-  <!-- Frame 4: The wrong way — duplicate -->
   <div class="frame" id="f4">
     <div class="section-label">Without MiLi</div>
     <div class="stacked-cards pop-in anim-target">
@@ -623,17 +515,13 @@
     </div>
   </div>
 
-  <!-- ══════════════════════════════════════ -->
   <!-- SECTION B: THE EXTENSION (Frames 5-16) -->
-  <!-- ══════════════════════════════════════ -->
 
-  <!-- Frame 5: The right way -->
   <div class="frame" id="f5">
     <div class="section-label">With MiLi</div>
     <div class="big-text pop-in anim-target">Extend, <em>don't duplicate.</em></div>
   </div>
 
-  <!-- Frame 6: Select the material -->
   <div class="frame" id="f6">
     <div class="section-label">Step 1 · Select material</div>
     <div class="small-label fade-up anim-target">Material</div>
@@ -647,7 +535,6 @@
     </div>
   </div>
 
-  <!-- Frame 7: Pick target plant -->
   <div class="frame" id="f7">
     <div class="section-label">Step 1 · Target plant</div>
     <div class="small-label fade-up anim-target">Extend to</div>
@@ -655,7 +542,6 @@
     <div class="plant-badge paris pop-in anim-target" style="animation-delay:0.15s;font-size:16px;padding:12px 24px;">📍 0002 – Paris</div>
   </div>
 
-  <!-- Frame 8: Copy from plant -->
   <div class="frame" id="f8">
     <div class="section-label">Step 1 · Copy settings from</div>
     <div style="display:flex;align-items:center;gap:20px;">
@@ -667,7 +553,6 @@
     <div class="thought-text fade-up anim-target" style="animation-delay:0.5s;">Copy plant settings from <strong>Hamburg</strong> to <strong>Paris</strong>.</div>
   </div>
 
-  <!-- Frame 9: Storage location -->
   <div class="frame" id="f9">
     <div class="section-label">Step 1 · Storage location</div>
     <div class="field-row pop-in anim-target">
@@ -681,7 +566,6 @@
     </div>
   </div>
 
-  <!-- Frame 10: Summary row — one row, that's it -->
   <div class="frame" id="f10">
     <div class="section-label">Step 1 · Summary</div>
     <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:center;">
@@ -689,22 +573,20 @@
       <div class="arrow fade-up anim-target" style="animation-delay:0.1s;">→</div>
       <div class="plant-badge paris pop-in anim-target" style="font-size:11px;padding:6px 12px;animation-delay:0.2s;">Paris</div>
       <div class="arrow fade-up anim-target" style="animation-delay:0.3s;">→</div>
-      <div style="font-size:11px;font-weight:600;color:var(--muted);padding:6px 12px;border:2px solid var(--border);border-radius:10px;" class="pop-in anim-target" style="animation-delay:0.4s;">Lager 0001 · Bin 24</div>
+      <div class="summary-chip pop-in anim-target" style="animation-delay:0.4s;">Lager 0001 · Bin 24</div>
     </div>
     <div style="height:20px"></div>
     <div class="thought-text fade-up anim-target" style="animation-delay:0.5s;"><strong>One row.</strong> That's the whole setup.</div>
   </div>
 
-  <!-- Frame 11: Plant details — lead time -->
   <div class="frame" id="f11">
     <div class="section-label">Step 2 · Plant details</div>
     <div class="field-row pop-in anim-target" style="max-width:300px;">
       <div class="field-label">Lead Time</div>
-      <div class="field-value" style="font-size:24px;">1,100 <span style="font-size:12px;color:var(--muted);font-weight:400;">days</span></div>
+      <div class="field-value" style="font-size:24px;">1,100 <span style="font-size:12px;color:var(--text-muted);font-weight:400;">days</span></div>
     </div>
   </div>
 
-  <!-- Frame 12: Plant details — price -->
   <div class="frame" id="f12">
     <div class="section-label">Step 2 · Plant details</div>
     <div class="detail-grid">
@@ -729,7 +611,6 @@
     <div class="thought-text fade-up anim-target" style="animation-delay:0.65s;">Plant-specific settings — <strong>carried across</strong>, not re-entered.</div>
   </div>
 
-  <!-- Frame 13: Criticality question — impact -->
   <div class="frame" id="f13">
     <div class="section-label">Step 3 · Criticality</div>
     <div class="mid-text fade-up anim-target">Impact of Failure?</div>
@@ -741,18 +622,16 @@
     </div>
   </div>
 
-  <!-- Frame 14: Criticality question — safety -->
   <div class="frame" id="f14">
     <div class="section-label">Step 3 · Criticality</div>
     <div class="mid-text fade-up anim-target">Safety Risk?</div>
     <div style="height:16px"></div>
     <div style="display:flex;gap:12px;">
       <div class="crit-option pop-in anim-target" style="animation-delay:0.15s;width:120px;justify-content:center;"><div class="crit-dot"></div> Yes</div>
-      <div class="crit-option selected pop-in anim-target" style="animation-delay:0.25s;width:120px;justify-content:center;"><div class="crit-dot"></div> No</div>
+      <div class="crit-option selected pop-in anim-target" style="animation-delay:0.25s;width:120px;justify-content:center;border-color:var(--green);background:#ffffff;"><div class="crit-dot" style="border-color:var(--green);background:var(--green);box-shadow:inset 0 0 0 3px white;"></div><span style="color:var(--navy);font-weight:700;">No</span></div>
     </div>
   </div>
 
-  <!-- Frame 15: Criticality result -->
   <div class="frame" id="f15">
     <div class="section-label">Step 3 · Criticality result</div>
     <div class="result-tag amber stamp anim-target" style="font-size:18px;padding:12px 28px;">E – NO IMPACT</div>
@@ -760,69 +639,65 @@
     <div class="thought-text fade-up anim-target" style="animation-delay:0.4s;">Scored by the system. <strong>Not your gut.</strong></div>
   </div>
 
-  <!-- Frame 16: Not stocked -->
   <div class="frame" id="f16">
     <div class="section-label">Step 3 · Stocking decision</div>
     <div style="display:flex;gap:24px;align-items:center;">
       <div style="text-align:center;" class="fade-up anim-target">
         <div class="small-label" style="margin-bottom:8px;">Material Critical?</div>
-        <div style="font-size:20px;font-weight:700;color:var(--text);">No</div>
+        <div style="font-size:20px;font-weight:700;color:#fff;letter-spacing:-0.03em;">No</div>
       </div>
-      <div style="width:2px;height:48px;background:var(--border);"></div>
+      <div style="width:1px;height:48px;background:rgba(255,255,255,0.08);"></div>
       <div style="text-align:center;" class="fade-up anim-target" style="animation-delay:0.15s;">
         <div class="small-label" style="margin-bottom:8px;">Stocked?</div>
-        <div style="font-size:20px;font-weight:700;color:var(--text);">Not Stocked</div>
+        <div style="font-size:20px;font-weight:700;color:#fff;letter-spacing:-0.03em;">Not Stocked</div>
       </div>
-      <div style="width:2px;height:48px;background:var(--border);"></div>
+      <div style="width:1px;height:48px;background:rgba(255,255,255,0.08);"></div>
       <div style="text-align:center;" class="fade-up anim-target" style="animation-delay:0.3s;">
         <div class="small-label" style="margin-bottom:8px;">Repairable?</div>
-        <div style="font-size:20px;font-weight:700;color:var(--text);">No</div>
+        <div style="font-size:20px;font-weight:700;color:#fff;letter-spacing:-0.03em;">No</div>
       </div>
     </div>
   </div>
 
-  <!-- ══════════════════════════════════════ -->
   <!-- SECTION C: REVIEW & DONE (Frames 17-22) -->
-  <!-- ══════════════════════════════════════ -->
 
-  <!-- Frame 17: Review — everything on one screen -->
   <div class="frame" id="f17">
     <div class="section-label">Step 4 · Review</div>
     <div class="big-text pop-in anim-target">Everything.<br><em>One screen.</em></div>
   </div>
 
-  <!-- Frame 18: Review checklist -->
   <div class="frame" id="f18">
     <div class="section-label">Step 4 · Review</div>
-    <div style="display:flex;flex-direction:column;gap:10px;width:100%;max-width:360px;">
-      <div class="field-row slide-right anim-target" style="max-width:none;border-color:var(--green);background:var(--green-bg);">
-        <div style="color:var(--green);font-size:16px;">✓</div>
-        <div class="field-label" style="color:var(--green);">Material Plant Summary</div>
+    <div style="display:flex;flex-direction:column;gap:10px;width:100%;max-width:380px;">
+      <div class="field-row slide-right anim-target" style="max-width:none;">
+        <div style="width:24px;height:24px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="6,12 10,16 18,8"/></svg></div>
+        <div class="field-label" style="color:var(--navy);font-weight:600;">Material Plant Summary</div>
       </div>
-      <div class="field-row slide-right anim-target" style="max-width:none;border-color:var(--green);background:var(--green-bg);animation-delay:0.12s;">
-        <div style="color:var(--green);font-size:16px;">✓</div>
-        <div class="field-label" style="color:var(--green);">Material Plant Details</div>
+      <div class="field-row slide-right anim-target" style="max-width:none;animation-delay:0.12s;">
+        <div style="width:24px;height:24px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="6,12 10,16 18,8"/></svg></div>
+        <div class="field-label" style="color:var(--navy);font-weight:600;">Material Plant Details</div>
       </div>
-      <div class="field-row slide-right anim-target" style="max-width:none;border-color:var(--green);background:var(--green-bg);animation-delay:0.24s;">
-        <div style="color:var(--green);font-size:16px;">✓</div>
-        <div class="field-label" style="color:var(--green);">Storage Location</div>
+      <div class="field-row slide-right anim-target" style="max-width:none;animation-delay:0.24s;">
+        <div style="width:24px;height:24px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="6,12 10,16 18,8"/></svg></div>
+        <div class="field-label" style="color:var(--navy);font-weight:600;">Storage Location</div>
       </div>
-      <div class="field-row slide-right anim-target" style="max-width:none;border-color:var(--green);background:var(--green-bg);animation-delay:0.36s;">
-        <div style="color:var(--green);font-size:16px;">✓</div>
-        <div class="field-label" style="color:var(--green);">Criticality</div>
+      <div class="field-row slide-right anim-target" style="max-width:none;animation-delay:0.36s;">
+        <div style="width:24px;height:24px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="6,12 10,16 18,8"/></svg></div>
+        <div class="field-label" style="color:var(--navy);font-weight:600;">Criticality</div>
       </div>
     </div>
   </div>
 
-  <!-- Frame 19: Submit button -->
   <div class="frame" id="f19">
     <div class="section-label">Step 4 · Submit</div>
-    <div style="background:var(--teal);color:white;padding:16px 48px;border-radius:12px;font-size:18px;font-weight:700;display:flex;align-items:center;gap:10px;cursor:pointer;" class="pop-in anim-target pulse-glow">
-      ✓ Submit
+    <div style="display:flex;flex-direction:column;align-items:center;gap:20px;">
+      <div class="thought-text fade-up anim-target">All sections complete. Ready to submit.</div>
+      <div class="cta-btn pop-in anim-target pulse-glow" style="animation-delay:0.3s;font-size:18px;padding:18px 56px;border-radius:14px;">
+        Submit Extension →
+      </div>
     </div>
   </div>
 
-  <!-- Frame 20: Sent to approval -->
   <div class="frame" id="f20">
     <div class="section-label">Workflow</div>
     <div class="check-circle check-draw anim-target">
@@ -834,7 +709,6 @@
     <div class="thought-text fade-up anim-target" style="animation-delay:0.5s;">The right person reviews it. <strong>Full audit trail.</strong></div>
   </div>
 
-  <!-- Frame 21: The result -->
   <div class="frame" id="f21">
     <div class="section-label">Result</div>
     <div style="display:flex;align-items:center;gap:16px;">
@@ -853,18 +727,27 @@
     <div class="thought-text fade-up anim-target" style="animation-delay:0.6s;"><strong>One material. Two plants. Zero duplicates.</strong></div>
   </div>
 
-  <!-- Frame 22: Closing thought -->
   <div class="frame" id="f22">
-    <div class="big-text pop-in anim-target">Reuse beats recreation.</div>
-    <div style="height:16px"></div>
-    <div class="thought-text fade-up anim-target" style="animation-delay:0.4s;"><em>Material Extension</em> — one of 13 MiLi modules.</div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:24px;">
+      <!-- MiLi Logo -->
+      <div class="pop-in anim-target" style="display:flex;align-items:center;gap:12px;">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+          <rect width="48" height="48" rx="12" fill="#a3d64b"/>
+          <text x="24" y="32" text-anchor="middle" font-family="Inter,sans-serif" font-weight="800" font-size="22" fill="#001E27" letter-spacing="-1">Mi</text>
+        </svg>
+        <div style="display:flex;flex-direction:column;">
+          <span style="font-size:32px;font-weight:800;color:#ffffff;letter-spacing:-0.04em;line-height:1;">MiLi</span>
+          <span style="font-size:11px;font-weight:500;color:rgba(255,255,255,0.35);letter-spacing:0.08em;text-transform:uppercase;">by Lexin Solutions</span>
+        </div>
+      </div>
+      <div style="width:60px;height:1px;background:rgba(255,255,255,0.08);"></div>
+      <div class="thought-text fade-up anim-target" style="animation-delay:0.4s;">Reuse beats recreation.<br><em>Material Extension</em> — one of 13 modules.</div>
+    </div>
   </div>
 
-  <!-- Progress bar -->
   <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
 </div>
 
-<!-- Controls -->
 <div class="controls">
   <button id="prevBtn" onclick="prev()" disabled>←</button>
   <div class="frame-counter" id="counter">1 / 22</div>
@@ -881,63 +764,31 @@
     document.querySelectorAll('.frame').forEach(f => f.classList.remove('active'));
     const frame = document.getElementById(`f${n + 1}`);
     frame.classList.add('active');
-
-    // Re-trigger animations
     frame.querySelectorAll('.anim-target').forEach(el => {
       const classes = [...el.classList];
-      const animClass = classes.find(c =>
-        ['pop-in','fade-up','slide-right','slide-left','scale-in','drop-in','stamp','check-draw'].includes(c)
-      );
-      if (animClass) {
-        el.classList.remove(animClass);
-        void el.offsetHeight;
-        el.classList.add(animClass);
-      }
+      const ac = classes.find(c => ['pop-in','fade-up','slide-right','slide-left','scale-in','stamp','check-draw'].includes(c));
+      if (ac) { el.classList.remove(ac); void el.offsetHeight; el.classList.add(ac); }
     });
-
     document.getElementById('counter').textContent = `${n + 1} / ${totalFrames}`;
     document.getElementById('prevBtn').disabled = n === 0;
     document.getElementById('nextBtn').disabled = n === totalFrames - 1;
     document.getElementById('progressFill').style.width = `${((n + 1) / totalFrames) * 100}%`;
   }
 
-  function next() {
-    if (current < totalFrames - 1) { current++; show(current); }
-  }
-
-  function prev() {
-    if (current > 0) { current--; show(current); }
-  }
+  function next() { if (current < totalFrames - 1) { current++; show(current); } }
+  function prev() { if (current > 0) { current--; show(current); } }
 
   function autoPlay() {
     const btn = document.getElementById('playBtn');
-    if (interval) {
-      clearInterval(interval);
-      interval = null;
-      btn.textContent = '▶ Play';
-      btn.classList.remove('active');
-      return;
-    }
-
-    btn.textContent = '⏸ Pause';
-    btn.classList.add('active');
-    current = 0;
-    show(0);
-
+    if (interval) { clearInterval(interval); interval = null; btn.textContent = '▶ Play'; btn.classList.remove('active'); return; }
+    btn.textContent = '⏸ Pause'; btn.classList.add('active');
+    current = 0; show(0);
     interval = setInterval(() => {
-      if (current < totalFrames - 1) {
-        current++;
-        show(current);
-      } else {
-        clearInterval(interval);
-        interval = null;
-        btn.textContent = '▶ Play';
-        btn.classList.remove('active');
-      }
+      if (current < totalFrames - 1) { current++; show(current); }
+      else { clearInterval(interval); interval = null; btn.textContent = '▶ Play'; btn.classList.remove('active'); }
     }, 1800);
   }
 
-  // Keyboard nav
   document.addEventListener('keydown', e => {
     if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); next(); }
     if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
@@ -945,7 +796,6 @@
 
   show(0);
 </script>
-
 <script src="../feedback.js"></script>
 
 </body>
