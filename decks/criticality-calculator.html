@@ -36,7 +36,7 @@
 
   body {
     font-family: 'Inter Tight', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: #001e27;
+    background: #0a1014;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -534,14 +534,14 @@
 }
 .shelf-item {
   flex: 1;
-  background: white;
+  background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 12px;
   text-align: center;
 }
 .shelf-item .shelf-icon { font-size: 24px; margin-bottom: 4px; }
-.shelf-item .shelf-name { font-size: 11px; color: var(--text); font-weight: 600; }
+.shelf-item .shelf-name { font-size: 12px; color: var(--navy); font-weight: 600; }
 .shelf-item .shelf-tag {
   display: inline-block;
   margin-top: 6px;
@@ -556,7 +556,7 @@
 
 /* ── Spreadsheet mockup ── */
 .sheet-view {
-  background: white;
+  background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: 8px;
   overflow: hidden;
@@ -567,7 +567,7 @@
 .sheet-header {
   display: grid;
   grid-template-columns: 80px 1fr 60px 100px;
-  background: #f1f5f9;
+  background: rgba(0,30,39,0.04);
   padding: 6px 10px;
   font-weight: 600;
   color: var(--text-muted);
@@ -585,7 +585,7 @@
 
 /* ── Question card ── */
 .question-card {
-  background: white;
+  background: var(--card-bg);
   border: 2px solid var(--green);
   border-radius: 10px;
   padding: 16px 20px;
@@ -594,7 +594,7 @@
   text-align: left;
 }
 .question-card .q-number {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
   color: var(--green);
   text-transform: uppercase;
@@ -602,10 +602,11 @@
   margin-bottom: 6px;
 }
 .question-card .q-text {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
-  color: var(--text);
+  color: var(--navy);
   margin-bottom: 10px;
+  line-height: 1.4;
 }
 .q-options {
   display: flex;
@@ -613,12 +614,12 @@
   gap: 4px;
 }
 .q-opt {
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-size: 11px;
-  color: var(--text);
-  background: var(--stage-bg);
-  border: 1px solid var(--border);
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  background: rgba(0,30,39,0.03);
+  border: 1px solid var(--border-card);
 }
 .q-opt.selected {
   background: var(--green-bg);
@@ -629,8 +630,8 @@
 
 /* ── Context panel ── */
 .context-panel {
-  background: var(--stage-bg);
-  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
   border-radius: 8px;
   padding: 12px 16px;
   width: 100%;
@@ -639,7 +640,7 @@
 .context-panel .ctx-title {
   font-size: 10px;
   font-weight: 700;
-  color: var(--text-muted);
+  color: rgba(255,255,255,0.35);
   text-transform: uppercase;
   letter-spacing: 1px;
   margin-bottom: 8px;
@@ -650,8 +651,8 @@
   padding: 3px 0;
   font-size: 11px;
 }
-.context-panel .ctx-label { color: var(--text-muted); }
-.context-panel .ctx-value { color: var(--text); font-weight: 600; }
+.context-panel .ctx-label { color: rgba(255,255,255,0.4); }
+.context-panel .ctx-value { color: rgba(255,255,255,0.85); font-weight: 600; }
 
 /* ── Criticality badge ── */
 .crit-badge {
@@ -661,12 +662,12 @@
   gap: 4px;
 }
 .crit-badge .badge-letter {
-  width: 64px; height: 64px;
+  width: 72px; height: 72px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 32px;
+  font-size: 36px;
   font-weight: 800;
   color: white;
 }
@@ -678,7 +679,7 @@
 .crit-badge .badge-label {
   font-size: 14px;
   font-weight: 700;
-  color: var(--text);
+  color: rgba(255,255,255,0.85);
 }
 
 /* ── Score breakdown ── */
@@ -693,13 +694,13 @@
   display: flex;
   justify-content: space-between;
   padding: 6px 12px;
-  background: white;
+  background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: 6px;
   font-size: 11px;
 }
-.score-row .score-label { color: var(--text-muted); }
-.score-row .score-val { font-weight: 600; color: var(--text); }
+.score-row .score-label { color: var(--text-muted); font-size: 12px; }
+.score-row .score-val { font-weight: 700; color: var(--navy); font-size: 12px; }
 .score-row .score-val.high { color: var(--amber); }
 .score-row .score-val.med { color: var(--green); }
 .score-row .score-val.low { color: var(--green); }
@@ -715,16 +716,16 @@
   width: 100%;
   max-width: 380px;
 }
-.downstream .ds-connector { color: var(--green); font-size: 16px; }
+.downstream .ds-connector { color: rgba(255,255,255,0.3); font-size: 16px; }
 .downstream .ds-item {
   width: 100%;
   padding: 10px 16px;
-  background: var(--green-bg);
-  border: 1px solid var(--green);
+  background: var(--card-bg);
+  border: 1.5px solid var(--green-border);
   border-radius: 8px;
   font-size: 12px;
   font-weight: 600;
-  color: var(--green);
+  color: var(--navy);
   text-align: center;
 }
 
@@ -754,7 +755,7 @@
 .grade-bar.grade-c { background: var(--green); }
 .grade-bar.grade-d { background: var(--blue); }
 .grade-bar.grade-e { background: var(--text-muted); }
-.grade-label { font-size: 10px; font-weight: 700; color: var(--text); }
+.grade-label { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.85); }
 .grade-pct { font-size: 9px; color: var(--text-muted); }
 
 /* ── Override flag ── */
@@ -769,7 +770,8 @@
   width: 100%;
   max-width: 380px;
   font-size: 12px;
-  color: #92400e;
+  color: var(--amber);
+  font-weight: 600;
 }
 
 /* ── Side-by-side ── */
@@ -805,13 +807,13 @@
   line-height: 1;
 }
 .metric-spotlight .metric-unit {
-  font-size: 14px;
-  color: var(--text-muted);
+  font-size: 15px;
+  color: rgba(255,255,255,0.5);
   margin-top: 4px;
 }
 .metric-spotlight .metric-compare {
-  font-size: 12px;
-  color: var(--text-muted);
+  font-size: 13px;
+  color: rgba(255,255,255,0.35);
   margin-top: 2px;
 }
 
@@ -820,12 +822,12 @@
   display: flex; flex-direction: column; gap: 6px;
   max-width: 440px; text-align: center;
 }
-.cascade-item { font-size: 14px; color: var(--text); line-height: 1.5; }
-.cascade-connector { color: var(--green); font-size: 16px; }
+.cascade-item { font-size: 14px; color: rgba(255,255,255,0.7); line-height: 1.5; }
+.cascade-connector { color: var(--green-dim); font-size: 16px; }
 
 /* ── Review card ── */
 .review-card {
-  background: white;
+  background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 14px 18px;
@@ -902,7 +904,7 @@
     <div class="sheet-row"><span>MC-1004</span><span>Filter, hydraulic</span><span class="col-y">Y</span><span>18 mo ago</span></div>
     <div class="sheet-row"><span>MC-1005</span><span>Coupling, flex</span><span>N</span><span>18 mo ago</span></div>
   </div>
-  <div class="result-tag slide-right anim-target" style="animation-delay:0.2s">94% marked "Y" — last updated 18 months ago</div>
+  <div class="result-tag amber slide-right anim-target" style="animation-delay:0.2s">94% marked "Y" — last updated 18 months ago</div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.4s">When the assessment is a yes/no checkbox, <strong>everyone checks yes</strong>.</div>
 </div>
 
@@ -963,7 +965,7 @@
     <div style="font-size:11px; color:var(--text-muted)">MC-4501</div>
     <div style="font-size:14px; font-weight:700; color:var(--text)">Seal, mechanical shaft KSPA 250 kW</div>
     <div style="display:flex; gap:8px; margin-top:8px">
-      <span class="result-tag" style="background:var(--amber-bg); color:#92400e; border-color:var(--amber)">No criticality assessed</span>
+      <span class="result-tag" style="background:var(--amber-bg); color:var(--amber); border-color:var(--amber-border)">No criticality assessed</span>
     </div>
   </div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">The material has no score. That means <strong>no stocking logic</strong> can run.</div>
@@ -1010,7 +1012,7 @@
     </div>
     <div class="context-panel" style="max-width:180px">
       <div class="ctx-title">Context</div>
-      <div style="font-size:11px; color:var(--text)">2 work orders linked to confined-space equipment</div>
+      <div style="font-size:11px; color:rgba(255,255,255,0.7)">2 work orders linked to confined-space equipment</div>
     </div>
   </div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Context data sits <strong>beside</strong> the question. The user doesn't have to look it up.</div>
@@ -1029,7 +1031,7 @@
     </div>
     <div class="context-panel" style="max-width:180px">
       <div class="ctx-title">Context</div>
-      <div style="font-size:11px; color:var(--text)">Cooling water system — discharge permit linked</div>
+      <div style="font-size:11px; color:rgba(255,255,255,0.7)">Cooling water system — discharge permit linked</div>
     </div>
   </div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Every question narrows the score. Every answer is <strong>recorded and auditable</strong>.</div>
