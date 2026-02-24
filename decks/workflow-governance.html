@@ -36,7 +36,7 @@
 
   body {
     font-family: 'Inter Tight', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: #001e27;
+    background: #0a1014;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -527,7 +527,7 @@
 /* ── Feature-specific styles ── */
 /* ── Email inbox mockup ── */
 .inbox-card {
-  background: white;
+  background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 14px 18px;
@@ -581,7 +581,7 @@
 }
 .tl-dot {
   width: 10px; height: 10px; border-radius: 50%;
-  border: 2px solid var(--border); background: white;
+  border: 2px solid var(--border); background: var(--card-bg);
 }
 .tl-dot.done { border-color: var(--green); background: var(--green); }
 .tl-dot.waiting { border-color: var(--amber); background: var(--amber); }
@@ -595,7 +595,7 @@
 
 /* ── Tangled chart ── */
 .tangle-card {
-  background: white;
+  background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 14px 18px;
@@ -616,7 +616,7 @@
 }
 .tangle-role {
   padding: 4px 10px; border-radius: 12px;
-  font-size: 10px; background: #f1f5f9;
+  font-size: 10px; background: rgba(0,30,39,0.04);
   color: var(--text-muted); border: 1px solid var(--border);
 }
 .tangle-role.unknown { border-color: var(--red); color: var(--red); border-style: dashed; }
@@ -654,7 +654,7 @@
 
 /* ── Approval queue ── */
 .approval-queue {
-  background: white;
+  background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: 10px;
   overflow: hidden;
@@ -666,7 +666,7 @@
   display: grid;
   grid-template-columns: 80px 1fr 80px 50px;
   padding: 6px 12px;
-  background: #f1f5f9;
+  background: rgba(0,30,39,0.04);
   font-weight: 600;
   color: var(--text-muted);
   border-bottom: 1px solid var(--border);
@@ -686,7 +686,7 @@
 
 /* ── Review panel ── */
 .review-panel {
-  background: white;
+  background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 14px 18px;
@@ -724,7 +724,7 @@
 
 /* ── Context sidebar ── */
 .context-sidebar {
-  background: white;
+  background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 12px 16px;
@@ -757,8 +757,8 @@
   border: 2px solid transparent;
 }
 .decision-btn.approve { background: var(--green); color: white; }
-.decision-btn.return-btn { background: white; border-color: var(--amber); color: var(--amber); }
-.decision-btn.reject { background: white; border-color: var(--red); color: var(--red); }
+.decision-btn.return-btn { background: var(--card-bg); border-color: var(--amber); color: var(--amber); }
+.decision-btn.reject { background: var(--card-bg); border-color: var(--red); color: var(--red); }
 .decision-btn.selected { transform: scale(1.05); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
 
 /* ── Step workflow ── */
@@ -781,13 +781,13 @@
   font-size: 14px; font-weight: 700;
 }
 .sw-dot.active { background: var(--green); color: white; }
-.sw-dot.pending { background: #f1f5f9; color: var(--text-muted); border: 2px solid var(--border); }
+.sw-dot.pending { background: rgba(0,30,39,0.04); color: var(--text-muted); border: 2px solid var(--border); }
 .sw-dot.done { background: var(--green-bg); color: var(--green); border: 2px solid var(--green); }
 .sw-label { font-size: 9px; color: var(--text-muted); text-align: center; max-width: 72px; }
 .sw-arrow { color: var(--text-muted); font-size: 14px; }
 .sw-progress {
   margin-top: 8px; width: 100%; max-width: 300px;
-  height: 6px; background: #e2e8f0; border-radius: 3px;
+  height: 6px; background: rgba(0,30,39,0.06); border-radius: 3px;
   overflow: hidden;
 }
 .sw-progress .sw-fill { height: 100%; background: var(--green); border-radius: 3px; }
@@ -808,7 +808,7 @@
 .pf-branches { display: flex; gap: 12px; }
 .pf-branch {
   padding: 10px 14px; border-radius: 8px;
-  background: white; border: 1px solid var(--border);
+  background: var(--card-bg); border: 1px solid var(--border);
   text-align: center; font-size: 11px;
 }
 .pf-branch .pf-role { font-weight: 700; color: var(--text); margin-bottom: 2px; }
@@ -831,8 +831,8 @@
   text-align: center;
 }
 .escalation-notice .en-icon { font-size: 20px; margin-bottom: 4px; }
-.escalation-notice .en-status { font-size: 12px; color: #92400e; font-weight: 600; margin-bottom: 4px; }
-.escalation-notice .en-detail { font-size: 11px; color: #92400e; }
+.escalation-notice .en-status { font-size: 12px; color: var(--amber); font-weight: 600; margin-bottom: 4px; }
+.escalation-notice .en-detail { font-size: 11px; color: var(--amber); }
 
 /* ── SAP confirmation ── */
 .sap-confirm {
@@ -881,7 +881,7 @@
 }
 .rq-card {
   flex: 1;
-  background: white;
+  background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 10px;
@@ -900,7 +900,7 @@
 
 /* ── Governance dashboard ── */
 .gov-dashboard {
-  background: white;
+  background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 14px 18px;
@@ -917,7 +917,7 @@
 }
 .gov-dashboard .gd-stat {
   text-align: center; padding: 8px;
-  background: var(--stage-bg); border-radius: 6px;
+  background: rgba(0,30,39,0.03); border-radius: 6px;
 }
 .gov-dashboard .gd-stat .gds-num { font-size: 20px; font-weight: 700; color: var(--green); }
 .gov-dashboard .gd-stat .gds-label { font-size: 9px; color: var(--text-muted); margin-top: 2px; }
@@ -937,7 +937,7 @@
 }
 .ag-bar {
   height: 16px;
-  background: #e2e8f0;
+  background: rgba(0,30,39,0.06);
   border-radius: 8px;
   overflow: hidden;
   margin-bottom: 6px;

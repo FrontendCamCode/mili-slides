@@ -36,7 +36,7 @@
 
   body {
     font-family: 'Inter Tight', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: #001e27;
+    background: #0a1014;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -527,7 +527,7 @@
 /* ── Feature-specific styles ── */
 /* ── Email request mockup ── */
 .email-card {
-  background: white;
+  background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 14px 18px;
@@ -551,14 +551,14 @@
 .email-card .em-body { font-size: 11px; color: var(--text); line-height: 1.6; }
 .email-card .em-attach {
   margin-top: 8px; padding: 6px 10px;
-  background: #f1f5f9; border-radius: 6px;
+  background: rgba(0,30,39,0.04); border-radius: 6px;
   font-size: 10px; color: var(--text-muted);
   display: flex; align-items: center; gap: 6px;
 }
 
 /* ── Pending spreadsheet ── */
 .pending-sheet {
-  background: white;
+  background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: 10px;
   overflow: hidden;
@@ -569,7 +569,7 @@
 .pending-sheet .ps-header {
   display: grid;
   grid-template-columns: 40px 1fr 60px 60px;
-  background: #f1f5f9;
+  background: rgba(0,30,39,0.04);
   padding: 6px 10px;
   font-weight: 600;
   color: var(--text-muted);
@@ -588,13 +588,13 @@
   padding: 6px 10px;
   background: var(--amber-bg);
   font-size: 10px;
-  color: #92400e;
+  color: var(--amber);
   text-align: center;
 }
 
 /* ── Stock decision (gut-feel) ── */
 .gut-decision {
-  background: white;
+  background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 14px 18px;
@@ -631,7 +631,7 @@
   position: relative;
 }
 .shelf-unit.dust {
-  background: #f1f5f9;
+  background: rgba(0,30,39,0.04);
   border-color: var(--border);
   opacity: 0.5;
 }
@@ -644,7 +644,7 @@
 
 /* ── Criticality trigger ── */
 .crit-trigger {
-  background: white;
+  background: var(--card-bg);
   border: 2px solid var(--green);
   border-radius: 10px;
   padding: 14px 18px;
@@ -659,7 +659,7 @@
   font-size: 12px;
   font-weight: 700;
   background: var(--amber-bg);
-  color: #92400e;
+  color: var(--amber);
   border: 2px solid var(--amber);
   margin-bottom: 8px;
 }
@@ -672,7 +672,7 @@
 
 /* ── Material context card ── */
 .context-card {
-  background: white;
+  background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 14px 18px;
@@ -690,7 +690,7 @@
 }
 .context-card .cc-item {
   padding: 6px 10px;
-  background: var(--stage-bg);
+  background: rgba(0,30,39,0.03);
   border-radius: 6px;
 }
 .context-card .cc-item .cc-label { font-size: 9px; color: var(--text-muted); text-transform: uppercase; }
@@ -700,13 +700,13 @@
   margin-top: 8px; padding: 8px 10px;
   background: var(--amber-bg);
   border-radius: 6px;
-  font-size: 11px; color: #92400e;
+  font-size: 11px; color: var(--amber);
   display: flex; justify-content: space-between;
 }
 
 /* ── Proposal card ── */
 .proposal-card {
-  background: white;
+  background: var(--card-bg);
   border: 2px solid var(--green);
   border-radius: 10px;
   padding: 14px 18px;
@@ -738,7 +738,7 @@
 
 /* ── Capital adjuster ── */
 .capital-adj {
-  background: white;
+  background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 14px 18px;
@@ -751,7 +751,7 @@
 }
 .capital-adj .ca-label { color: var(--text-muted); min-width: 50px; }
 .capital-adj .ca-slider {
-  flex: 1; height: 6px; background: #e2e8f0;
+  flex: 1; height: 6px; background: rgba(0,30,39,0.06);
   border-radius: 3px; position: relative;
 }
 .capital-adj .ca-fill {
@@ -762,7 +762,7 @@
 .capital-adj .ca-reason {
   margin-top: 8px; padding: 6px 10px;
   background: var(--amber-bg); border-radius: 6px;
-  font-size: 10px; color: #92400e;
+  font-size: 10px; color: var(--amber);
 }
 .capital-adj .ca-total {
   margin-top: 8px; text-align: center;
@@ -771,7 +771,7 @@
 
 /* ── Justification panel ── */
 .justification-panel {
-  background: white;
+  background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 14px 18px;
@@ -800,7 +800,7 @@
 }
 .vendor-option {
   flex: 1;
-  background: white;
+  background: var(--card-bg);
   border: 2px solid var(--border);
   border-radius: 10px;
   padding: 12px;
@@ -821,7 +821,7 @@
 
 /* ── Review screen ── */
 .review-screen {
-  background: white;
+  background: var(--card-bg);
   border: 2px solid var(--green);
   border-radius: 10px;
   padding: 14px 18px;
@@ -862,14 +862,14 @@
   display: flex; align-items: center; justify-content: center;
   font-size: 14px;
 }
-.wf-node .wf-dot.pending { background: var(--amber-bg); border: 2px solid var(--amber); color: #92400e; }
+.wf-node .wf-dot.pending { background: var(--amber-bg); border: 2px solid var(--amber); color: var(--amber); }
 .wf-node .wf-dot.done { background: var(--green-bg); border: 2px solid var(--green); color: var(--green); }
 .wf-node .wf-label { font-size: 9px; color: var(--text-muted); text-align: center; max-width: 70px; }
 .wf-arrow { color: var(--text-muted); font-size: 14px; }
 
 /* ── Approval view ── */
 .approval-view {
-  background: white;
+  background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 14px 18px;
