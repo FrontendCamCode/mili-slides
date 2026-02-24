@@ -57,6 +57,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 16px;
     padding: 48px 64px;
     opacity: 0;
     pointer-events: none;
@@ -755,7 +756,6 @@
         <div class="mat-desc">Bearing</div>
       </div>
     </div>
-    <div style="height:12px"></div>
     <p class="thought-text fade-up anim-target" style="animation-delay:0.15s">The material exists. But its description says <strong>almost nothing</strong>.</p>
   </div>
 
@@ -763,7 +763,6 @@
   <div class="frame" id="f2">
     <div class="section-label">THE PROBLEM</div>
     <div class="big-text fade-up anim-target" style="animation-delay:0s">47,000 materials.<br><em>Incomplete.</em></div>
-    <div style="height:12px"></div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">
       <div class="summary-chip fade-up anim-target" style="animation-delay:0.15s">62% missing manufacturer</div>
       <div class="summary-chip fade-up anim-target" style="animation-delay:0.25s">71% missing MPN</div>
@@ -778,13 +777,10 @@
     <div class="field-row slide-right anim-target" style="animation-delay:0s;max-width:380px">
       <span class="field-label">Search</span><span class="field-value">bearing SKF 6205</span>
     </div>
-    <div style="height:8px"></div>
     <div class="result-tag red pop-in anim-target" style="animation-delay:0.15s">0 results found</div>
-    <div style="height:8px"></div>
     <div class="field-row slide-right anim-target" style="animation-delay:0.25s;max-width:380px">
       <span class="field-label">Search</span><span class="field-value">bearing</span>
     </div>
-    <div style="height:8px"></div>
     <div class="result-tag amber pop-in anim-target" style="animation-delay:0.35s">1,400 results — too many</div>
     <p class="thought-text fade-up anim-target" style="animation-delay:0.45s">When descriptions are poor, <strong>search is useless</strong>. When search is useless, <strong>free text wins</strong>.</p>
   </div>
@@ -793,7 +789,6 @@
   <div class="frame" id="f4">
     <div class="section-label">THE PROBLEM</div>
     <div class="mid-text fade-up anim-target" style="animation-delay:0s">Master Data Cleanse — 18 months, $2.4M</div>
-    <div style="height:12px"></div>
     <div class="score-bar-track scale-in anim-target" style="animation-delay:0.15s">
       <div class="score-bar-fill" style="--fill:30%;background:var(--amber)"></div>
     </div>
@@ -808,12 +803,10 @@
       <div class="warn-icon">!</div>
       <div class="warn-text">Poor descriptions → search fails → free text rises</div>
     </div>
-    <div style="height:8px"></div>
     <div class="warn-card slide-right anim-target" style="animation-delay:0.15s;max-width:420px">
       <div class="warn-icon">!</div>
       <div class="warn-text">Cleanse projects stall → ROI never realized</div>
     </div>
-    <div style="height:8px"></div>
     <div class="warn-card slide-right anim-target" style="animation-delay:0.3s;max-width:420px">
       <div class="warn-icon">!</div>
       <div class="warn-text">Users lose trust → workarounds become permanent</div>
@@ -831,7 +824,6 @@
   <div class="frame" id="f7">
     <div class="section-label">HOW IT WORKS</div>
     <div class="mid-text fade-up anim-target" style="animation-delay:0s">Select a material to enrich</div>
-    <div style="height:12px"></div>
     <div class="mat-card scale-in anim-target" style="animation-delay:0.15s;max-width:360px">
       <div class="mat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg></div>
       <div class="mat-info">
@@ -846,7 +838,6 @@
   <div class="frame" id="f8">
     <div class="section-label">HOW IT WORKS</div>
     <div class="mid-text fade-up anim-target" style="animation-delay:0s">See exactly what's missing</div>
-    <div style="height:8px"></div>
     <div style="display:flex;flex-direction:column;gap:4px;width:100%;max-width:360px">
       <div class="gap-row slide-right anim-target" style="animation-delay:0.1s">
         <div class="gap-status missing"></div>
@@ -872,7 +863,6 @@
   <div class="frame" id="f9">
     <div class="section-label">HOW IT WORKS</div>
     <div class="mid-text fade-up anim-target" style="animation-delay:0s">Click "Enrich" to start</div>
-    <div style="height:12px"></div>
     <div class="taxonomy-path">
       <div class="taxonomy-chip pop-in anim-target" style="animation-delay:0.1s">Bearing</div>
       <div class="taxonomy-arrow fade-up anim-target" style="animation-delay:0.2s">→</div>
@@ -887,9 +877,7 @@
   <div class="frame" id="f10">
     <div class="section-label">HOW IT WORKS</div>
     <div class="mid-text fade-up anim-target" style="animation-delay:0s">Description builds itself</div>
-    <div style="height:12px"></div>
     <div class="desc-build scale-in anim-target" style="animation-delay:0.15s">Bearing, ball deep groove <em>6205 2RS — SKF</em></div>
-    <div style="height:8px"></div>
     <div class="small-label fade-up anim-target" style="animation-delay:0.3s">manufacturer and MPN auto-populated from catalogue</div>
     <p class="thought-text fade-up anim-target" style="animation-delay:0.45s">The user didn't <strong>write</strong> a description. They <strong>selected</strong> one.</p>
   </div>
@@ -898,7 +886,6 @@
   <div class="frame" id="f11">
     <div class="section-label">HOW IT WORKS</div>
     <div class="mid-text fade-up anim-target" style="animation-delay:0s">Attributes appear by classification</div>
-    <div style="height:8px"></div>
     <div class="detail-grid fade-up anim-target" style="animation-delay:0.15s">
       <div class="field-row"><span class="field-label">Bore</span><span class="field-value">25 mm</span></div>
       <div class="field-row"><span class="field-label">Outer dia.</span><span class="field-value">52 mm</span></div>
@@ -912,13 +899,11 @@
   <div class="frame" id="f12">
     <div class="section-label">HOW IT WORKS</div>
     <div class="mid-text fade-up anim-target" style="animation-delay:0s">One material enriched</div>
-    <div style="height:8px"></div>
     <div class="diff-view fade-up anim-target" style="animation-delay:0.15s">
       <div class="diff-row"><span class="diff-label">Description</span><span class="diff-old">Bearing</span><span class="diff-new">Bearing, ball deep groove 6205 2RS — SKF</span></div>
       <div class="diff-row"><span class="diff-label">Mfr</span><span class="diff-old">—</span><span class="diff-new">SKF</span></div>
       <div class="diff-row"><span class="diff-label">MPN</span><span class="diff-old">—</span><span class="diff-new">6205-2RS</span></div>
     </div>
-    <div style="height:8px"></div>
     <div class="summary-chip pop-in anim-target" style="animation-delay:0.3s">⏱ Time: 90 seconds</div>
     <p class="thought-text fade-up anim-target" style="animation-delay:0.45s">One material improved. <strong>Time: 90 seconds.</strong></p>
   </div>
@@ -933,13 +918,11 @@
   <div class="frame" id="f14">
     <div class="section-label">HOW IT WORKS</div>
     <div class="mid-text fade-up anim-target" style="animation-delay:0s">Filter to a targeted list</div>
-    <div style="height:8px"></div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">
       <div class="summary-chip slide-right anim-target" style="animation-delay:0.1s">Plant: 1000</div>
       <div class="summary-chip slide-right anim-target" style="animation-delay:0.2s">Group: Bearings</div>
       <div class="summary-chip slide-right anim-target" style="animation-delay:0.3s">Status: Incomplete</div>
     </div>
-    <div style="height:8px"></div>
     <div class="result-tag amber pop-in anim-target" style="animation-delay:0.35s">340 materials match</div>
     <p class="thought-text fade-up anim-target" style="animation-delay:0.45s">Bulk enrichment starts with a <strong>targeted list</strong>, not the whole database.</p>
   </div>
@@ -948,7 +931,6 @@
   <div class="frame" id="f15">
     <div class="section-label">HOW IT WORKS</div>
     <div class="mid-text fade-up anim-target" style="animation-delay:0s">Download spreadsheet template</div>
-    <div style="height:12px"></div>
     <div class="sheet-view scale-in anim-target" style="animation-delay:0.15s">
       <div class="sheet-header"><span>Material</span><span>Current Desc.</span><span>New Desc.</span><span>MPN</span></div>
       <div class="sheet-row"><span>MC-2100</span><span>Bearing</span><span style="color:var(--muted)">—</span><span style="color:var(--muted)">—</span></div>
@@ -962,12 +944,11 @@
   <div class="frame" id="f16">
     <div class="section-label">HOW IT WORKS</div>
     <div class="mid-text fade-up anim-target" style="animation-delay:0s">Experts enrich offline</div>
-    <div style="height:12px"></div>
     <div class="sheet-view scale-in anim-target" style="animation-delay:0.15s">
       <div class="sheet-header"><span>Material</span><span>Current</span><span>New Desc.</span><span>MPN</span></div>
       <div class="sheet-row"><span>MC-2100</span><span>Bearing</span><span class="edited">Bearing, ball DG 6205 2RS — SKF</span><span class="edited">6205-2RS</span></div>
       <div class="sheet-row"><span>MC-2101</span><span>Bearing</span><span class="edited">Bearing, roller taper — NTN</span><span class="edited">4T-30205</span></div>
-      <div class="sheet-row"><span>MC-2102</span><span>Seal</span><span class="edited">Seal, mech shaft 55mm — Burgmann</span><span class="edited">MG1-55</span></div>
+      <div class="sheet-row"><span>MC-2102</span><span>Seal</span><span class="edited">Seal, mech shaft 55mm — Flowserve</span><span class="edited">MG1-55</span></div>
     </div>
     <p class="thought-text fade-up anim-target" style="animation-delay:0.3s">340 rows. <strong>Expert knowledge captured in a format they already know.</strong></p>
   </div>
@@ -976,11 +957,9 @@
   <div class="frame" id="f17">
     <div class="section-label">HOW IT WORKS</div>
     <div class="mid-text fade-up anim-target" style="animation-delay:0s">Upload back to MiLi</div>
-    <div style="height:12px"></div>
     <div class="upload-bar scale-in anim-target" style="animation-delay:0.1s">
       <div class="upload-fill" style="--fill:100%"></div>
     </div>
-    <div style="height:8px"></div>
     <div style="display:flex;gap:8px;justify-content:center">
       <div class="result-tag green pop-in anim-target" style="animation-delay:0.2s">312 enriched</div>
       <div class="result-tag amber pop-in anim-target" style="animation-delay:0.3s">28 flagged</div>
@@ -992,11 +971,10 @@
   <div class="frame" id="f18">
     <div class="section-label">HOW IT WORKS</div>
     <div class="mid-text fade-up anim-target" style="animation-delay:0s">Review changes before approval</div>
-    <div style="height:8px"></div>
     <div class="diff-view fade-up anim-target" style="animation-delay:0.15s">
       <div class="diff-row"><span class="diff-label">MC-2100</span><span class="diff-old">Bearing</span><span class="diff-new">Bearing, ball DG 6205 2RS — SKF</span></div>
       <div class="diff-row"><span class="diff-label">MC-2101</span><span class="diff-old">Bearing</span><span class="diff-new">Bearing, roller taper — NTN</span></div>
-      <div class="diff-row"><span class="diff-label">MC-2102</span><span class="diff-old">Seal</span><span class="diff-new">Seal, mech shaft 55mm — Burgmann</span></div>
+      <div class="diff-row"><span class="diff-label">MC-2102</span><span class="diff-old">Seal</span><span class="diff-new">Seal, mech shaft 55mm — Flowserve</span></div>
     </div>
     <p class="thought-text fade-up anim-target" style="animation-delay:0.3s">Every change shows a diff — <strong>old vs. new</strong>. No surprises.</p>
   </div>
@@ -1011,13 +989,11 @@
   <div class="frame" id="f20">
     <div class="section-label">HOW IT WORKS</div>
     <div class="mid-text fade-up anim-target" style="animation-delay:0s">Approver reviews patterns</div>
-    <div style="height:8px"></div>
     <div style="display:flex;gap:8px;justify-content:center">
       <div class="summary-chip fade-up anim-target" style="animation-delay:0.15s">Bearings: 180</div>
       <div class="summary-chip fade-up anim-target" style="animation-delay:0.25s">Seals: 92</div>
       <div class="summary-chip fade-up anim-target" style="animation-delay:0.3s">Filters: 40</div>
     </div>
-    <div style="height:8px"></div>
     <div class="result-tag green pop-in anim-target" style="animation-delay:0.35s">312 materials staged</div>
     <p class="thought-text fade-up anim-target" style="animation-delay:0.45s">Approvers don't review every field. They review <strong>patterns and exceptions</strong>.</p>
   </div>
@@ -1028,9 +1004,7 @@
     <div class="check-circle check-draw anim-target" style="animation-delay:0s">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>
     </div>
-    <div style="height:8px"></div>
     <div class="mid-text fade-up anim-target" style="animation-delay:0.15s">312 materials updated in SAP</div>
-    <div style="height:8px"></div>
     <div class="small-label fade-up anim-target" style="animation-delay:0.3s">One approval. One SAP post-back.</div>
     <p class="thought-text fade-up anim-target" style="animation-delay:0.45s">312 materials. One approval. <strong>One SAP post-back.</strong></p>
   </div>
@@ -1039,11 +1013,9 @@
   <div class="frame" id="f22">
     <div class="section-label">HOW IT WORKS</div>
     <div class="mid-text fade-up anim-target" style="animation-delay:0s">Search works now</div>
-    <div style="height:8px"></div>
     <div class="field-row slide-right anim-target" style="animation-delay:0.1s;max-width:380px">
       <span class="field-label">Search</span><span class="field-value">bearing SKF 6205</span>
     </div>
-    <div style="height:8px"></div>
     <div class="mat-card scale-in anim-target" style="animation-delay:0.2s;max-width:380px">
       <div class="mat-icon" style="background:var(--green-bg)"><svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></div>
       <div class="mat-info">
@@ -1094,7 +1066,6 @@
   <div class="frame" id="f27">
     <div class="section-label">THE IMPACT</div>
     <div class="mid-text fade-up anim-target" style="animation-delay:0s">Enrichment over 6 months</div>
-    <div style="height:12px"></div>
     <div class="progress-chart fade-up anim-target" style="animation-delay:0.15s">
       <div class="progress-bar-item" style="height:15%"></div>
       <div class="progress-bar-item" style="height:30%"></div>
@@ -1111,7 +1082,6 @@
   <div class="frame" id="f28">
     <div class="section-label">THE IMPACT</div>
     <div class="mid-text fade-up anim-target" style="animation-delay:0s">The difference</div>
-    <div style="height:8px"></div>
     <div class="side-by-side fade-up anim-target" style="animation-delay:0.15s">
       <div class="side-col before">
         <div class="col-title">Without MiLi</div>
@@ -1158,18 +1128,14 @@
   <div class="frame" id="f31">
     <div class="section-label">THE IMPACT</div>
     <div class="big-text fade-up anim-target" style="animation-delay:0s">Better data, one material at a time.</div>
-    <div style="height:12px"></div>
     <p class="thought-text fade-up anim-target" style="animation-delay:0.15s"><em>Material Enrichment</em> — operational improvement, not another project.</p>
   </div>
 
   <!-- F32 · Closer -->
   <div class="frame" id="f32">
     <div class="big-text pop-in anim-target" style="animation-delay:0s">Mi<em>Li</em></div>
-    <div style="height:4px"></div>
     <div class="small-label fade-up anim-target" style="animation-delay:0.15s">by Lexin Solutions</div>
-    <div style="height:16px"></div>
     <div style="width:60px;height:2px;background:var(--border)" class="fade-up anim-target" style="animation-delay:0.25s"></div>
-    <div style="height:16px"></div>
     <p class="thought-text fade-up anim-target" style="animation-delay:0.35s">Better data, one material at a time. <em>Material Enrichment</em> — one of 13 modules.</p>
   </div>
 

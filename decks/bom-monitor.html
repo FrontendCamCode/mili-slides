@@ -57,6 +57,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 16px;
     padding: 48px 64px;
     opacity: 0;
     pointer-events: none;
@@ -756,7 +757,6 @@
       <div class="part-chip">Filter</div>
     </div>
   </div>
-  <div style="height:16px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">The parts exist. The pump exists. But SAP doesn't know they <strong>belong together</strong>.</div>
 </div>
 
@@ -767,7 +767,6 @@
     <div style="font-size:13px; font-weight:600; color:var(--text); margin:8px 0">🔍 Search: "parts for Pump A"</div>
     <div style="font-size:12px; color:var(--red); font-style:italic">No BOM found.</div>
   </div>
-  <div style="height:16px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Without a BOM, every breakdown starts with <strong>"what parts do I need?"</strong> instead of <strong>"the parts are ready."</strong></div>
 </div>
 
@@ -779,7 +778,6 @@
     <div style="font-size:12px; color:var(--muted); margin-top:6px"><strong>Technician:</strong> "Try MC-4501. Or maybe MC-4503. Not sure which was used last time."</div>
     <div style="font-size:10px; color:var(--muted); margin-top:6px; font-style:italic">Source: paper manual from 2014</div>
   </div>
-  <div style="height:16px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">When BOMs don't exist, <strong>tribal knowledge replaces system knowledge</strong>.</div>
 </div>
 
@@ -799,7 +797,6 @@
       <div class="col-item" style="color:var(--red)">Other sits in stock forever</div>
     </div>
   </div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Missing BOMs don't just waste time. They <strong>waste money twice</strong> — wrong orders and dead stock.</div>
 </div>
 
@@ -808,7 +805,6 @@
   <div class="warn-card slide-right anim-target" style="animation-delay:0s">No BOM → reactive maintenance → longer downtime</div>
   <div class="warn-card slide-right anim-target" style="animation-delay:0.15s">Wrong parts ordered → $340 average return cost per line</div>
   <div class="warn-card slide-right anim-target" style="animation-delay:0.3s">Stocked parts without BOM links → impossible to plan</div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.5s">You're stocking parts for equipment, but <strong>the system doesn't know which equipment</strong>.</div>
 </div>
 
@@ -837,7 +833,6 @@
       <div class="gs-label">No BOM linkage</div>
     </div>
   </div>
-  <div style="height:16px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">These parts were <strong>used</strong> on equipment. But no BOM records that relationship.</div>
 </div>
 
@@ -848,9 +843,7 @@
     <div class="result-tag">Last 12 months</div>
     <div class="result-tag" style="background:var(--red-bg); color:var(--red); border-color:var(--red)">No BOM</div>
   </div>
-  <div style="height:4px"></div>
   <div class="result-tag slide-right anim-target" style="animation-delay:0.15s; background:var(--teal-light); color:var(--teal); border-color:var(--teal)">438 materials · Sorted by issue frequency ↓</div>
-  <div style="height:16px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.35s">Start with the parts issued most often. <strong>Those are the ones maintenance needs in the BOM.</strong></div>
 </div>
 
@@ -862,7 +855,6 @@
     <div class="usage-row"><span class="ur-label">FL-PUMP-001</span><span class="ur-value">5×</span></div>
     <div class="usage-row"><span class="ur-label">FL-PUMP-003</span><span class="ur-value">3×</span></div>
   </div>
-  <div style="height:16px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s"><em>MiLi</em> already knows <strong>where</strong> the part has been used. It just needs confirmation.</div>
 </div>
 
@@ -875,7 +867,6 @@
     <div class="usage-row"><span class="ur-label">WO-22634</span><span class="ur-value">22 May · 1 EA · R. Singh</span></div>
     <div class="usage-row"><span class="ur-label">WO-22801</span><span class="ur-value">14 Aug · 1 EA · K. Torres</span></div>
   </div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">This isn't guessing. It's <strong>demonstrated history</strong>.</div>
 </div>
 
@@ -888,7 +879,6 @@
     <div class="bp-link"><strong>FL-PUMP-003</strong> — Cooling water pump C</div>
     <div class="bp-link" style="margin-top:6px; font-size:11px; color:var(--muted)">Qty per assembly: 1 EA</div>
   </div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s"><em>MiLi</em> proposes. The planner <strong>confirms</strong>. The BOM grows from reality.</div>
 </div>
 
@@ -898,9 +888,7 @@
     <div style="font-size:22px; font-weight:700; color:var(--teal); text-align:center">30 materials selected</div>
     <div style="font-size:12px; color:var(--muted); text-align:center; margin-top:4px">Clear usage patterns · Confident FL matches</div>
   </div>
-  <div style="height:8px"></div>
   <div class="result-tag slide-right anim-target" style="animation-delay:0.15s; background:var(--teal-light); color:var(--teal); border-color:var(--teal)">Create BOM proposals for selected</div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.35s">30 BOM updates. One batch. Not 30 separate SAP transactions.</div>
 </div>
 
@@ -918,7 +906,6 @@
       <span class="conf-count" style="color:var(--amber)">4</span>
     </div>
   </div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">High-confidence matches proceed. <strong>Uncertain ones get flagged for human review.</strong></div>
 </div>
 
@@ -931,7 +918,6 @@
     <div class="usage-row"><span class="ur-label">Flagged for review</span><span class="ur-value" style="color:var(--amber)">4</span></div>
     <div class="usage-row"><span class="ur-label">Equipment types</span><span class="ur-value">Pumps (18) · Compressors (7) · Conveyors (5)</span></div>
   </div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">The approver sees the <strong>evidence and the confidence level</strong>. Not just a list of changes.</div>
 </div>
 
@@ -949,9 +935,7 @@
     <div class="bom-item"><span class="bi-icon">✓</span><span class="bi-name">MC-3200 — Bearing, deep groove</span><span class="bi-status">Reserved</span></div>
     <div class="bom-item"><span class="bi-icon">✓</span><span class="bi-name">MC-5100 — O-ring kit</span><span class="bi-status">Reserved</span></div>
   </div>
-  <div style="height:4px"></div>
   <div class="result-tag fade-up anim-target" style="animation-delay:0.15s; background:var(--green-bg); color:var(--green); border-color:var(--green)">BOM auto-populated · All parts reserved</div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.35s">The planner didn't search. Didn't call anyone. <strong>The BOM knew.</strong></div>
 </div>
 
@@ -964,7 +948,6 @@
     <div class="usage-row"><span class="ur-label">Consumption pattern</span><span class="ur-value">Predictable, seasonal</span></div>
     <div class="usage-row"><span class="ur-label">Stocking decision</span><span class="ur-value" style="color:var(--green)">Justified by BOM demand</span></div>
   </div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">BOMs transform stocking from <strong>"we might need it"</strong> to <strong>"we will need it here."</strong></div>
 </div>
 
@@ -974,7 +957,6 @@
     <div class="gauge-bar"><div class="gauge-fill" style="width:84%"></div></div>
     <div class="gauge-labels"><span>62% (12 mo ago)</span><span style="font-weight:700; color:var(--teal)">84% today</span><span>90% target</span></div>
   </div>
-  <div style="height:16px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">BOM coverage improves <strong>continuously</strong>, not through a one-time project.</div>
 </div>
 
@@ -1011,7 +993,6 @@
     <div class="metric-unit">BOM gaps identified</div>
     <div class="metric-compare">from 12 months of work order history</div>
   </div>
-  <div style="height:16px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Every gap is a <strong>missed opportunity for planned maintenance</strong>.</div>
 </div>
 
@@ -1022,7 +1003,6 @@
     <div class="metric-unit">BOM coverage</div>
     <div class="metric-compare">climbing toward 90% target</div>
   </div>
-  <div style="height:16px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Coverage that <strong>grows every month</strong> — not every reorganization.</div>
 </div>
 
@@ -1032,7 +1012,6 @@
     <div class="metric-big">+29%</div>
     <div class="metric-unit">parts availability for planned maintenance</div>
   </div>
-  <div style="height:16px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s"><strong>When BOMs exist, maintenance stops improvising.</strong></div>
 </div>
 
@@ -1044,7 +1023,6 @@
     <div class="summary-chip pop-in anim-target" style="animation-delay:0.2s">+29% availability</div>
     <div class="summary-chip pop-in anim-target" style="animation-delay:0.3s">Evidence-based</div>
   </div>
-  <div style="height:16px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.45s">Parts with purpose. <strong>Equipment with plans.</strong></div>
 </div>
 
@@ -1062,7 +1040,6 @@
 <div class="frame" id="f27">
   <div class="section-label">THE OUTCOME</div>
   <div class="big-text fade-up anim-target" style="animation-delay:0s">Parts with purpose.</div>
-  <div style="height:8px"></div>
   <div class="big-text fade-up anim-target" style="animation-delay:0.15s"><em>BOM Monitor</em> — one of 13 modules.</div>
 </div>
 

@@ -57,6 +57,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 16px;
     padding: 48px 64px;
     opacity: 0;
     pointer-events: none;
@@ -710,7 +711,6 @@
     <div class="dust-name">MC-2400 — Gasket, spiral wound DN150</div>
     <div class="dust-meta">Stock: <strong>24 units</strong> · Last issued: <strong>4 years ago</strong> · Last PO: 3 years ago</div>
   </div>
-  <div style="height:16px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">This material hasn't moved in years. But it's still <strong>"active" in SAP</strong>.</div>
 </div>
 
@@ -721,7 +721,6 @@
     <div class="metric-unit">materials with zero movement in 24+ months</div>
     <div class="metric-compare">Combined stock value: $6.2M · 40% of shelf space</div>
   </div>
-  <div style="height:16px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Dead stock doesn't just tie up capital. It takes up <strong>physical space</strong> that active parts need.</div>
 </div>
 
@@ -732,9 +731,7 @@
     <div class="blocker-item"><span class="blocker-icon">🔗</span><span class="blocker-label">Material listed in BOM for FL-COMP-007</span><span class="blocker-status blocked">Blocked</span></div>
     <div class="blocker-item"><span class="blocker-icon">📦</span><span class="blocker-label">Stock on hand: 24 EA</span><span class="blocker-status blocked">Blocked</span></div>
   </div>
-  <div style="height:6px"></div>
   <div class="result-tag fade-up anim-target" style="animation-delay:0.15s; background:var(--red-bg); color:var(--red); border-color:var(--red)">Deletion blocked — no resolution guidance</div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.35s">SAP prevents deletion but <strong>doesn't tell you how to resolve the blockers</strong>.</div>
 </div>
 
@@ -744,7 +741,6 @@
     <div style="font-size:13px; color:var(--text); text-align:center">Planner gives up. Moves to next material. <strong>Same blockers.</strong></div>
     <div style="font-size:12px; color:var(--red); margin-top:8px; text-align:center">Dead stock report sits unchanged from last quarter.</div>
   </div>
-  <div style="height:16px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">When deletion is hard, <strong>nothing gets deleted</strong>. The dead stock grows.</div>
 </div>
 
@@ -753,7 +749,6 @@
   <div class="warn-card slide-right anim-target" style="animation-delay:0s">$6.2M in dead stock → capital locked, space consumed</div>
   <div class="warn-card slide-right anim-target" style="animation-delay:0.15s">Obsolete parts in BOMs → maintenance orders wrong parts</div>
   <div class="warn-card slide-right anim-target" style="animation-delay:0.3s">No deletion process → material master grows forever</div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.5s">A material master that only grows and never shrinks is a <strong>liability, not an asset</strong>.</div>
 </div>
 
@@ -777,19 +772,17 @@
     <div class="dust-name">MC-2400 — Gasket, spiral wound DN150</div>
     <div class="dust-meta">Status: Active · Stock: 24 EA · Last issue: <strong>4 years ago</strong></div>
   </div>
-  <div style="height:16px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">The numbers tell the story. <em>MiLi</em> just makes sure you <strong>see them clearly</strong>.</div>
 </div>
 
 <div class="frame" id="f9">
   <div class="section-label">MILI DELETION</div>
   <div class="blocker-list slide-right anim-target" style="animation-delay:0s">
-    <div class="blocker-item"><span class="blocker-icon">📦</span><span class="blocker-label">Stock on hand: 24 EA ($2,160) — Hamburg</span><span class="blocker-status blocked">Open</span></div>
+    <div class="blocker-item"><span class="blocker-icon">📦</span><span class="blocker-label">Stock on hand: 24 EA ($2,160) — Houston</span><span class="blocker-status blocked">Open</span></div>
     <div class="blocker-item"><span class="blocker-icon">📄</span><span class="blocker-label">Open PO: PO-88412 — 12 EA arriving Mar 20</span><span class="blocker-status blocked">Open</span></div>
     <div class="blocker-item"><span class="blocker-icon">🔗</span><span class="blocker-label">BOM link: FL-COMP-007 (Compressor C)</span><span class="blocker-status blocked">Open</span></div>
     <div class="blocker-item"><span class="blocker-icon">📑</span><span class="blocker-label">Contract: FA-2200 (valid until Dec)</span><span class="blocker-status blocked">Open</span></div>
   </div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Every blocker <strong>visible</strong>, every resolution path clear.</div>
 </div>
 
@@ -804,7 +797,6 @@
       <div class="resolve-opt">Return to vendor</div>
     </div>
   </div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Stock resolution is a <strong>decision with options</strong>, not a dead end.</div>
 </div>
 
@@ -818,7 +810,6 @@
       <div class="resolve-opt">Receive and write off</div>
     </div>
   </div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">The PO was auto-generated by an outdated ROP. <strong>Canceling it is the right call.</strong></div>
 </div>
 
@@ -831,7 +822,6 @@
       <div class="resolve-opt selected">Replace with MC-2401 (updated gasket spec)</div>
     </div>
   </div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Don't just remove from the BOM. <strong>Replace with the correct part.</strong></div>
 </div>
 
@@ -843,7 +833,6 @@
       <div class="resolve-opt selected">Auto-removal on next contract review — no minimum impact</div>
     </div>
   </div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Every blocker type has its own <strong>resolution workflow</strong>. Nothing is left ambiguous.</div>
 </div>
 
@@ -855,9 +844,7 @@
     <div class="blocker-item"><span class="blocker-icon">✓</span><span class="blocker-label">BOM: Replaced with MC-2401</span><span class="blocker-status resolved">Resolved</span></div>
     <div class="blocker-item"><span class="blocker-icon">✓</span><span class="blocker-label">Contract: Line 14 removed</span><span class="blocker-status resolved">Resolved</span></div>
   </div>
-  <div style="height:6px"></div>
   <div class="result-tag fade-up anim-target" style="animation-delay:0.15s; background:var(--green-bg); color:var(--green); border-color:var(--green)">All blocking objects resolved — eligible for deletion</div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.35s">Only when <strong>every blocker is addressed</strong> can the deletion proceed.</div>
 </div>
 
@@ -870,7 +857,6 @@
     <span class="approval-arrow">→</span>
     <div class="approval-node"><div class="an-dot pending">3</div><div class="an-label">MDM Team</div></div>
   </div>
-  <div style="height:16px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Deletion follows a <strong>chain of accountability</strong>. Not a single click in SAP.</div>
 </div>
 
@@ -890,9 +876,7 @@
     <span class="approval-arrow">→</span>
     <div class="approval-node"><div class="an-dot pending">3</div><div class="an-label">MDM Team</div></div>
   </div>
-  <div style="height:8px"></div>
   <div class="result-tag fade-up anim-target" style="animation-delay:0.15s">Capital impact: -$3,240 · Dead stock: -24 EA · Shelf space: 2 bins freed</div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.35s">Each approver sees only what's <strong>relevant to their role</strong>.</div>
 </div>
 
@@ -905,7 +889,6 @@
     <div class="exec-item"><span class="ei-check">✓</span> BOM FL-COMP-007 updated → MC-2401</div>
     <div class="exec-item"><span class="ei-check">✓</span> Contract FA-2200 line 14 removed</div>
   </div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Five SAP transactions. <strong>One workflow. Full audit trail.</strong></div>
 </div>
 
@@ -916,7 +899,6 @@
     <div style="font-size:13px; color:var(--text); margin-top:6px"><strong>142 new candidates</strong> identified this month</div>
     <div style="font-size:12px; color:var(--muted); margin-top:4px">Prioritized by stock value and age</div>
   </div>
-  <div style="height:16px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Deletion isn't a one-time cleanup. It's a <strong>continuous process</strong>.</div>
 </div>
 
@@ -953,7 +935,6 @@
     <div class="metric-unit">dead stock retired in 6 months</div>
     <div class="metric-compare">$6.2M → $4.1M</div>
   </div>
-  <div style="height:16px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s"><strong>Dead stock leaving the system is capital returning to the business.</strong></div>
 </div>
 
@@ -964,7 +945,6 @@
     <div class="metric-unit">materials safely deleted</div>
     <div class="metric-compare">every blocker resolved, every step audited</div>
   </div>
-  <div style="height:16px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Not a single broken BOM. Not a single orphaned PO.</div>
 </div>
 
@@ -975,7 +955,6 @@
     <div class="metric-unit">warehouse space recovered</div>
     <div class="metric-compare">bins freed for active materials</div>
   </div>
-  <div style="height:16px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Physical space that was <strong>occupied by the past</strong> — now available for the present.</div>
 </div>
 
@@ -987,7 +966,6 @@
     <div class="summary-chip pop-in anim-target" style="animation-delay:0.2s">12% space recovered</div>
     <div class="summary-chip pop-in anim-target" style="animation-delay:0.3s">Full audit trail</div>
   </div>
-  <div style="height:16px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.45s">Retire what's dead. <strong>Protect what's alive.</strong></div>
 </div>
 
@@ -1005,7 +983,6 @@
 <div class="frame" id="f27">
   <div class="section-label">THE OUTCOME</div>
   <div class="big-text fade-up anim-target" style="animation-delay:0s">Retire what's dead. Protect what's alive.</div>
-  <div style="height:8px"></div>
   <div class="big-text fade-up anim-target" style="animation-delay:0.15s"><em>Flag for Deletion</em> — one of 13 modules.</div>
 </div>
 

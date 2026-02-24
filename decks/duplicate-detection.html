@@ -57,6 +57,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 16px;
     padding: 48px 64px;
     opacity: 0;
     pointer-events: none;
@@ -720,31 +721,27 @@
     <div class="dup-card"><span class="dc-num">MC-7812</span><span class="dc-desc">Mech seal KSB pump 250kw</span></div>
     <div class="dup-card"><span class="dc-num">MC-9234</span><span class="dc-desc">Shaft seal, KSPA-250, KSB</span></div>
   </div>
-  <div style="height:16px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Three numbers. Three descriptions. <strong>One part.</strong></div>
 </div>
 
 <div class="frame" id="f2">
   <div class="section-label">THE PROBLEM</div>
   <div class="stock-summary pop-in anim-target" style="animation-delay:0s">
-    <div class="stock-item"><div class="si-num">MC-4501</div><div class="si-qty">12</div><div class="si-plant">Hamburg</div></div>
-    <div class="stock-item"><div class="si-num">MC-7812</div><div class="si-qty">8</div><div class="si-plant">Paris</div></div>
-    <div class="stock-item"><div class="si-num">MC-9234</div><div class="si-qty">6</div><div class="si-plant">Perth</div></div>
+    <div class="stock-item"><div class="si-num">MC-4501</div><div class="si-qty">12</div><div class="si-plant">Houston</div></div>
+    <div class="stock-item"><div class="si-num">MC-7812</div><div class="si-qty">8</div><div class="si-plant">Midland</div></div>
+    <div class="stock-item"><div class="si-num">MC-9234</div><div class="si-qty">6</div><div class="si-plant">Calgary</div></div>
   </div>
-  <div style="height:6px"></div>
   <div class="result-tag slide-right anim-target" style="animation-delay:0.15s; background:var(--red-bg); color:var(--red); border-color:var(--red)">Total: 26 units · Actual need: 10</div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.35s">The company thinks it has three different parts. It has <strong>one part stocked 2.6× higher than necessary</strong>.</div>
 </div>
 
 <div class="frame" id="f3">
   <div class="section-label">THE PROBLEM</div>
   <div class="mat-card pop-in anim-target" style="animation-delay:0s">
-    <div style="font-size:11px; color:var(--muted)">Paris Plant — Planner searches for a seal</div>
+    <div style="font-size:11px; color:var(--muted)">Midland Plant — Planner searches for a seal</div>
     <div style="font-size:13px; font-weight:600; color:var(--text); margin:6px 0">Finds MC-7812 → Orders 8 more</div>
-    <div style="font-size:11px; color:var(--red); font-style:italic">Meanwhile: 12 units of the same part sit untouched in Hamburg under MC-4501</div>
+    <div style="font-size:11px; color:var(--red); font-style:italic">Meanwhile: 12 units of the same part sit untouched in Houston under MC-4501</div>
   </div>
-  <div style="height:16px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Duplicates don't just inflate stock. They <strong>hide availability from other plants</strong>.</div>
 </div>
 
@@ -755,7 +752,6 @@
     <div style="font-size:13px; color:var(--text); margin-top:6px"><strong>120,000</strong> materials · Manual comparison</div>
     <div style="font-size:12px; color:var(--red); margin-top:6px">Status: 12% reviewed — <strong>project paused</strong></div>
   </div>
-  <div style="height:16px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Manual duplicate detection at scale is a <strong>project that never finishes</strong>.</div>
 </div>
 
@@ -764,7 +760,6 @@
   <div class="warn-card slide-right anim-target" style="animation-delay:0s">Duplicate stock inflates inventory 11–21%</div>
   <div class="warn-card slide-right anim-target" style="animation-delay:0.15s">Contract leverage fragmented across duplicate numbers</div>
   <div class="warn-card slide-right anim-target" style="animation-delay:0.3s">Unsafe deletion → BOMs break, POs orphaned</div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.5s">Duplicates are easy to create. <strong>Dangerous to remove without a system.</strong></div>
 </div>
 
@@ -787,7 +782,6 @@
     <div style="font-size:22px; font-weight:700; color:var(--teal); text-align:center">2,340 groups</div>
     <div style="font-size:12px; color:var(--muted); text-align:center; margin-top:4px">Potential duplicate groups identified · Covering 6,200 materials</div>
   </div>
-  <div style="height:16px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s"><em>MiLi</em> doesn't wait for you to suspect duplicates. It <strong>surfaces them proactively</strong>.</div>
 </div>
 
@@ -797,9 +791,7 @@
     <div class="result-tag">Confidence: High (>85%)</div>
     <div class="result-tag">Material group: Seals</div>
   </div>
-  <div style="height:6px"></div>
   <div class="result-tag slide-right anim-target" style="animation-delay:0.15s; background:var(--teal-light); color:var(--teal); border-color:var(--teal)">48 groups · Sorted by combined stock value ↓</div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.35s">Start where the <strong>money</strong> is.</div>
 </div>
 
@@ -809,10 +801,9 @@
     <div class="ct-header"><span>Field</span><span>MC-4501</span><span>MC-7812</span><span>MC-9234</span></div>
     <div class="ct-row"><span class="ct-label">Manufacturer</span><span class="ct-match">KSB</span><span class="ct-match">KSB</span><span class="ct-match">KSB</span></div>
     <div class="ct-row"><span class="ct-label">MPN</span><span class="ct-match">KSPA-250-SEAL</span><span class="ct-match">KSPA-250-SEAL</span><span>KSPA-250</span></div>
-    <div class="ct-row"><span class="ct-label">Plant</span><span>Hamburg</span><span>Paris</span><span>Perth</span></div>
+    <div class="ct-row"><span class="ct-label">Plant</span><span>Houston</span><span>Midland</span><span>Calgary</span></div>
     <div class="ct-row"><span class="ct-label">Stock</span><span>12</span><span>8</span><span>6</span></div>
   </div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Same manufacturer. Same MPN. <strong>Three material numbers.</strong></div>
 </div>
 
@@ -823,7 +814,6 @@
     <div class="dup-card dim"><span class="dc-num">MC-7812</span><span class="dc-desc">Mech seal KSB pump 250kw</span></div>
     <div class="dup-card dim"><span class="dc-num">MC-9234</span><span class="dc-desc">Shaft seal, KSPA-250, KSB</span></div>
   </div>
-  <div style="height:16px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">One record survives. The others <strong>retire into it</strong>.</div>
 </div>
 
@@ -837,17 +827,15 @@
     <div class="dep-row"><span class="dr-label">MC-9234 — BOM links</span><span class="dr-value clear">0</span></div>
     <div class="dep-row"><span class="dr-label">MC-9234 — Stock</span><span class="dr-value blocked">6 units</span></div>
   </div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Before deletion, <em>MiLi</em> checks for <strong>everything that could break</strong>.</div>
 </div>
 
 <div class="frame" id="f13">
   <div class="section-label">MILI DUPLICATES</div>
   <div class="resolution-plan pop-in anim-target" style="animation-delay:0s">
-    <div class="res-item"><strong>MC-7812:</strong> Remap 2 POs → MC-4501 · Update BOM → MC-4501 · Extend MC-4501 to Paris</div>
-    <div class="res-item"><strong>MC-9234:</strong> Extend MC-4501 to Perth · Transfer 6 units → MC-4501 · Flag for deletion</div>
+    <div class="res-item"><strong>MC-7812:</strong> Remap 2 POs → MC-4501 · Update BOM → MC-4501 · Extend MC-4501 to Midland</div>
+    <div class="res-item"><strong>MC-9234:</strong> Extend MC-4501 to Calgary · Transfer 6 units → MC-4501 · Flag for deletion</div>
   </div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Not just "delete the duplicate." <strong>Migrate everything safely first.</strong></div>
 </div>
 
@@ -857,7 +845,6 @@
     <div style="font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:1px">Batch Processing</div>
     <div style="font-size:13px; color:var(--text); margin-top:6px"><strong>12 groups</strong> resolved · 34 materials → 12</div>
   </div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">34 material numbers collapsed to 12. <strong>Zero information lost.</strong></div>
 </div>
 
@@ -871,7 +858,6 @@
     <div class="dep-row"><span class="dr-label">PO remappings</span><span class="dr-value">3</span></div>
     <div class="dep-row"><span class="dr-label">Est. stock reduction</span><span class="dr-value" style="color:var(--green)">$187K</span></div>
   </div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">The approver sees the full resolution plan. <strong>Not just what's being deleted, but how.</strong></div>
 </div>
 
@@ -889,9 +875,7 @@
     <div class="dep-row"><span class="dr-label">Open PO (arriving Mar 15)</span><span class="dr-value blocked">⚠ Blocked</span></div>
     <div class="dep-row"><span class="dr-label">BOM link (FL-PUMP-003)</span><span class="dr-value blocked">⚠ Blocked</span></div>
   </div>
-  <div style="height:6px"></div>
   <div class="result-tag fade-up anim-target" style="animation-delay:0.15s; background:var(--red-bg); color:var(--red); border-color:var(--red)">Cannot delete until blockers resolved</div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.35s"><em>MiLi</em> <strong>won't let you delete</strong> what's still in use. The system protects against itself.</div>
 </div>
 
@@ -904,7 +888,6 @@
     <div class="dep-row"><span class="dr-label">Original creation dates</span><span class="dr-value clear">Preserved</span></div>
     <div class="dep-row"><span class="dr-label">PO history</span><span class="dr-value clear">Consolidated</span></div>
   </div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">The duplicates are gone. But their <strong>history remains traceable</strong>.</div>
 </div>
 
@@ -915,9 +898,7 @@
     <strong>Similar material exists: MC-4501</strong><br>
     <span style="font-size:11px">Seal, mechanical shaft KSPA 250 kW</span>
   </div>
-  <div style="height:8px"></div>
   <div class="result-tag fade-up anim-target" style="animation-delay:0.15s">Shown at material creation → duplicate prevention at source</div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.35s">Detect and remove is good. <strong>Prevent at creation is better.</strong></div>
 </div>
 
@@ -954,7 +935,6 @@
     <div class="metric-unit">duplicate groups identified</div>
     <div class="metric-compare">covering 6,200 materials — automatically</div>
   </div>
-  <div style="height:16px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">What took a project team years, <em>MiLi</em> does <strong>continuously</strong>.</div>
 </div>
 
@@ -965,7 +945,6 @@
     <div class="metric-unit">stock reduction from first batch</div>
     <div class="metric-compare">11–21% inventory inflation eliminated</div>
   </div>
-  <div style="height:16px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s"><strong>Every duplicate removed is stock freed and search improved.</strong></div>
 </div>
 
@@ -977,7 +956,6 @@
     <div class="summary-chip pop-in anim-target" style="animation-delay:0.2s">11–21% inflation</div>
     <div class="summary-chip pop-in anim-target" style="animation-delay:0.3s">Safe resolution</div>
   </div>
-  <div style="height:16px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.45s">One truth per material. <strong>One number, every plant.</strong></div>
 </div>
 
@@ -995,7 +973,6 @@
 <div class="frame" id="f26">
   <div class="section-label">THE OUTCOME</div>
   <div class="big-text fade-up anim-target" style="animation-delay:0s">One truth per material.</div>
-  <div style="height:8px"></div>
   <div class="big-text fade-up anim-target" style="animation-delay:0.15s"><em>Duplicate Detection</em> — one of 13 modules.</div>
 </div>
 

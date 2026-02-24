@@ -57,6 +57,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 16px;
     padding: 48px 64px;
     opacity: 0;
     pointer-events: none;
@@ -725,7 +726,6 @@
     <div class="lt-row"><span class="lt-label">PO #3 actual</span><span class="lt-value alert">56 days</span></div>
     <div class="lt-row"><span class="lt-label">PO #4 actual</span><span class="lt-value alert">41 days</span></div>
   </div>
-  <div style="height:16px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">SAP says 14 days. Reality says <strong>42</strong>. The ROP is based on the lie.</div>
 </div>
 
@@ -736,7 +736,6 @@
     <div class="alert-title">STOCKOUT — MC-7800</div>
     <div class="alert-detail">Coupling, flexible jaw type · Stock: 0<br>PO placed 3 weeks ago · Expected: 1 week ago · Status: still in transit</div>
   </div>
-  <div style="height:16px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">The stockout didn't happen because demand spiked. It happened because the <strong>lead time was wrong</strong>.</div>
 </div>
 
@@ -747,7 +746,6 @@
     <div style="font-size:16px; font-weight:700; color:var(--text); margin:6px 0">Type new value: <span style="color:var(--teal)">42</span>_</div>
     <div style="font-size:11px; color:var(--muted); font-style:italic">"Wait — is it 42? Or was that a one-off? What's the average? Across which vendors?"</div>
   </div>
-  <div style="height:16px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Updating a lead time requires <strong>knowing the right number</strong>. And knowing it requires analysis nobody has time to do.</div>
 </div>
 
@@ -765,7 +763,6 @@
       <div class="col-item" style="margin-top:6px; font-size:10px; color:var(--red)">→ 30 min × 8,000 materials</div>
     </div>
   </div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Manual lead time analysis at scale is <strong>mathematically impossible</strong>.</div>
 </div>
 
@@ -774,7 +771,6 @@
   <div class="warn-card slide-right anim-target" style="animation-delay:0s">Wrong lead time → ROP too low → stockout</div>
   <div class="warn-card slide-right anim-target" style="animation-delay:0.15s">Wrong lead time → ROP too high → overstock</div>
   <div class="warn-card slide-right anim-target" style="animation-delay:0.3s">Vendor promises unverified → no accountability</div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.5s">Lead time is the <strong>foundation</strong> of MRP. When it's wrong, everything built on it is wrong.</div>
 </div>
 
@@ -795,12 +791,10 @@
   <div class="section-label">MILI LEAD TIME</div>
   <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:center" class="pop-in anim-target" style="animation-delay:0s">
     <div class="result-tag">Last 24 months</div>
-    <div class="result-tag">Plant 1000 — Hamburg</div>
+    <div class="result-tag">Plant 1000 — Houston</div>
     <div class="result-tag">All material groups</div>
   </div>
-  <div style="height:8px"></div>
   <div class="result-tag slide-right anim-target" style="animation-delay:0.15s; background:var(--teal-light); color:var(--teal); border-color:var(--teal)">Analyzing PO history…</div>
-  <div style="height:16px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.35s">Select the window. <em>MiLi</em> does the math.</div>
 </div>
 
@@ -814,7 +808,6 @@
     <div class="lt-row"><span class="lt-label">MC-2200 · Filter</span><span class="lt-value alert">30d → 48d (+18)</span></div>
     <div class="lt-row"><span class="lt-label">MC-6700 · Gasket</span><span class="lt-value" style="color:var(--amber)">14d → 22d (+8)</span></div>
   </div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">The biggest gaps surface first. <strong>That's where the risk lives.</strong></div>
 </div>
 
@@ -837,9 +830,7 @@
     <div class="scatter-dot" style="left:280px; top:26px"></div>
     <div class="scatter-dot" style="left:305px; top:24px"></div>
   </div>
-  <div style="height:4px"></div>
   <div class="result-tag fade-up anim-target" style="animation-delay:0.15s; background:var(--teal-light); color:var(--teal); border-color:var(--teal)">Calculated lead time: 43 days</div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.35s">Not one number. A <strong>distribution</strong>. The user sees the spread, not just the average.</div>
 </div>
 
@@ -859,7 +850,6 @@
       <div class="vendor-stat"><span class="vs-label">On-time rate</span><span class="vs-value" style="color:var(--red)">60%</span></div>
     </div>
   </div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Same part, different vendors, <strong>different reliability</strong>. <em>MiLi</em> shows which one delivers.</div>
 </div>
 
@@ -873,9 +863,7 @@
       <span class="rec-new">43 days</span>
     </div>
   </div>
-  <div style="height:8px"></div>
   <div class="result-tag slide-right anim-target" style="animation-delay:0.15s">Impact: ROP recalculates from 2 → 7 EA</div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.35s">Change the lead time → <strong>ROP adjusts automatically</strong>. One fix, two improvements.</div>
 </div>
 
@@ -885,9 +873,7 @@
     <div style="font-size:22px; font-weight:700; color:var(--teal); text-align:center">45 materials selected</div>
     <div style="font-size:12px; color:var(--muted); text-align:center; margin-top:4px">Variance exceeds 10 days · Accept all recommendations</div>
   </div>
-  <div style="height:8px"></div>
   <div class="result-tag slide-right anim-target" style="animation-delay:0.15s; background:var(--green-bg); color:var(--green); border-color:var(--green)">Average variance closed: 22 days</div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.35s">45 corrections. <strong>Minutes, not months.</strong></div>
 </div>
 
@@ -900,18 +886,14 @@
     <div class="lt-row"><span class="lt-label">Average correction</span><span class="lt-value">+22 days</span></div>
     <div class="lt-row"><span class="lt-label">ROP impact</span><span class="lt-value good">Recalculation triggered</span></div>
   </div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">The approver sees the <strong>evidence</strong>, not just the change.</div>
 </div>
 
 <div class="frame" id="f15">
   <div class="section-label">MILI LEAD TIME</div>
   <div class="check-circle check-draw anim-target" style="animation-delay:0s">✓</div>
-  <div style="height:6px"></div>
   <div class="result-tag slide-right anim-target" style="animation-delay:0.15s; background:var(--green-bg); color:var(--green); border-color:var(--green)">45 materials updated in SAP</div>
-  <div style="height:4px"></div>
   <div class="result-tag slide-right anim-target" style="animation-delay:0.25s">MRP uses corrected lead times from next planning run</div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.4s">SAP now plans with <strong>reality</strong>. Not the number entered in 2018.</div>
 </div>
 
@@ -932,7 +914,6 @@
     <div class="lt-row"><span class="lt-label">Reliability score</span><span class="lt-value" style="color:var(--amber)">82%</span></div>
     <div class="lt-row"><span class="lt-label">Trend (12 mo)</span><span class="lt-value good">Improving ↑</span></div>
   </div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Vendor performance becomes <strong>measurable</strong>, not anecdotal.</div>
 </div>
 
@@ -952,7 +933,6 @@
       <div class="vendor-stat"><span class="vs-label">Price</span><span class="vs-value">$120/unit (3% less)</span></div>
     </div>
   </div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">The 3% cheaper vendor costs more in <strong>stockouts and expediting</strong>.</div>
 </div>
 
@@ -964,7 +944,6 @@
     <div class="lt-row"><span class="lt-label">Lead time changes</span><span class="lt-value" style="color:var(--amber)">340 recommended</span></div>
     <div class="lt-row"><span class="lt-label">Vendor flags</span><span class="lt-value alert">89 performance issues</span></div>
   </div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Lead times drift. <em>MiLi</em> <strong>catches the drift</strong> before MRP fails.</div>
 </div>
 
@@ -992,7 +971,6 @@
       <div class="col-item">ROP based on reality → availability</div>
     </div>
   </div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">From vendor promises to <strong>proven performance</strong>.</div>
 </div>
 
@@ -1003,7 +981,6 @@
     <div class="metric-unit">average variance closed</div>
     <div class="metric-compare">the gap between SAP and reality — eliminated</div>
   </div>
-  <div style="height:16px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Twenty-two days of <strong>planning error</strong> — corrected across the board.</div>
 </div>
 
@@ -1014,7 +991,6 @@
     <div class="metric-unit">fewer stockouts</div>
     <div class="metric-compare">from lead-time-related errors</div>
   </div>
-  <div style="height:16px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Two-thirds of stockouts were caused by <strong>wrong lead times</strong>. Now they're right.</div>
 </div>
 
@@ -1026,7 +1002,6 @@
     <div class="summary-chip pop-in anim-target" style="animation-delay:0.2s">Vendor scorecards</div>
     <div class="summary-chip pop-in anim-target" style="animation-delay:0.3s">Quarterly refresh</div>
   </div>
-  <div style="height:16px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.45s"><strong>When lead times are real, MRP works.</strong> That's the entire point.</div>
 </div>
 
@@ -1044,7 +1019,6 @@
 <div class="frame" id="f26">
   <div class="section-label">THE OUTCOME</div>
   <div class="big-text fade-up anim-target" style="animation-delay:0s">Promises verified by performance.</div>
-  <div style="height:8px"></div>
   <div class="big-text fade-up anim-target" style="animation-delay:0.15s"><em>Lead Time Calculator</em> — one of 13 modules.</div>
 </div>
 

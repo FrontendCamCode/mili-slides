@@ -57,6 +57,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 16px;
     padding: 48px 64px;
     opacity: 0;
     pointer-events: none;
@@ -989,7 +990,6 @@
 
 <div class="frame" id="f1">
   <div class="section-label anim-target pop-in">THE SITUATION</div>
-  <div class="spacer"></div>
   <div class="email-card anim-target fade-up" style="animation-delay:.15s">
     <div class="em-header">
       <div class="em-avatar">MS</div>
@@ -1003,7 +1003,6 @@
     </div>
     <div class="em-attach">📎 nameplate_photo.jpg &nbsp;·&nbsp; handwritten_PN.pdf</div>
   </div>
-  <div class="spacer"></div>
   <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
     Stocking decisions start with <strong>an incident and an email</strong>. Not analysis.
   </div>
@@ -1011,7 +1010,6 @@
 
 <div class="frame" id="f2">
   <div class="section-label anim-target pop-in">THE SITUATION</div>
-  <div class="spacer"></div>
   <div class="pending-sheet anim-target fade-up" style="animation-delay:.15s">
     <div class="ps-count">⚠ 87 rows — some from last month, some from last year</div>
     <div class="ps-header"><span>#</span><span>Description</span><span>Priority</span><span>Cost</span></div>
@@ -1020,7 +1018,6 @@
     <div class="ps-row stale"><span>86</span><span>Coupling half — Jan 2024</span><span>—</span><span>—</span></div>
     <div class="ps-row stale"><span>87</span><span>Filter element — Nov 2023</span><span>—</span><span>—</span></div>
   </div>
-  <div class="spacer"></div>
   <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
     Stock requests accumulate in spreadsheets. <strong>Nobody knows which ones matter.</strong>
   </div>
@@ -1028,7 +1025,6 @@
 
 <div class="frame" id="f3">
   <div class="section-label anim-target pop-in">WITHOUT MILI</div>
-  <div class="spacer"></div>
   <div class="gut-decision anim-target fade-up" style="animation-delay:.15s">
     <div class="gd-title">Manual stocking decision</div>
     <div class="gd-row"><span class="gd-label">Material</span><span class="gd-value">Seal kit MC-4501</span></div>
@@ -1037,7 +1033,6 @@
     <div class="gd-row"><span class="gd-label">Criticality</span><span class="gd-value guess">Not assessed</span></div>
     <div class="gd-row"><span class="gd-label">Capital review</span><span class="gd-value guess">None</span></div>
   </div>
-  <div class="spacer"></div>
   <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
     The ROP was a guess. The ROQ was fear. The stocking decision had <strong>no governance</strong>.
   </div>
@@ -1045,7 +1040,6 @@
 
 <div class="frame" id="f4">
   <div class="section-label anim-target pop-in">WITHOUT MILI</div>
-  <div class="spacer"></div>
   <div class="shelf-visual anim-target fade-up" style="animation-delay:.15s">
     <div class="shelf-unit dust" style="height:50px"></div>
     <div class="shelf-unit dust" style="height:50px"></div>
@@ -1069,13 +1063,11 @@
     <div class="shelf-unit" style="height:24px"></div>
   </div>
   <div class="shelf-label anim-target fade-up" style="animation-delay:.2s">18 of 20 units untouched after 12 months</div>
-  <div class="spacer"></div>
   <div class="metric-spotlight anim-target scale-in" style="animation-delay:.25s">
     <div class="metric-big">$14,400</div>
     <div class="metric-unit">capital locked on a shelf</div>
     <div class="metric-compare">one incident · one emotional response</div>
   </div>
-  <div class="spacer"></div>
   <div class="thought-text anim-target fade-up" style="animation-delay:.35s">
     One incident. One emotional response. <strong>$14,400 sitting on a shelf.</strong>
   </div>
@@ -1083,7 +1075,6 @@
 
 <div class="frame" id="f5">
   <div class="section-label anim-target pop-in">WITHOUT MILI</div>
-  <div class="spacer"></div>
   <div class="warn-card anim-target slide-right" style="animation-delay:.1s">
     <span class="warn-icon">⚠</span>
     <span>Emotional stocking → inventory grows unchecked</span>
@@ -1096,7 +1087,6 @@
     <span class="warn-icon">⚠</span>
     <span>No approval trail → nobody accountable for stock growth</span>
   </div>
-  <div class="spacer"></div>
   <div class="thought-text anim-target fade-up" style="animation-delay:.55s">
     Inventory grows one "just stock it" at a time. <strong>Without governance, it only goes up.</strong>
   </div>
@@ -1110,7 +1100,6 @@
 
 <div class="frame" id="f7">
   <div class="section-label anim-target pop-in">STEP 1 · TRIGGER</div>
-  <div class="spacer"></div>
   <div class="crit-trigger anim-target fade-up" style="animation-delay:.15s">
     <div class="ct-badge">B — High</div>
     <div class="ct-prompt">
@@ -1118,7 +1107,6 @@
       Would you like to create a new stock request?
     </div>
   </div>
-  <div class="spacer"></div>
   <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
     Stocking is triggered by <strong>criticality score</strong>, not by an email after a breakdown.
   </div>
@@ -1126,7 +1114,6 @@
 
 <div class="frame" id="f8">
   <div class="section-label anim-target pop-in">STEP 1 · MATERIAL CONTEXT</div>
-  <div class="spacer"></div>
   <div class="context-card anim-target fade-up" style="animation-delay:.15s">
     <div class="cc-title">Material context — MC-4501</div>
     <div class="cc-grid">
@@ -1136,11 +1123,10 @@
       <div class="cc-item"><div class="cc-label">This plant</div><div class="cc-val" style="color:var(--red)">0 units</div></div>
     </div>
     <div class="cc-stock">
-      <span>Hamburg: 12 units</span>
-      <span>Perth: 8 units</span>
+      <span>Houston: 12 units</span>
+      <span>Calgary: 8 units</span>
     </div>
   </div>
-  <div class="spacer"></div>
   <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
     Before proposing stock levels, <em>MiLi</em> shows you <strong>everything relevant to the decision</strong>.
   </div>
@@ -1148,7 +1134,6 @@
 
 <div class="frame" id="f9">
   <div class="section-label anim-target pop-in">STEP 2 · PROPOSE ROP / ROQ</div>
-  <div class="spacer"></div>
   <div class="proposal-card anim-target fade-up" style="animation-delay:.15s">
     <div class="pc-title">Calculated recommendation</div>
     <div class="pc-row"><span class="pc-label">Reorder point (ROP)</span><span class="pc-value highlight">3</span></div>
@@ -1156,7 +1141,6 @@
     <div class="pc-row"><span class="pc-label">Based on</span><span class="pc-value">Criticality + lead time + consumption</span></div>
     <div class="pc-capital">Capital commitment: $6,000</div>
   </div>
-  <div class="spacer"></div>
   <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
     The numbers are <strong>calculated</strong>, not guessed. And the capital cost is visible upfront.
   </div>
@@ -1164,7 +1148,6 @@
 
 <div class="frame" id="f10">
   <div class="section-label anim-target pop-in">STEP 2 · ADJUST</div>
-  <div class="spacer"></div>
   <div class="capital-adj anim-target fade-up" style="animation-delay:.15s">
     <div class="ca-row">
       <span class="ca-label">ROP</span>
@@ -1179,7 +1162,6 @@
     </div>
     <div class="ca-total">Capital commitment: $6,000</div>
   </div>
-  <div class="spacer"></div>
   <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
     Overrides are allowed. But the <strong>financial impact is always visible</strong>.
   </div>
@@ -1187,7 +1169,6 @@
 
 <div class="frame" id="f11">
   <div class="section-label anim-target pop-in">STEP 2 · STOCKING JUSTIFICATION</div>
-  <div class="spacer"></div>
   <div class="justification-panel anim-target fade-up" style="animation-delay:.15s">
     <div class="jp-title">Business case for stocking</div>
     <div class="jp-row"><span class="jp-icon">🎯</span><span class="jp-text">Criticality: <strong>B — High</strong></span></div>
@@ -1195,7 +1176,6 @@
     <div class="jp-row"><span class="jp-icon">⏱</span><span class="jp-text">Lead time: <strong>45 days</strong> — exceeds emergency window</span></div>
     <div class="jp-row"><span class="jp-icon">💰</span><span class="jp-text">Cost of downtime: <strong>$24,000/day</strong></span></div>
   </div>
-  <div class="spacer"></div>
   <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
     This isn't a request. It's a <strong>business case</strong> for stocking.
   </div>
@@ -1203,7 +1183,6 @@
 
 <div class="frame" id="f12">
   <div class="section-label anim-target pop-in">STEP 3 · VENDOR SELECTION</div>
-  <div class="spacer"></div>
   <div class="vendor-select anim-target fade-up" style="animation-delay:.15s">
     <div class="vendor-option selected">
       <div class="vo-name">Vendor A</div>
@@ -1217,7 +1196,6 @@
       <div class="vo-row">Lead time: <strong>52 days</strong></div>
     </div>
   </div>
-  <div class="spacer"></div>
   <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
     The stocking decision includes <strong>where to buy from</strong>. Not just how many to hold.
   </div>
@@ -1225,7 +1203,6 @@
 
 <div class="frame" id="f13">
   <div class="section-label anim-target pop-in">STEP 3 · REVIEW</div>
-  <div class="spacer"></div>
   <div class="review-screen anim-target fade-up" style="animation-delay:.15s">
     <div class="rs-title">Stock request — ready to submit</div>
     <div class="rs-grid">
@@ -1239,7 +1216,6 @@
       <span class="rs-label">Justification</span><span class="rs-val">Auto-generated</span>
     </div>
   </div>
-  <div class="spacer"></div>
   <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
     The approver will see exactly this. <strong>No information lost between request and approval.</strong>
   </div>
@@ -1247,9 +1223,7 @@
 
 <div class="frame" id="f14">
   <div class="section-label anim-target pop-in">STEP 3 · SUBMIT</div>
-  <div class="spacer"></div>
   <div class="cta-btn anim-target stamp" style="animation-delay:.15s">Submit Stock Request</div>
-  <div class="spacer-sm"></div>
   <div class="workflow-chain anim-target fade-up" style="animation-delay:.3s">
     <div class="wf-node">
       <div class="wf-dot pending">💰</div>
@@ -1266,7 +1240,6 @@
       <div class="wf-label">SAP Post-back</div>
     </div>
   </div>
-  <div class="spacer"></div>
   <div class="thought-text anim-target fade-up" style="animation-delay:.45s">
     Three approvers. Each sees what matters to them. <strong>Stock only exists after all approve.</strong>
   </div>
@@ -1280,7 +1253,6 @@
 
 <div class="frame" id="f16">
   <div class="section-label anim-target pop-in">APPROVAL · CAPITAL REVIEW</div>
-  <div class="spacer"></div>
   <div class="approval-view anim-target fade-up" style="animation-delay:.15s">
     <div class="av-role">Plant Controller</div>
     <div class="av-row"><span class="av-label">Capital commitment</span><span class="av-val">$6,000</span></div>
@@ -1288,7 +1260,6 @@
     <div class="av-row"><span class="av-label">Downtime risk avoided</span><span class="av-val green">$24,000/day</span></div>
     <div class="av-row"><span class="av-label">Payback</span><span class="av-val green">1 stockout prevented</span></div>
   </div>
-  <div class="spacer"></div>
   <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
     The controller doesn't approve "a part." They approve <strong>an investment with a return</strong>.
   </div>
@@ -1296,7 +1267,6 @@
 
 <div class="frame" id="f17">
   <div class="section-label anim-target pop-in">APPROVAL · WAREHOUSE LOGISTICS</div>
-  <div class="spacer"></div>
   <div class="approval-view anim-target fade-up" style="animation-delay:.15s">
     <div class="av-role">Warehouse Manager</div>
     <div class="av-row"><span class="av-label">Bin allocation</span><span class="av-val">Required</span></div>
@@ -1304,7 +1274,6 @@
     <div class="av-row"><span class="av-label">Adjacent to</span><span class="av-val">Similar seals</span></div>
     <div class="av-row"><span class="av-label">Space available</span><span class="av-val green">Yes</span></div>
   </div>
-  <div class="spacer"></div>
   <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
     Stocking isn't just a number in SAP. It's <strong>physical space and logistics</strong>.
   </div>
@@ -1312,7 +1281,6 @@
 
 <div class="frame" id="f18">
   <div class="section-label anim-target pop-in">SAP ACTIVATION</div>
-  <div class="spacer"></div>
   <div class="workflow-chain anim-target fade-up" style="animation-delay:.1s">
     <div class="wf-node">
       <div class="wf-dot done">✓</div>
@@ -1329,14 +1297,12 @@
       <div class="wf-label">SAP</div>
     </div>
   </div>
-  <div class="spacer-sm"></div>
   <div class="sap-activation anim-target fade-up" style="animation-delay:.25s">
     <div class="sap-item"><span class="sap-check">✓</span> MRP parameters set — ROP 3, ROQ 2</div>
     <div class="sap-item"><span class="sap-check">✓</span> Storage location assigned — Aisle 4, Bin 22</div>
     <div class="sap-item"><span class="sap-check">✓</span> Source of supply linked — Vendor A</div>
     <div class="sap-item"><span class="sap-check">✓</span> First PO auto-generated</div>
   </div>
-  <div class="spacer"></div>
   <div class="thought-text anim-target fade-up" style="animation-delay:.4s">
     From request to active stock, <strong>every step governed and traceable</strong>.
   </div>
@@ -1350,7 +1316,6 @@
 
 <div class="frame" id="f20">
   <div class="section-label anim-target pop-in">THE DIFFERENCE</div>
-  <div class="spacer"></div>
   <div class="side-by-side anim-target fade-up" style="animation-delay:.15s">
     <div class="side-col before">
       <div class="col-title">Without MiLi</div>
@@ -1369,7 +1334,6 @@
       <div class="col-item">Justified investment</div>
     </div>
   </div>
-  <div class="spacer"></div>
   <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
     Every stocking decision becomes <strong>a governed investment</strong>, not a reactive impulse.
   </div>
@@ -1377,7 +1341,6 @@
 
 <div class="frame" id="f21">
   <div class="section-label anim-target pop-in">RESULT</div>
-  <div class="spacer"></div>
   <div class="flow-diagram anim-target fade-up" style="animation-delay:.1s">
     <div class="flow-step active">Criticality</div>
     <div class="flow-arrow">→</div>
@@ -1389,11 +1352,9 @@
     <div class="flow-arrow">→</div>
     <div class="flow-step active">Active</div>
   </div>
-  <div class="spacer"></div>
   <div class="summary-chip anim-target slide-right" style="animation-delay:.2s">100% of new stock backed by criticality score</div>
   <div class="summary-chip anim-target slide-right" style="animation-delay:.3s">$6K avg capital commitment vs. $14K gut-feel</div>
   <div class="summary-chip anim-target slide-right" style="animation-delay:.4s">Zero un-governed stock additions</div>
-  <div class="spacer"></div>
   <div class="thought-text anim-target fade-up" style="animation-delay:.5s">
     <strong>Intentional stocking costs less and works better than reactive stocking.</strong>
   </div>
@@ -1401,13 +1362,11 @@
 
 <div class="frame" id="f22">
   <div class="section-label anim-target pop-in">RESULT</div>
-  <div class="spacer"></div>
   <div class="metric-spotlight anim-target scale-in" style="animation-delay:.15s">
     <div class="metric-big">100%</div>
     <div class="metric-unit">of new stock backed by criticality</div>
     <div class="metric-compare">every item justified before stocking</div>
   </div>
-  <div class="spacer"></div>
   <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
     No material enters stock without a <strong>scored reason to be there</strong>.
   </div>
@@ -1415,13 +1374,11 @@
 
 <div class="frame" id="f23">
   <div class="section-label anim-target pop-in">RESULT</div>
-  <div class="spacer"></div>
   <div class="metric-spotlight anim-target scale-in" style="animation-delay:.15s">
     <div class="metric-big">$6K</div>
     <div class="metric-unit">average capital commitment</div>
     <div class="metric-compare">vs. $14K from gut-feel stocking</div>
   </div>
-  <div class="spacer"></div>
   <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
     Calculated stock levels mean <strong>57% less capital locked per item</strong>.
   </div>
@@ -1429,13 +1386,11 @@
 
 <div class="frame" id="f24">
   <div class="section-label anim-target pop-in">RESULT</div>
-  <div class="spacer"></div>
   <div class="metric-spotlight anim-target scale-in" style="animation-delay:.15s">
     <div class="metric-big">Zero</div>
     <div class="metric-unit">un-governed stock additions</div>
     <div class="metric-compare">every item tracked from request to shelf</div>
   </div>
-  <div class="spacer"></div>
   <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
     <strong>Nothing enters inventory without approval, justification, and a trail.</strong>
   </div>
@@ -1443,7 +1398,6 @@
 
 <div class="frame" id="f25">
   <div class="section-label anim-target pop-in">NET EFFECT</div>
-  <div class="spacer"></div>
   <div class="cascade-stack anim-target fade-up" style="animation-delay:.15s">
     <div class="cascade-item">When stocking requires justification, <strong>inventory grows intentionally</strong>.</div>
     <div class="cascade-connector">↓</div>
@@ -1451,7 +1405,6 @@
     <div class="cascade-connector">↓</div>
     <div class="cascade-item">When capital is efficient, <strong>more budget goes to parts that matter</strong>.</div>
   </div>
-  <div class="spacer"></div>
   <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
     Governance doesn't slow things down. <strong>It directs resources where they belong.</strong>
   </div>
@@ -1468,9 +1421,7 @@
     <div class="logo">MiLi</div>
     <div class="by">by Lexin Solutions</div>
   </div>
-  <div class="spacer"></div>
   <div class="divider anim-target fade-up" style="animation-delay:.15s"></div>
-  <div class="spacer"></div>
   <div class="thought-text anim-target fade-up" style="animation-delay:.3s">
     Stock on purpose. <em>New Stock Requests</em> — one of 13 modules.
   </div>

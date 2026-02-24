@@ -57,6 +57,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 16px;
     padding: 48px 64px;
     opacity: 0;
     pointer-events: none;
@@ -784,7 +785,6 @@
   <div class="frame" id="f1">
     <div class="section-label">THE PROBLEM</div>
     <div class="big-text fade-up anim-target" style="animation-delay:0s">New pump arrived.<br><em>No material number.</em></div>
-    <div style="height:16px"></div>
     <p class="thought-text fade-up anim-target" style="animation-delay:0.15s">Before you can order it, stock it, or track it — it has to <strong>exist</strong> in SAP.</p>
   </div>
 
@@ -794,14 +794,12 @@
     <div class="sap-tx pop-in anim-target" style="animation-delay:0s">
       <div class="tx-label">Transaction</div>MM01 — Create Material
     </div>
-    <div style="height:12px"></div>
     <div class="detail-grid fade-up anim-target" style="animation-delay:0.15s">
       <div class="field-row"><span class="field-label">Material type</span><span class="field-value" style="color:var(--muted)">?</span></div>
       <div class="field-row"><span class="field-label">Industry sector</span><span class="field-value" style="color:var(--muted)">?</span></div>
       <div class="field-row"><span class="field-label">MRP type</span><span class="field-value" style="color:var(--muted)">?</span></div>
       <div class="field-row"><span class="field-label">Valuation class</span><span class="field-value" style="color:var(--muted)">?</span></div>
     </div>
-    <div style="height:12px"></div>
     <p class="thought-text fade-up anim-target" style="animation-delay:0.3s">SAP doesn't ask what the part <strong>is</strong>. It asks what it's <strong>classified as</strong> across 15 views.</p>
   </div>
 
@@ -809,13 +807,11 @@
   <div class="frame" id="f3">
     <div class="section-label">THE PROBLEM</div>
     <div class="mid-text fade-up anim-target" style="animation-delay:0s">Three people. Same part.</div>
-    <div style="height:12px"></div>
     <div class="dup-list">
       <div class="dup-item slide-right anim-target" style="animation-delay:0.1s">Pump seal thing for CW system</div>
       <div class="dup-item slide-right anim-target" style="animation-delay:0.2s">Seal mechanical CW pump</div>
       <div class="dup-item slide-right anim-target" style="animation-delay:0.3s">KSPA seal 250kw</div>
     </div>
-    <div style="height:12px"></div>
     <p class="thought-text fade-up anim-target" style="animation-delay:0.45s"><strong>Three descriptions.</strong> None will find the others.</p>
   </div>
 
@@ -823,7 +819,6 @@
   <div class="frame" id="f4">
     <div class="section-label">THE PROBLEM</div>
     <div class="mid-text fade-up anim-target" style="animation-delay:0s">Creation is hard. Users either...</div>
-    <div style="height:12px"></div>
     <div class="dilemma">
       <div class="dilemma-path bad slide-right anim-target" style="animation-delay:0.15s">
         <div class="path-icon">⚡</div>
@@ -846,12 +841,10 @@
       <div class="warn-icon">!</div>
       <div class="warn-text">Incomplete master → MRP can't plan</div>
     </div>
-    <div style="height:8px"></div>
     <div class="warn-card slide-right anim-target" style="animation-delay:0.15s;max-width:420px">
       <div class="warn-icon">!</div>
       <div class="warn-text">Wrong description → nobody finds it next time</div>
     </div>
-    <div style="height:8px"></div>
     <div class="warn-card slide-right anim-target" style="animation-delay:0.3s;max-width:420px">
       <div class="warn-icon">!</div>
       <div class="warn-text">Duplicate at 3 plants → $45K excess stock</div>
@@ -869,11 +862,9 @@
   <div class="frame" id="f7">
     <div class="section-label">HOW IT WORKS</div>
     <div class="mid-text fade-up anim-target" style="animation-delay:0s">Start with what you know</div>
-    <div style="height:12px"></div>
     <div class="field-row slide-right anim-target" style="animation-delay:0.15s">
       <span class="field-label">Manufacturer</span><span class="field-value">KSB</span>
     </div>
-    <div style="height:8px"></div>
     <div class="field-row slide-right anim-target" style="animation-delay:0.3s">
       <span class="field-label">Part Number</span><span class="field-value">KSPA-250-SEAL</span>
     </div>
@@ -884,14 +875,12 @@
   <div class="frame" id="f8">
     <div class="section-label">HOW IT WORKS</div>
     <div class="mid-text fade-up anim-target" style="animation-delay:0s">Search first. Create second.</div>
-    <div style="height:12px"></div>
     <div class="result-tag amber pop-in anim-target" style="animation-delay:0.15s">⚠ 3 similar materials found</div>
-    <div style="height:8px"></div>
     <div class="mat-card scale-in anim-target" style="animation-delay:0.3s;max-width:360px">
       <div class="mat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></div>
       <div class="mat-info">
         <div class="mat-number">MC-4501</div>
-        <div class="mat-desc">Seal, mech shaft KSPA — Hamburg</div>
+        <div class="mat-desc">Seal, mech shaft KSPA — Houston</div>
       </div>
     </div>
     <p class="thought-text fade-up anim-target" style="animation-delay:0.45s"><em>MiLi</em> makes you <strong>look</strong> before you create. Most "new" parts already exist.</p>
@@ -901,7 +890,6 @@
   <div class="frame" id="f9">
     <div class="section-label">HOW IT WORKS</div>
     <div class="mid-text fade-up anim-target" style="animation-delay:0s">No exact match. Proceed to create.</div>
-    <div style="height:12px"></div>
     <div class="result-tag green pop-in anim-target" style="animation-delay:0.15s">✓ No duplicates — safe to create</div>
     <p class="thought-text fade-up anim-target" style="animation-delay:0.3s">The <strong>duplicate check</strong> runs automatically. Zero manual searching.</p>
   </div>
@@ -910,7 +898,6 @@
   <div class="frame" id="f10">
     <div class="section-label">HOW IT WORKS</div>
     <div class="mid-text fade-up anim-target" style="animation-delay:0s">Classify by selecting, not typing</div>
-    <div style="height:12px"></div>
     <div class="taxonomy-tree">
       <div class="taxonomy-level selected slide-right anim-target" style="animation-delay:0.1s">
         <span class="level-label">Noun</span><span class="level-value">Seal</span>
@@ -929,9 +916,7 @@
   <div class="frame" id="f11">
     <div class="section-label">HOW IT WORKS</div>
     <div class="mid-text fade-up anim-target" style="animation-delay:0s">Description generates automatically</div>
-    <div style="height:12px"></div>
     <div class="desc-build scale-in anim-target" style="animation-delay:0.15s">Seal, mechanical shaft <em>KSPA 250 kW</em></div>
-    <div style="height:8px"></div>
     <div class="small-label fade-up anim-target" style="animation-delay:0.3s">structured · consistent · findable</div>
     <p class="thought-text fade-up anim-target" style="animation-delay:0.45s">The user didn't <strong>write</strong> a description. They <strong>selected</strong> one.</p>
   </div>
@@ -940,7 +925,6 @@
   <div class="frame" id="f12">
     <div class="section-label">HOW IT WORKS</div>
     <div class="mid-text fade-up anim-target" style="animation-delay:0s">Relevant attributes only</div>
-    <div style="height:12px"></div>
     <div class="detail-grid fade-up anim-target" style="animation-delay:0.15s">
       <div class="field-row"><span class="field-label">Shaft diameter</span><span class="field-value">55 mm</span></div>
       <div class="field-row"><span class="field-label">Pressure</span><span class="field-value">16 bar</span></div>
@@ -954,13 +938,10 @@
   <div class="frame" id="f13">
     <div class="section-label">HOW IT WORKS</div>
     <div class="mid-text fade-up anim-target" style="animation-delay:0s">Plant setup with smart defaults</div>
-    <div style="height:12px"></div>
-    <div class="plant-badge solid-teal pop-in anim-target" style="animation-delay:0.1s">📍 1000 — Hamburg</div>
-    <div style="height:8px"></div>
+    <div class="plant-badge solid-teal pop-in anim-target" style="animation-delay:0.1s">📍 1000 — Houston</div>
     <div class="field-row slide-right anim-target" style="animation-delay:0.2s">
       <span class="field-label">Storage loc.</span><span class="field-value">0001 – Lager</span>
     </div>
-    <div style="height:4px"></div>
     <div class="field-row slide-right anim-target" style="animation-delay:0.3s">
       <span class="field-label">MRP type</span><span class="field-value">VB (auto-populated)</span>
     </div>
@@ -971,7 +952,6 @@
   <div class="frame" id="f14">
     <div class="section-label">HOW IT WORKS</div>
     <div class="mid-text fade-up anim-target" style="animation-delay:0s">Attach documents at creation</div>
-    <div style="height:12px"></div>
     <div class="file-drop fade-up anim-target" style="animation-delay:0.15s">
       <div class="file-item">
         <span class="file-icon">📄</span>
@@ -991,15 +971,13 @@
   <div class="frame" id="f15">
     <div class="section-label">HOW IT WORKS</div>
     <div class="mid-text fade-up anim-target" style="animation-delay:0s">Full review before submit</div>
-    <div style="height:8px"></div>
     <div class="mat-card scale-in anim-target" style="animation-delay:0.1s;max-width:400px">
       <div class="mat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg></div>
       <div class="mat-info">
         <div class="mat-number">Seal, mechanical shaft KSPA 250 kW</div>
-        <div class="mat-desc">KSB · KSPA-250-SEAL · Hamburg · 2 attachments</div>
+        <div class="mat-desc">KSB · KSPA-250-SEAL · Houston · 2 attachments</div>
       </div>
     </div>
-    <div style="height:8px"></div>
     <div class="result-tag green pop-in anim-target" style="animation-delay:0.25s">✓ 0 conflicts found</div>
     <p class="thought-text fade-up anim-target" style="animation-delay:0.4s">Everything visible. <strong>Nothing hidden behind tabs or transactions.</strong></p>
   </div>
@@ -1008,9 +986,7 @@
   <div class="frame" id="f16">
     <div class="section-label">HOW IT WORKS</div>
     <div class="mid-text fade-up anim-target" style="animation-delay:0s">Submit for approval</div>
-    <div style="height:12px"></div>
     <div class="cta-btn scale-in anim-target pulse-glow" style="animation-delay:0.15s">✓ Submit for Approval</div>
-    <div style="height:12px"></div>
     <div class="approval-flow fade-up anim-target" style="animation-delay:0.3s">
       <div class="approval-step"><div class="approval-dot pending">1</div><div class="approval-label">MDM Team</div></div>
       <div class="approval-arrow">→</div>
@@ -1031,7 +1007,6 @@
   <div class="frame" id="f18">
     <div class="section-label">HOW IT WORKS</div>
     <div class="mid-text fade-up anim-target" style="animation-delay:0s">Reviewer sees side-by-side</div>
-    <div style="height:12px"></div>
     <div class="side-by-side fade-up anim-target" style="animation-delay:0.15s">
       <div class="side-col before">
         <div class="col-title">Submitted</div>
@@ -1051,13 +1026,11 @@
   <div class="frame" id="f19">
     <div class="section-label">HOW IT WORKS</div>
     <div class="mid-text fade-up anim-target" style="animation-delay:0s">Approve, return, or reject</div>
-    <div style="height:12px"></div>
     <div style="display:flex;gap:8px" class="fade-up anim-target" style="animation-delay:0.15s">
       <div class="result-tag green">✓ Approve</div>
       <div class="result-tag amber">↩ Return</div>
       <div class="result-tag red">✕ Reject</div>
     </div>
-    <div style="height:8px"></div>
     <div class="field-row fade-up anim-target" style="animation-delay:0.3s;max-width:400px">
       <span class="field-label">Comment</span><span class="field-value" style="color:var(--muted)">Structured feedback here...</span>
     </div>
@@ -1070,12 +1043,10 @@
     <div class="check-circle check-draw anim-target" style="animation-delay:0s">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>
     </div>
-    <div style="height:12px"></div>
     <div class="mid-text fade-up anim-target" style="animation-delay:0.15s">MC-4501 created in SAP</div>
-    <div style="height:8px"></div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">
       <div class="summary-chip fade-up anim-target" style="animation-delay:0.2s">✓ All views populated</div>
-      <div class="summary-chip fade-up anim-target" style="animation-delay:0.3s">✓ Plant: Hamburg</div>
+      <div class="summary-chip fade-up anim-target" style="animation-delay:0.3s">✓ Plant: Houston</div>
       <div class="summary-chip fade-up anim-target" style="animation-delay:0.35s">✓ Status: Active</div>
     </div>
     <p class="thought-text fade-up anim-target" style="animation-delay:0.45s">One click from <em>MiLi</em>. <strong>15 SAP views written simultaneously.</strong></p>
@@ -1085,12 +1056,11 @@
   <div class="frame" id="f21">
     <div class="section-label">HOW IT WORKS</div>
     <div class="mid-text fade-up anim-target" style="animation-delay:0s">Extend to other plants instantly</div>
-    <div style="height:12px"></div>
     <div style="display:flex;gap:8px;align-items:center;justify-content:center">
-      <div class="plant-badge solid-teal pop-in anim-target" style="animation-delay:0.1s">Hamburg ✓</div>
+      <div class="plant-badge solid-teal pop-in anim-target" style="animation-delay:0.1s">Houston ✓</div>
       <span class="arrow fade-up anim-target" style="animation-delay:0.2s">→</span>
-      <div class="plant-badge dashed pop-in anim-target" style="animation-delay:0.3s">Paris +</div>
-      <div class="plant-badge dashed pop-in anim-target" style="animation-delay:0.35s">Perth +</div>
+      <div class="plant-badge dashed pop-in anim-target" style="animation-delay:0.3s">Midland +</div>
+      <div class="plant-badge dashed pop-in anim-target" style="animation-delay:0.35s">Calgary +</div>
     </div>
     <p class="thought-text fade-up anim-target" style="animation-delay:0.45s">Created once, <strong>extended everywhere</strong>. Same master, different plants.</p>
   </div>
@@ -1099,7 +1069,6 @@
   <div class="frame" id="f22">
     <div class="section-label">HOW IT WORKS</div>
     <div class="mid-text fade-up anim-target" style="animation-delay:0s">The complete creation workflow</div>
-    <div style="height:12px"></div>
     <div class="approval-flow fade-up anim-target" style="animation-delay:0.15s">
       <div class="approval-step"><div class="approval-dot done">✓</div><div class="approval-label">Identify</div></div>
       <div class="approval-arrow">→</div>
@@ -1157,7 +1126,6 @@
   <div class="frame" id="f27">
     <div class="section-label">THE IMPACT</div>
     <div class="mid-text fade-up anim-target" style="animation-delay:0s">The difference</div>
-    <div style="height:12px"></div>
     <div class="side-by-side fade-up anim-target" style="animation-delay:0.15s">
       <div class="side-col before">
         <div class="col-title">Without MiLi</div>
@@ -1185,7 +1153,6 @@
         <div class="mat-desc">Created in SAP — complete, governed, live</div>
       </div>
     </div>
-    <div style="height:12px"></div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">
       <div class="summary-chip fade-up anim-target" style="animation-delay:0.15s">⏱ 5 min</div>
       <div class="summary-chip fade-up anim-target" style="animation-delay:0.25s">✓ 100% complete</div>
@@ -1210,7 +1177,6 @@
   <div class="frame" id="f30">
     <div class="section-label">THE IMPACT</div>
     <div class="mid-text fade-up anim-target" style="animation-delay:0s">Creation feeds every module</div>
-    <div style="height:12px"></div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;max-width:400px">
       <div class="summary-chip slide-right anim-target" style="animation-delay:0.1s">→ Search</div>
       <div class="summary-chip slide-right anim-target" style="animation-delay:0.2s">→ Enrichment</div>
@@ -1225,18 +1191,14 @@
   <div class="frame" id="f31">
     <div class="section-label">THE IMPACT</div>
     <div class="big-text fade-up anim-target" style="animation-delay:0s">Correct from birth.<br>Governed through life.</div>
-    <div style="height:12px"></div>
     <p class="thought-text fade-up anim-target" style="animation-delay:0.15s"><em>Material Creation</em> — the foundation of clean master data.</p>
   </div>
 
   <!-- F32 · Closer -->
   <div class="frame" id="f32">
     <div class="big-text pop-in anim-target" style="animation-delay:0s">Mi<em>Li</em></div>
-    <div style="height:4px"></div>
     <div class="small-label fade-up anim-target" style="animation-delay:0.15s">by Lexin Solutions</div>
-    <div style="height:16px"></div>
     <div style="width:60px;height:2px;background:var(--border)" class="fade-up anim-target" style="animation-delay:0.25s"></div>
-    <div style="height:16px"></div>
     <p class="thought-text fade-up anim-target" style="animation-delay:0.35s">Correct from birth. <em>Material Creation</em> — one of 13 modules.</p>
   </div>
 

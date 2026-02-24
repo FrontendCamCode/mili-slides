@@ -57,6 +57,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 16px;
     padding: 48px 64px;
     opacity: 0;
     pointer-events: none;
@@ -772,13 +773,11 @@
     <div class="po-label">Purchase Requisition — Free Text</div>
     seal for pump by workshop — urgnt pls
   </div>
-  <div style="height:8px"></div>
   <div style="display:flex; gap:8px; justify-content:center">
     <div class="result-tag fade-up anim-target" style="animation-delay:0.1s; background:var(--red-bg); color:var(--red); border-color:var(--red)">No material number</div>
     <div class="result-tag fade-up anim-target" style="animation-delay:0.15s; background:var(--red-bg); color:var(--red); border-color:var(--red)">No vendor</div>
     <div class="result-tag fade-up anim-target" style="animation-delay:0.2s; background:var(--red-bg); color:var(--red); border-color:var(--red)">No spec</div>
   </div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.4s">This isn't a purchase order. It's a <strong>message in a bottle</strong>.</div>
 </div>
 
@@ -789,7 +788,6 @@
     <div class="metric-unit">of MRO spend flows through free-text requisitions</div>
     <div class="metric-compare">$8.4M per year — unstructured, untracked, unmanaged</div>
   </div>
-  <div style="height:16px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Almost half of MRO spend <strong>bypasses the entire material management system</strong>.</div>
 </div>
 
@@ -800,9 +798,7 @@
     <div class="po-line"><span class="po-desc">seal mechanical for CW pump</span><span class="po-price">$1,350</span></div>
     <div class="po-line"><span class="po-desc">KSB KSPA seal 250</span><span class="po-price">$1,180</span></div>
   </div>
-  <div style="height:8px"></div>
   <div class="result-tag slide-right anim-target" style="animation-delay:0.15s; background:var(--amber-bg); color:#92400e; border-color:var(--amber)">Same part · 3 POs · 3 prices · 0 material numbers</div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.35s">Same part, three times, three prices, <strong>zero leverage</strong>.</div>
 </div>
 
@@ -818,9 +814,7 @@
       <div class="cb-amount">$127</div>
     </div>
   </div>
-  <div style="height:8px"></div>
   <div class="result-tag slide-right anim-target" style="animation-delay:0.15s; background:var(--red-bg); color:var(--red); border-color:var(--red)">4,200 free-text POs × $127 = $533,400/year</div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.35s">Free text doesn't just bypass the system. It <strong>costs 10× more to process</strong>.</div>
 </div>
 
@@ -829,7 +823,6 @@
   <div class="warn-card slide-right anim-target" style="animation-delay:0s">No contract leverage → prices vary 15–30% per item</div>
   <div class="warn-card slide-right anim-target" style="animation-delay:0.15s">$127/PO processing cost → $533K annual overhead</div>
   <div class="warn-card slide-right anim-target" style="animation-delay:0.3s">No demand visibility → can't plan, can't negotiate, can't automate</div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.5s">Free text is invisible demand. <strong>You can't manage what you can't see.</strong></div>
 </div>
 
@@ -855,7 +848,6 @@
     <div class="treemap-cell"><div class="tm-amount">$520K</div><div class="tm-label">Filters</div></div>
     <div class="treemap-cell"><div class="tm-amount">$410K</div><div class="tm-label">Electrical</div></div>
   </div>
-  <div style="height:16px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">The biggest pockets of free text are now <strong>visible and quantified</strong>.</div>
 </div>
 
@@ -866,9 +858,7 @@
     <div class="result-tag">Last 12 months</div>
     <div class="result-tag">Seals & Gaskets</div>
   </div>
-  <div style="height:6px"></div>
   <div class="result-tag slide-right anim-target" style="animation-delay:0.15s; background:var(--teal-light); color:var(--teal); border-color:var(--teal)">340 free-text lines · Top group: 28 POs (same seal)</div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.35s">28 times the same part was bought without a material number. <em>MiLi</em> <strong>grouped them automatically</strong>.</div>
 </div>
 
@@ -880,9 +870,7 @@
     <div class="po-line"><span class="po-desc">KSB KSPA seal 250</span><span class="po-vendor">Vendor A</span><span class="po-price">$1,180</span></div>
     <div class="po-line"><span class="po-desc">pump seal 250kw mech</span><span class="po-vendor">Vendor C</span><span class="po-price">$1,400</span></div>
   </div>
-  <div style="height:6px"></div>
   <div class="result-tag fade-up anim-target" style="animation-delay:0.15s; background:var(--green-bg); color:var(--green); border-color:var(--green)">Match found: MC-4501 — Seal, mechanical shaft KSPA 250 kW</div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.35s">The material <strong>already exists in SAP</strong>. Nobody found it. 28 times.</div>
 </div>
 
@@ -896,7 +884,6 @@
     <div class="leakage-row"><span class="lr-label">Price overspend (28 units)</span><span class="lr-value">$5,320</span></div>
     <div class="leakage-row" style="border-top:2px solid var(--red); margin-top:4px; padding-top:6px"><span class="lr-label" style="font-weight:700">Total wasted</span><span class="lr-value" style="font-size:14px">$8,876</span></div>
   </div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">One part. One year. <strong>$8,876 wasted.</strong> Multiply that across thousands of items.</div>
 </div>
 
@@ -906,9 +893,7 @@
     <div class="action-opt selected"><span class="ao-icon">🔗</span> Link to existing MC-4501</div>
     <div class="action-opt"><span class="ao-icon">➕</span> Create new material</div>
   </div>
-  <div style="height:8px"></div>
   <div class="check-circle check-draw anim-target" style="animation-delay:0.2s">✓</div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.4s">The fix isn't a project. It's a <strong>click</strong>.</div>
 </div>
 
@@ -920,7 +905,6 @@
     <div class="action-opt"><span class="ao-icon">🔍</span> Flag for review</div>
     <div class="action-opt"><span class="ao-icon">✕</span> Dismiss (one-off purchase)</div>
   </div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Not everything needs a material number. But <strong>repeat purchases do</strong>.</div>
 </div>
 
@@ -933,7 +917,6 @@
     <div style="margin-top:8px; font-size:14px; font-weight:700; color:var(--teal)">$109K estimated annual saving</div>
     <div style="font-size:10px; color:var(--muted)">$67K processing + $42K price improvements</div>
   </div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">15 decisions. $109K annual impact. <strong>Done before lunch.</strong></div>
 </div>
 
@@ -964,7 +947,6 @@
     </div>
     <div class="trend-labels"><span>45%</span><span>→ 28%</span></div>
   </div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Free text doesn't disappear overnight. It <strong>shrinks month by month</strong> as materials are catalogued.</div>
 </div>
 
@@ -987,7 +969,6 @@
       <div class="kb-change good">Annualized</div>
     </div>
   </div>
-  <div style="height:12px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">Every material number added to a free-text pattern <strong>flips a manual PO to an automated one</strong>.</div>
 </div>
 
@@ -997,7 +978,6 @@
     <div style="font-size:11px; color:var(--muted)">Procurement Manager View</div>
     <div style="font-size:13px; font-weight:600; color:var(--text); margin:6px 0">Previously invisible free-text spend →<br><span style="color:var(--teal)">structured demand ready for contract negotiation</span></div>
   </div>
-  <div style="height:16px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">You can't negotiate volume discounts on <strong>spend you can't see</strong>.</div>
 </div>
 
@@ -1034,7 +1014,6 @@
     <div class="metric-unit">free-text rate</div>
     <div class="metric-compare">declining every month as patterns convert</div>
   </div>
-  <div style="height:16px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.3s">From nearly half to just over a quarter — and <strong>still falling</strong>.</div>
 </div>
 
@@ -1046,7 +1025,6 @@
     <div class="summary-chip pop-in anim-target" style="animation-delay:0.2s">72% automation rate</div>
     <div class="summary-chip pop-in anim-target" style="animation-delay:0.3s">45→28% free text</div>
   </div>
-  <div style="height:16px"></div>
   <div class="thought-text fade-up anim-target" style="animation-delay:0.45s"><strong>Structured demand creates savings that compound.</strong> Free text burns money that compounds too.</div>
 </div>
 
@@ -1064,7 +1042,6 @@
 <div class="frame" id="f24">
   <div class="section-label">THE OUTCOME</div>
   <div class="big-text fade-up anim-target" style="animation-delay:0s">Invisible spend, made visible.</div>
-  <div style="height:8px"></div>
   <div class="big-text fade-up anim-target" style="animation-delay:0.15s"><em>Free Text Monitor</em> — one of 13 modules.</div>
 </div>
 
