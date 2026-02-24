@@ -701,17 +701,17 @@
     <div class="metric-unit">materials with zero movement in 24+ months</div>
   </div>
   <div class="pop-in anim-target" style="animation-delay:0.15s; position:relative; width:100%; max-width:420px; height:120px; margin-top:8px;">
-    <!-- Back row — 30% opacity -->
-    <div class="blocker-item" style="position:absolute; top:0; left:50%; transform:translateX(-50%) scale(0.92); width:90%; opacity:0.3; z-index:1;">
-      <span class="blocker-icon">📦</span><span class="blocker-label">MAT-44210 Mech Seal · 24 EA on hand</span><span class="blocker-status blocked">Blocked</span>
+    <!-- Front row — fully visible, on top -->
+    <div class="blocker-item" style="position:absolute; top:0; left:50%; transform:translateX(-50%); width:100%; opacity:1; z-index:3;">
+      <span class="blocker-icon">🚫</span><span class="blocker-label">MAT-10552 Bearing Assy · open PO 4500298814</span><span class="blocker-status blocked">Blocked</span>
     </div>
-    <!-- Middle row — 60% opacity -->
+    <!-- Middle row — 60% opacity, peeks below -->
     <div class="blocker-item" style="position:absolute; top:20px; left:50%; transform:translateX(-50%) scale(0.96); width:95%; opacity:0.6; z-index:2;">
       <span class="blocker-icon">🔗</span><span class="blocker-label">MAT-31087 V-Belt · active in BOM P-4400</span><span class="blocker-status blocked">Blocked</span>
     </div>
-    <!-- Front row — fully visible -->
-    <div class="blocker-item" style="position:absolute; top:40px; left:50%; transform:translateX(-50%); width:100%; opacity:1; z-index:3;">
-      <span class="blocker-icon">🚫</span><span class="blocker-label">MAT-10552 Bearing Assy · open PO 4500298814</span><span class="blocker-status blocked">Blocked</span>
+    <!-- Back row — 30% opacity, farthest down -->
+    <div class="blocker-item" style="position:absolute; top:40px; left:50%; transform:translateX(-50%) scale(0.92); width:90%; opacity:0.3; z-index:1;">
+      <span class="blocker-icon">📦</span><span class="blocker-label">MAT-44210 Mech Seal · 24 EA on hand</span><span class="blocker-status blocked">Blocked</span>
     </div>
   </div>
   <div class="result-tag fade-up anim-target" style="animation-delay:0.35s; background:transparent; color:var(--red); border:1.5px solid rgba(224, 82, 82, 0.4)">Deletion blocked — no resolution guidance</div>
